@@ -13,9 +13,12 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Database\Eloquent\Collection|Project[]
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Project::all()->load(['members', 'languages']);
+        $type = $request->type;
+        return Project::when(!is_null($type), function ($query) use ($type) {
+            $query->where('type', $type);
+        })->get()->load(['members', 'languages']);
     }
 
     /**

@@ -9,3 +9,5 @@ export const EDIT_ACTION = 'edit';
 export const PROJECT_TYPE = ['Strategy', 'Business'];
 
 export const PROJECT_STATUS = ['New', 'Progress', 'Done', 'Pending'];
+
+export const PROJECT_MEMBER_ROLE = ['Member', 'Team Leader', 'Manager'];

@@ -16,15 +16,16 @@ import { FiPlusCircle } from 'react-icons/fi';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import { useQuery } from 'react-query';
 import projectAPI from '../../services/project';
+import { PROJECT_STATUS } from '../../config/constants';
 
 const LIMIT = 6;
 
 const ProjectPage = () => {
   const [keyword, setKeyword] = useState('');
-  const [typeFilter, setTypeFilter] = useState('0');
+  const [type, setType] = useState('');
   const [page, setPage] = useState(1);
   const handleFilter = (_, newFilter) => {
-    setTypeFilter(newFilter);
+    setType(newFilter);
   };
   const handleChangeKeyword = (value) => {
     setKeyword(value);
@@ -32,9 +33,9 @@ const ProjectPage = () => {
   const handlePageChange = useCallback((_event, newPage) => {
     setPage(newPage);
   }, []);
-  const { data, isLoading, isError, error, isSuccess } = useQuery(
-    [KEY_QUERIES.FETCH_PROJECT],
-    projectAPI.all,
+  const { data, isLoading, isError, isSuccess } = useQuery(
+    [KEY_QUERIES.FETCH_PROJECT, keyword, type],
+    () => projectAPI.all({ keyword, type }),
   );
   return (
     <Box>
@@ -47,7 +48,7 @@ const ProjectPage = () => {
               alignItems={'center'}
             >
               <Box>
-                <Typography variant="h2" fontWeight={'bold'}>
+                <Typography variant="h5" fontWeight={'bold'}>
                   Projects
                 </Typography>
               </Box>
@@ -69,29 +70,41 @@ const ProjectPage = () => {
             </Box>
             <Divider sx={{ paddingY: 1 }} />
           </Box>
-          <Box display={'flex'} justifyContent="space-between">
-            {isSuccess && (
-              <Pagination
-                count={Math.round(data.length / LIMIT)}
-                page={page}
-                defaultPage={1}
-                variant="outlined"
-                shape="rounded"
-                onChange={handlePageChange}
-              />
-            )}
+          <Box
+            display={'flex'}
+            justifyContent="space-between"
+            alignItems={'center'}
+          >
+            <Box>
+              {isSuccess && !!data?.length && (
+                <Pagination
+                  count={Math.round(data.length / LIMIT)}
+                  page={page}
+                  defaultPage={1}
+                  variant="outlined"
+                  shape="rounded"
+                  onChange={handlePageChange}
+                />
+              )}
+            </Box>
             <ToggleButtonGroup
-              value={typeFilter}
+              value={type}
               exclusive
               color="primary"
               onChange={handleFilter}
             >
-              <ToggleButton value="0" sx={{ paddingX: 2, paddingY: 0.8 }}>
+              <ToggleButton value="" sx={{ paddingX: 2, paddingY: 0.8 }}>
                 All
               </ToggleButton>
-              <ToggleButton value="1" sx={{ paddingX: 2, paddingY: 0.8 }}>
-                Done
-              </ToggleButton>
+              {PROJECT_STATUS.map((status, index) => (
+                <ToggleButton
+                  value={index}
+                  key={index}
+                  sx={{ paddingX: 2, paddingY: 0.8 }}
+                >
+                  {status}
+                </ToggleButton>
+              ))}
             </ToggleButtonGroup>
           </Box>
           <Box sx={{ pt: 2 }}>
