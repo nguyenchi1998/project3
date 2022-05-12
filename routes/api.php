@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\ProjectController;
 use Illuminate\Http\Request;
@@ -30,3 +31,5 @@ Route::group(['middleware' => ['auth:sanctum', 'access:director']], function () 
 
     Route::resource('projects', ProjectController::class);
 });
+
+Route::resource('employees', EmployeeController::class);

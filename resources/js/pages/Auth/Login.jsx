@@ -81,9 +81,9 @@ const LoginPage = () => {
   return (
     <Box className={classes.root}>
       <Box className={classes.wrap}>
-        <Typography variant="h2" component="div">
+        <Typography variant="h4" component="div">
           <Box fontWeight="bold" textAlign="center">
-            Login
+            Data Warehouse
           </Box>
         </Typography>
         <Box sx={{ height: 25 }}>

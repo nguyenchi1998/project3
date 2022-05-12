@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Group extends Model
 {
     use HasFactory;
+
+    public function division()
+    {
+        return $this->belongsTo(Division::class);
+    }
 }

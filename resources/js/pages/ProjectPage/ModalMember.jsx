@@ -19,7 +19,7 @@ import {
   OutlinedInput,
   TextField,
 } from '@mui/material';
-import { PROJECT_MEMBER_ROLE } from '../../config/constants';
+import { PROJECT_MEMBER_ROLES } from '../../config/constants';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useState } from 'react';
 import { SearchOutlined } from '@mui/icons-material';
@@ -44,7 +44,7 @@ const MemberItem = ({ member }) => {
       </ListItemAvatar>
       <ListItemText primary={member.name} secondary={member.email} />
       <Box display={'flex'} alignItems="center">
-        <Box>{PROJECT_MEMBER_ROLE[member.pivot.role]}</Box>
+        <Box>{PROJECT_MEMBER_ROLES[member.pivot.role]}</Box>
         <Button id="basic-button" onClick={handleClick}>
           <SettingsIcon fontSize="small" />
           <ArrowDropDownIcon />
@@ -67,11 +67,11 @@ const MemberItem = ({ member }) => {
 const ModalMember = ({ open, handleClose, project }) => {
   return (
     <Dialog onClose={handleClose} open={open} fullWidth maxWidth="sm">
-      <DialogTitle>Project member</DialogTitle>
-      <Box px={2}>
+      <DialogTitle>Member Invitation</DialogTitle>
+      <Box px={3}>
         <OutlinedInput
           fullWidth
-          placeholder="Search member"
+          placeholder="Employee email"
           size="small"
           endAdornment={
             <InputAdornment position="end">
@@ -82,6 +82,7 @@ const ModalMember = ({ open, handleClose, project }) => {
           }
         />
       </Box>
+      <DialogTitle sx={{ paddingY: 1 }}>Members</DialogTitle>
       <List sx={{ pt: 0 }}>
         {project.members.map((member) => (
           <MemberItem key={member.id} member={member} />

@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import { useQuery } from 'react-query';
 import ListSkeleton from './ListSkeleton';
-import { PROJECT_TYPE } from '../../config/constants';
+import { PROJECT_TYPES } from '../../config/constants';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import projectAPI from '../../services/project';
 import FolderIcon from '@mui/icons-material/Folder';
@@ -53,15 +53,7 @@ const ListResult = ({ data, isLoading, isError }) => {
     <PerfectScrollbar>
       <Grid container spacing={2}>
         {data.map((project) => (
-          <Grid
-            key={project.id}
-            item
-            xs={12}
-            sm={6}
-            lg={4}
-            bgcolor="unset"
-            mt={3}
-          >
+          <Grid key={project.id} item xs={12} sm={6} lg={4} xl={3} mt={3}>
             <ProjectItem
               project={project}
               handleOpenMembers={handleOpenMembers}

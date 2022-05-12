@@ -11,7 +11,7 @@ class Project extends Model
 
     public function members()
     {
-        return $this->belongsToMany(User::class)->withPivot('role');
+        return $this->belongsToMany(User::class)->withPivot('role')->withTimestamps();
     }
 
     public function languages()
@@ -24,4 +24,8 @@ class Project extends Model
         return $this->belongsTo(Customer::class);
     }
 
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
 }

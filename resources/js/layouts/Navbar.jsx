@@ -29,7 +29,7 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
           <Logo />
         </RouterLink>
         <Box pl={2}>
-          <Typography variant="h5">Dashboard</Typography>
+          <Typography variant="h5">Data Warehouse</Typography>
         </Box>
         <Box sx={{ flexGrow: 1 }} />
         <Hidden mdDown>

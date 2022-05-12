@@ -40,7 +40,11 @@ class ProjectController extends Controller
      */
     public function show($id)
     {
-        return Project::findOrFail($id)->load(['members', 'languages', 'customer']);
+        $project =  Project::findOrFail($id)
+            ->load(['members.group.division', 'languages', 'customer', 'tasks']);
+
+
+        return $project;
     }
 
     /**

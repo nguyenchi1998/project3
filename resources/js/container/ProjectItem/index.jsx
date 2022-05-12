@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import { PROJECT_TYPE } from '../../config/constants';
+import { PROJECT_TYPES } from '../../config/constants';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Stack from '@mui/material/Stack';
 import { BsFillCalendarDateFill, BsPeopleFill } from 'react-icons/bs';
@@ -18,6 +18,8 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { deepOrange } from '@mui/material/colors';
+import { PATH } from '../../routes/paths';
+import { Link } from 'react-router-dom';
 
 const ProjectItem = ({ project, handleOpenMembers }) => {
   return (
@@ -33,12 +35,20 @@ const ProjectItem = ({ project, handleOpenMembers }) => {
           alignItems={'center'}
         >
           <Avatar
+            component={Link}
+            to={`${PATH.PROJECT_PAGE}/${project.id}`}
             sx={{ bgcolor: deepOrange[500], height: 50, width: 50 }}
             variant="square"
           >
             {project.name.charAt(0)}
           </Avatar>
-          <Box fontWeight={'bold'}>{project.name}</Box>
+          <Box
+            component={Link}
+            to={`${PATH.PROJECT_PAGE}/${project.id}`}
+            fontWeight={'bold'}
+          >
+            {project.name}
+          </Box>
         </Box>
         <Stack spacing={1.5} p={2}>
           <Box
@@ -47,7 +57,7 @@ const ProjectItem = ({ project, handleOpenMembers }) => {
             width="100%"
             justifyContent={'space-between'}
           >
-            <Typography>{PROJECT_TYPE[project.type]}</Typography>
+            <Typography>{PROJECT_TYPES[project.type]}</Typography>
             <Box display={'flex'}>
               <ButtonGroup variant="outlined" disableElevation>
                 <Button sx={{ padding: 'unset' }}>

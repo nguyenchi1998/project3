@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Group;
 use App\Models\Language;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Sequence;
@@ -16,20 +17,32 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $languages = Language::all()->pluck('id')->toArray();
+        $languages = Language::all()
+            ->pluck('id')
+            ->toArray();
+        $groupIds = Group::all()
+            ->pluck('id')
+            ->toArray();
 
         User::factory(1)->create([
             'email' => 'admin@gmail.com',
             'position' => config('constants.position.director')
         ]);
-        User::factory(4)->create([
-            'position' => config('constants.position.manager')
-        ])->each(function ($user) use ($languages) {
-            $user->languages()->sync(array_rand($languages, 3));
-        });
-        User::factory(20)->create()
+        User::factory(4)
+            ->create([
+                'position' => config('constants.position.manager'),
+                'group_id' => array_rand($groupIds),
+            ])->each(function ($user) use ($languages) {
+                $user->languages()
+                    ->sync(array_rand($languages, 3));
+            });
+        User::factory(20)
+            ->create([
+                'group_id' => array_rand($groupIds),
+            ])
             ->each(function ($user) use ($languages) {
-                $user->languages()->sync(array_rand($languages, 3));
+                $user->languages()
+                    ->sync(array_rand($languages, 3));
             });
     }
 }

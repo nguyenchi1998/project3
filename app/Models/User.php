@@ -57,4 +57,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Language::class)->withPivot('level');
     }
+
+    public function group()
+    {
+        return $this->belongsTo(Group::class);
+    }
 }

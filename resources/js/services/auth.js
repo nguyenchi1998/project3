@@ -23,7 +23,7 @@ export const signIn = (credential) => {
 };
 
 export const fetchAuthUser = async () => {
-  const { data } = await request().get('/profile');
+  const { data } = await request().get(AUTH_API.PROFILE);
 
   return data;
 };

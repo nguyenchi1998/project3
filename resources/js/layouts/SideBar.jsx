@@ -11,6 +11,10 @@ import { PATH } from '../routes/paths';
 import NavItem from './NavItem';
 import FilterIcon from '@mui/icons-material/Filter';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import { KEY_QUERIES } from '../config/keyQueries';
+import { useQuery } from 'react-query';
+import * as authAPI from './../services/auth';
+import { POSITIONS } from '../config/constants';
 
 const user = {
   avatar: '/static/images/avatars/avatar_6.png',
@@ -33,6 +37,10 @@ const items = [
 
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
   const location = useLocation();
+  const { data, isLoading, isError } = useQuery(
+    [KEY_QUERIES.FETCH_AUTH],
+    authAPI.fetchAuthUser,
+  );
 
   useEffect(() => {
     if (openMobile && onMobileClose) {
@@ -67,12 +75,16 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
           }}
           to="/app/account"
         />
-        <Typography color="textPrimary" variant="h5">
-          {user.name}
-        </Typography>
-        <Typography color="textSecondary" variant="body2">
-          {user.jobTitle}
-        </Typography>
+        {data && (
+          <Box>
+            <Typography color="textPrimary" variant="h6">
+              {data.name}
+            </Typography>
+            <Typography color="textSecondary" variant="body1">
+              {POSITIONS[data.position]}
+            </Typography>
+          </Box>
+        )}
       </Box>
       <Divider />
       <List>
