@@ -142,18 +142,19 @@ const DetailProjectPage = () => {
               data={{
                 datasets: [
                   {
-                    data: [63, 15, 22],
+                    data: [63, 15, 12, 10],
                     backgroundColor: [
                       colors.red[600],
                       colors.orange[600],
                       colors.indigo[500],
+                      colors.grey[500],
                     ],
                     borderWidth: 8,
                     borderColor: colors.common.white,
                     hoverBorderColor: colors.common.white,
                   },
                 ],
-                labels: ['Bug', 'Task', 'Backlog'],
+                labels: ['Bug', 'Task', 'Backlog', 'Cancel'],
               }}
               options={{
                 animation: false,

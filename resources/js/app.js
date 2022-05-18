@@ -23,7 +23,9 @@ import PrivateRoute from './components/PrivateRoute';
 import 'react-toastify/dist/ReactToastify.css';
 import ManagerLayout from './layouts';
 
-const queryClient = new QueryClient({});
+const queryClient = new QueryClient({
+  defaultOptions: { refetchOnWindowFocus: false },
+});
 ReactDOM.render(
   <QueryClientProvider client={queryClient}>
     <Provider store={store}>

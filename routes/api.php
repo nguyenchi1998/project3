@@ -21,15 +21,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
-
     Route::post('logout', [AuthController::class, 'logout']);
-
     Route::get('profile',  [AuthController::class, 'profile']);
 });
-
 Route::group(['middleware' => ['auth:sanctum', 'access:director']], function () {
-
     Route::resource('projects', ProjectController::class);
+    Route::resource('groups', ProjectController::class);
 });
-
 Route::resource('employees', EmployeeController::class);

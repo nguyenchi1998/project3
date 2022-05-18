@@ -7,23 +7,22 @@ import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import PersonIcon from '@mui/icons-material/Person';
-import AddIcon from '@mui/icons-material/Add';
-import Typography from '@mui/material/Typography';
 import { blue } from '@mui/material/colors';
 import {
   Box,
+  DialogContent,
   IconButton,
   InputAdornment,
   Menu,
   MenuItem,
   OutlinedInput,
-  TextField,
 } from '@mui/material';
 import { PROJECT_MEMBER_ROLES } from '../../config/constants';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useState } from 'react';
 import { SearchOutlined } from '@mui/icons-material';
 import SettingsIcon from '@mui/icons-material/Settings';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const MemberItem = ({ member }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -36,7 +35,7 @@ const MemberItem = ({ member }) => {
   };
 
   return (
-    <ListItem divider>
+    <ListItem divider sx={{ py: 0.5, px: 0 }}>
       <ListItemAvatar>
         <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
           <PersonIcon />
@@ -67,6 +66,11 @@ const MemberItem = ({ member }) => {
 const ModalMember = ({ open, handleClose, project }) => {
   return (
     <Dialog onClose={handleClose} open={open} fullWidth maxWidth="sm">
+      <Box position="absolute" top={8} right={4}>
+        <IconButton onClick={handleClose}>
+          <CancelIcon />
+        </IconButton>
+      </Box>
       <DialogTitle>Member Invitation</DialogTitle>
       <Box px={3}>
         <OutlinedInput
@@ -83,11 +87,13 @@ const ModalMember = ({ open, handleClose, project }) => {
         />
       </Box>
       <DialogTitle sx={{ paddingY: 1 }}>Members</DialogTitle>
-      <List sx={{ pt: 0 }}>
-        {project.members.map((member) => (
-          <MemberItem key={member.id} member={member} />
-        ))}
-      </List>
+      <DialogContent>
+        <List>
+          {project.members.map((member) => (
+            <MemberItem key={member.id} member={member} />
+          ))}
+        </List>
+      </DialogContent>
     </Dialog>
   );
 };

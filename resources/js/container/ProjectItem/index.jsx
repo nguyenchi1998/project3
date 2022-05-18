@@ -21,7 +21,7 @@ import { deepOrange } from '@mui/material/colors';
 import { PATH } from '../../routes/paths';
 import { Link } from 'react-router-dom';
 
-const ProjectItem = ({ project, handleOpenMembers }) => {
+const ProjectItem = ({ project, handleOpenMembers, handleOpenEdit }) => {
   return (
     <Paper variant="outlined">
       <Box position={'relative'}>
@@ -60,7 +60,10 @@ const ProjectItem = ({ project, handleOpenMembers }) => {
             <Typography>{PROJECT_TYPES[project.type]}</Typography>
             <Box display={'flex'}>
               <ButtonGroup variant="outlined" disableElevation>
-                <Button sx={{ padding: 'unset' }}>
+                <Button
+                  sx={{ padding: 'unset' }}
+                  onClick={() => handleOpenEdit(project)}
+                >
                   <EditIcon color="success" fontSize="small" />
                 </Button>
                 <Button sx={{ padding: 'unset' }}>

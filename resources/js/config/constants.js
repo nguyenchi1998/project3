@@ -8,6 +8,8 @@ export const EDIT_ACTION = 'edit';
 
 export const PROJECT_TYPES = ['Strategy', 'Business'];
 
+export const PROJECT_PRIORITIES = ['Low', 'Normal', 'High'];
+
 export const PROJECT_STATUS = ['New', 'Progress', 'Done', 'Pending'];
 
 export const PROJECT_MEMBER_ROLES = ['Member', 'Team Leader', 'Manager'];

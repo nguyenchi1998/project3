@@ -1,40 +1,21 @@
 import React, { useCallback, useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import { useQuery } from 'react-query';
 import ListSkeleton from './ListSkeleton';
-import { PROJECT_TYPES } from '../../config/constants';
-import { KEY_QUERIES } from '../../config/keyQueries';
-import projectAPI from '../../services/project';
-import FolderIcon from '@mui/icons-material/Folder';
-import DeleteIcon from '@mui/icons-material/Delete';
-import Stack from '@mui/material/Stack';
-import GroupIcon from '@mui/icons-material/Group';
-import { BsFillCalendarDateFill, BsPeopleFill } from 'react-icons/bs';
-import { BsFillCalendarCheckFill } from 'react-icons/bs';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import {
-  Avatar,
-  AvatarGroup,
-  Button,
-  ButtonGroup,
-  Divider,
-  Grid,
-  LinearProgress,
-  Paper,
-  Typography,
-} from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import { deepOrange } from '@mui/material/colors';
+import { Grid } from '@mui/material';
 import ModalMember from './ModalMember';
 import ProjectItem from './../../container/ProjectItem';
+import ModalProject from './ModalProject';
 
-const ListResult = ({ data, isLoading, isError }) => {
+const ListResult = ({ data, isLoading, isError, action, setAction }) => {
   const [open, setOpen] = useState(false);
-  const handleClose = useCallback(() => {
+  const handleMembersClose = useCallback(() => {
     setOpen(false);
-  }, [open]);
+    setSelectedProject(null);
+  }, []);
+  const handleProjectClose = useCallback(() => {
+    setAction(null);
+    setSelectedProject(null);
+  }, []);
   const [selectedProject, setSelectedProject] = useState(null);
   const handleOpenMembers = useCallback(
     (project) => {
@@ -43,6 +24,10 @@ const ListResult = ({ data, isLoading, isError }) => {
     },
     [open],
   );
+  const handleOpenEdit = (dataProject) => {
+    setSelectedProject(dataProject);
+    setAction('edit');
+  };
   if (isError) {
     return <>{error.message}</>;
   }
@@ -57,6 +42,7 @@ const ListResult = ({ data, isLoading, isError }) => {
             <ProjectItem
               project={project}
               handleOpenMembers={handleOpenMembers}
+              handleOpenEdit={handleOpenEdit}
             />
           </Grid>
         ))}
@@ -65,7 +51,14 @@ const ListResult = ({ data, isLoading, isError }) => {
         <ModalMember
           project={selectedProject}
           open={open}
-          handleClose={handleClose}
+          handleClose={handleMembersClose}
+        />
+      )}
+      {action && (
+        <ModalProject
+          action={action}
+          handleCloseForm={handleProjectClose}
+          project={selectedProject}
         />
       )}
     </PerfectScrollbar>

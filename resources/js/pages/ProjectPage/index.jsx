@@ -17,6 +17,8 @@ import { KEY_QUERIES } from '../../config/keyQueries';
 import { useQuery } from 'react-query';
 import projectAPI from '../../services/project';
 import { PROJECT_STATUS } from '../../config/constants';
+import { debounce } from 'lodash';
+import ModalProject from './ModalProject';
 
 const LIMIT = 6;
 
@@ -24,15 +26,21 @@ const ProjectPage = () => {
   const [keyword, setKeyword] = useState('');
   const [type, setType] = useState('');
   const [page, setPage] = useState(1);
+  const [action, setAction] = useState(null);
   const handleFilter = (_, newFilter) => {
     setType(newFilter);
   };
-  const handleChangeKeyword = (value) => {
-    setKeyword(value);
+  const debounceChangeKeyword = useCallback(
+    debounce((value) => setKeyword(value), 500),
+    [],
+  );
+  const handleChangeKeyword = ({ target: { value } }) => {
+    debounceChangeKeyword(value);
   };
   const handlePageChange = useCallback((_event, newPage) => {
     setPage(newPage);
   }, []);
+
   const { data, isLoading, isError, isSuccess } = useQuery(
     [KEY_QUERIES.FETCH_PROJECT, keyword, type],
     () => projectAPI.all({ keyword, type }),
@@ -43,7 +51,7 @@ const ProjectPage = () => {
         <Box paddingY={3}>
           <Box sx={{ paddingY: 2 }}>
             <Box
-              display={'flex'}
+              display="flex"
               justifyContent="space-between"
               alignItems={'center'}
             >
@@ -53,7 +61,7 @@ const ProjectPage = () => {
                 </Typography>
               </Box>
               <Box display={'flex'}>
-                <Button variant="contained">
+                <Button variant="contained" onClick={() => setAction('create')}>
                   <FiPlusCircle />
                   <Box ml={1}>Create Project</Box>
                 </Button>
@@ -112,6 +120,10 @@ const ProjectPage = () => {
               isLoading={isLoading}
               isError={isError}
               data={data?.slice((page - 1) * LIMIT, page * LIMIT)}
+              keyword={keyword}
+              type={type}
+              action={action}
+              setAction={setAction}
             />
           </Box>
         </Box>

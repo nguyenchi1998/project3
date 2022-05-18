@@ -9,6 +9,12 @@ class Project extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'type',
+        'name',
+        'priority',
+    ];
+
     public function members()
     {
         return $this->belongsToMany(User::class)->withPivot('role')->withTimestamps();

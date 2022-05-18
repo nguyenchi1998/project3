@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Project\ProjectStoreRequest;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -16,9 +17,15 @@ class ProjectController extends Controller
     public function index(Request $request)
     {
         $type = $request->type;
+        $keyword = $request->keyword;
         return Project::when(!is_null($type), function ($query) use ($type) {
             $query->where('type', $type);
-        })->get()->load(['members', 'languages']);
+        })
+            ->when(!is_null($keyword), function ($query) use ($keyword) {
+                $query->where('name', 'like', '%' . $keyword . '%');
+            })
+            ->get()
+            ->load(['members', 'languages']);
     }
 
     /**
@@ -27,7 +34,7 @@ class ProjectController extends Controller
      * @param Request $request
      * @return void
      */
-    public function store(Request $request)
+    public function store(ProjectStoreRequest $request)
     {
         return Project::create($request->all());
     }

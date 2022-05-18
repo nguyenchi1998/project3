@@ -1,24 +1,13 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Dialog from '@mui/material/Dialog';
-import { makeStyles } from '@mui/styles';
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
 import Box from '@mui/material/Box';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { FormProvider } from 'react-hook-form';
-import LoadingIndicator from 'components/LoadingIndicator';
+import LoadingIndicator from './../LoadingIndicator';
 import CancelIcon from '@mui/icons-material/Cancel';
 import IconButton from '@mui/material/IconButton';
-
-const useStyle = makeStyles({
-  diagramContentTop: {
-    paddingTop: '8px !important',
-  },
-  title: {
-    fontSize: 24,
-  },
-});
 
 const FormDialog = ({
   children,
@@ -28,23 +17,17 @@ const FormDialog = ({
   title,
   methods,
   isLoading,
+  maxWidth = 'sm',
 }) => {
-  const style = useStyle();
-
   return (
     <Dialog
       open={open}
       fullWidth
-      maxWidth="sm"
+      maxWidth={maxWidth}
       disableEscapeKeyDown
       disableEnforceFocus
     >
-      <Box position="absolute" top={8} right={4}>
-        <IconButton onClick={onClose}>
-          <CancelIcon />
-        </IconButton>
-      </Box>
-      <DialogTitle className={style.title}>{title}</DialogTitle>
+      <DialogTitle>{title}</DialogTitle>
       {isLoading ? (
         <Box
           height="40vh"
@@ -55,21 +38,22 @@ const FormDialog = ({
           <LoadingIndicator />
         </Box>
       ) : (
-        <FormProvider {...methods}>
-          <form onSubmit={onSubmit}>
-            <DialogContent className={style.diagramContentTop}>
-              {children}
-            </DialogContent>
-            <DialogActions>
-              <Button variant="outlined" color="error" onClick={onClose}>
-                Cancel
-              </Button>
-              <Button variant="outlined" color="success" type="submit">
-                Submit
-              </Button>
-            </DialogActions>
-          </form>
-        </FormProvider>
+        <form onSubmit={onSubmit}>
+          <DialogContent dividers>{children}</DialogContent>
+          <DialogActions>
+            <Button
+              variant="outlined"
+              autoFocus
+              color="error"
+              onClick={onClose}
+            >
+              Cancel
+            </Button>
+            <Button color="success" type="submit">
+              Submit
+            </Button>
+          </DialogActions>
+        </form>
       )}
     </Dialog>
   );
