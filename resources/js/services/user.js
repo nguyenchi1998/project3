@@ -1,31 +1,38 @@
-import { request } from 'utils/request';
+import { request } from '../utils/request';
 
-const all = async () => {
-  const { data } = await request().get('/students');
+const baseResourceUri = '/users';
+
+const all = async (filter) => {
+  const { data } = await request().get(`${baseResourceUri}`, {
+    params: { ...filter },
+  });
 
   return data;
 };
 
 const find = async (id) => {
-  const { data } = await request().get(`/students/${id}`);
+  const { data } = await request().get(`${baseResourceUri}/${id}`);
 
   return data;
 };
 
-const store = (student) => {
-  const { data } = request().post(`/students`, student);
+const store = async (resource) => {
+  const { data } = await request().post(`${baseResourceUri}`, resource);
 
   return data;
 };
 
-const update = (student) => {
-  const { data } = request().post(`/students/${student.id}`, student);
+const update = async (resource) => {
+  const { data } = await request().put(
+    `${baseResourceUri}/${resource.id}`,
+    resource,
+  );
 
   return data;
 };
 
-const destroy = (student) => {
-  const { data } = request().post(`/students/${student.id}`, student);
+const destroy = async (id) => {
+  const { data } = await request().delete(`${baseResourceUri}/${id}`);
 
   return data;
 };

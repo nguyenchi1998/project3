@@ -55,7 +55,7 @@ ReactDOM.render(
                     </Route>
                   </Switch>
                 </Router>
-                <ToastContainer />
+                <ToastContainer theme="colored" />
               </LocalizationProvider>
             </React.Suspense>
           </ThemeProvider>

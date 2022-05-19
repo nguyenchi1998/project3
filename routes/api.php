@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeeController;
-use App\Http\Controllers\ManagerController;
+use App\Http\Controllers\GroupController;
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\ProjectController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\UserController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,6 +28,8 @@ Route::group(['prefix' => 'auth'], function () {
 });
 Route::group(['middleware' => ['auth:sanctum', 'access:director']], function () {
     Route::resource('projects', ProjectController::class);
-    Route::resource('groups', ProjectController::class);
+    Route::resource('groups', GroupController::class);
+    Route::resource('languages', LanguageController::class);
+    Route::resource('users', UserController::class);
 });
 Route::resource('employees', EmployeeController::class);

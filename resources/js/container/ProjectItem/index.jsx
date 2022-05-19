@@ -5,6 +5,7 @@ import Stack from '@mui/material/Stack';
 import { BsFillCalendarDateFill, BsPeopleFill } from 'react-icons/bs';
 import { BsFillCalendarCheckFill } from 'react-icons/bs';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import {
   Avatar,
   AvatarGroup,
@@ -15,6 +16,7 @@ import {
   LinearProgress,
   Paper,
   Typography,
+  IconButton,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { deepOrange } from '@mui/material/colors';
@@ -73,51 +75,49 @@ const ProjectItem = ({ project, handleOpenMembers, handleOpenEdit }) => {
             </Box>
           </Box>
           <Box>
-            <Button
-              sx={{ padding: 0 }}
-              onClick={() => handleOpenMembers(project)}
-            >
-              {project.members.length <= 2 ? (
-                <AvatarGroup sx={{ justifyContent: 'flex-end' }}>
-                  {project.members.map((member) => (
-                    <Avatar key={member.id} sizes="small" alt="Remy Sharp" />
-                  ))}
-                </AvatarGroup>
-              ) : (
-                <AvatarGroup
-                  total={project.members.length - 2}
-                  sx={{ justifyContent: 'flex-end' }}
-                >
-                  {project.members.slice(0, 2).map((member) => (
-                    <Avatar key={member.id} sizes="small" alt="Remy Sharp" />
-                  ))}
-                </AvatarGroup>
-              )}
-            </Button>
+            {project.members.length ? (
+              <Button
+                sx={{ padding: 0 }}
+                onClick={() => handleOpenMembers(project)}
+              >
+                {project.members.length <= 2 ? (
+                  <AvatarGroup sx={{ justifyContent: 'flex-end' }}>
+                    {project.members.map((member) => (
+                      <Avatar key={member.id} sizes="small" />
+                    ))}
+                  </AvatarGroup>
+                ) : (
+                  <AvatarGroup
+                    total={project.members.length - 2}
+                    sx={{ justifyContent: 'flex-end' }}
+                  >
+                    {project.members.slice(0, 2).map((member) => (
+                      <Avatar key={member.id} sizes="small" />
+                    ))}
+                  </AvatarGroup>
+                )}
+              </Button>
+            ) : (
+              <IconButton onClick={() => handleOpenMembers(project)}>
+                <PersonAddAltIcon fontSize="large" />
+              </IconButton>
+            )}
           </Box>
           <Box>
             <Grid container>
               <Grid
                 item
-                xs={6}
+                xs={12}
                 display="flex"
                 justifyContent={'flex-start'}
                 alignItems="center"
               >
                 <BsFillCalendarDateFill />
-                <Box ml={1}>{project.start_date ?? 'Unset'}</Box>
-              </Grid>
-              <Grid
-                item
-                xs={6}
-                flexGrow={1}
-                textAlign={'left'}
-                display="flex"
-                justifyContent={'flex-start'}
-                alignItems="center"
-              >
-                <BsPeopleFill />
-                <Box ml={1}>{project.members.length} Members</Box>
+                <Box ml={1}>
+                  {project.languages
+                    .map((language) => language.name)
+                    .join(', ')}
+                </Box>
               </Grid>
               <Grid
                 item

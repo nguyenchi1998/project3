@@ -1,25 +1,22 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Stack,
-} from '@mui/material';
-import { Box } from '@mui/system';
+import { Checkbox, Stack, TextField } from '@mui/material';
 import { format, isValid } from 'date-fns';
-import { date } from 'joi';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { toast, useToast } from 'react-toastify';
+import FormAutocomplete from '../../components/FormAutocomplete';
 import FormDialog from '../../components/FormDialog';
 import FormInputDate from '../../components/FormInputDate';
 import FormSelect from '../../components/FormSelect';
 import FormTextarea from '../../components/FormTextarea';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import * as API_CODES from '../../config/API_CODES';
 import { PROJECT_PRIORITIES, PROJECT_TYPES } from '../../config/constants';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import FormInputText from './../../components/FormInputText';
 import groupAPI from './../../services/group';
+import languageAPI from './../../services/language';
 import projectAPI from './../../services/project';
 
 const defaultValues = {
@@ -29,33 +26,63 @@ const defaultValues = {
   group_id: '',
   start_date: null,
   end_date: null,
+  languages: [],
 };
-
-const ModalProject = ({ handleCloseForm, project, keyword, type, action }) => {
+const ModalProject = ({ handleCloseForm, project, keyQuery, action }) => {
   const queryClient = useQueryClient();
-  const { mutate } = useMutation(projectAPI.store, {
-    onSuccess: () => {
-      queryClient.invalidateQueries([KEY_QUERIES.FETCH_PROJECT, keyword, type]);
-      handleClose();
-    },
-  });
-  const { data, isLoading, isError } = useQuery([KEY_QUERIES.FETCH_GROUP], () =>
-    groupAPI.all(),
-  );
   const {
     handleSubmit,
-    register,
     control,
     reset,
     setError,
     formState: { errors },
-    ...methods
   } = useForm({
     defaultValues,
   });
+  const { mutate, isLoading: isStorePending } = useMutation(projectAPI.store, {
+    onSuccess: () => {
+      queryClient.invalidateQueries([KEY_QUERIES.FETCH_PROJECT, ...keyQuery]);
+      handleClose();
+      toast.success('Project created successfully');
+    },
+    onError: ({ response: { data, status } }) => {
+      if (status === API_CODES.INVALID_DATA) {
+        Object.entries(data.errors).forEach((error) => {
+          const [name, message] = error;
+          setError(name, { type: 'custom', message: message[0] });
+        });
+      }
+    },
+  });
+  const { mutate: updateMutate, isLoading: isUpdatePending } = useMutation(
+    projectAPI.update,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([KEY_QUERIES.FETCH_PROJECT, ...keyQuery]);
+        handleClose();
+        toast.success('Project updated successfully');
+      },
+      onError: ({ response: { data, status } }) => {
+        if (status === API_CODES.INVALID_DATA) {
+          Object.entries(data.errors).forEach((error) => {
+            const [name, message] = error;
+            setError(name, { type: 'custom', message: message[0] });
+          });
+        }
+      },
+    },
+  );
+  const { data, isLoading } = useQuery([KEY_QUERIES.FETCH_GROUP], () =>
+    groupAPI.all(),
+  );
+  const { data: languages, isLoading: isLanguageLoading } = useQuery(
+    [KEY_QUERIES.FETCH_LANGUAGE],
+    () => languageAPI.all(),
+  );
+
   const onSubmit = (data) => {
-    mutate(
-      {
+    if (action === 'create') {
+      mutate({
         ...data,
         start_date: isValid(data.start_date)
           ? format(data.start_date, 'yyyy-MM-dd')
@@ -63,9 +90,22 @@ const ModalProject = ({ handleCloseForm, project, keyword, type, action }) => {
         end_date: isValid(data.end_date)
           ? format(data.end_date, 'yyyy-MM-dd')
           : null,
-      },
-      {},
-    );
+        languages: data.languages.map(({ value }) => value),
+      });
+    } else {
+      updateMutate({
+        ...data,
+        start_date:
+          data.start_date && isValid(new Date(data.start_date))
+            ? format(new Date(data.start_date), 'yyyy-MM-dd')
+            : null,
+        end_date:
+          data.end_date && isValid(new Date(data.end_date))
+            ? format(new Date(data.end_date), 'yyyy-MM-dd')
+            : null,
+        languages: data.languages.map(({ value }) => value),
+      });
+    }
   };
   useEffect(() => {
     if (action === 'edit') {
@@ -73,16 +113,20 @@ const ModalProject = ({ handleCloseForm, project, keyword, type, action }) => {
         reset({
           ...project,
           group_id: project.group_id ?? '',
+          languages: project.languages.map(({ name, id }) => ({
+            label: name,
+            value: id,
+          })),
         });
     } else {
       reset({ ...defaultValues });
     }
   }, [project, reset]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     reset({ ...defaultValues });
     handleCloseForm();
-  };
+  }, []);
   return (
     <FormDialog
       title={action === 'edit' ? 'Edit Project' : 'Create Project'}
@@ -91,9 +135,11 @@ const ModalProject = ({ handleCloseForm, project, keyword, type, action }) => {
       open={!!action}
       fullWidth
       maxWidth="sm"
-      isLoading={isLoading}
+      isLoading={isLoading || isLanguageLoading}
+      isPending={isStorePending || isUpdatePending}
+      formId="form-project"
     >
-      <Stack spacing={3}>
+      <Stack spacing={2}>
         <FormInputText
           control={control}
           name="name"
@@ -133,14 +179,49 @@ const ModalProject = ({ handleCloseForm, project, keyword, type, action }) => {
             val: index,
           }))}
         />
+        <FormAutocomplete
+          control={control}
+          name="languages"
+          isOptionEqualToValue={(option, value) => option.value == value.value}
+          getOptionLabel={(option) => option.label}
+          options={
+            languages?.map(({ name, id }) => ({
+              label: name,
+              value: id,
+            })) ?? []
+          }
+          renderOption={(props, option, { selected }) => (
+            <li {...props}>
+              <Checkbox
+                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                checkedIcon={<CheckBoxIcon fontSize="small" />}
+                style={{ marginRight: 8 }}
+                checked={selected}
+              />
+              {option.label}
+            </li>
+          )}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label={'Language'}
+              placeholder={'Choose languages'}
+              variant="outlined"
+              fullWidth
+              inputProps={{
+                ...params.inputProps,
+              }}
+            />
+          )}
+        />
         <FormSelect
           control={control}
           name="group_id"
           label="Group"
           fullWidth
           options={
-            data?.map(({ name, id }) => ({
-              key: name,
+            data?.map(({ name, id, division }) => ({
+              key: `${name} - ${division.name}`,
               val: id,
             })) ?? []
           }

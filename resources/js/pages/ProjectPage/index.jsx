@@ -1,16 +1,15 @@
 import React, { useCallback, useState } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import ListResult from './ListResult';
 import {
   Button,
   Divider,
-  Input,
   Pagination,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
+  Grid,
 } from '@mui/material';
 import { FiPlusCircle } from 'react-icons/fi';
 import { KEY_QUERIES } from '../../config/keyQueries';
@@ -19,14 +18,30 @@ import projectAPI from '../../services/project';
 import { PROJECT_STATUS } from '../../config/constants';
 import { debounce } from 'lodash';
 import ModalProject from './ModalProject';
-
-const LIMIT = 6;
+import ModalMember from './ModalMember';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import ListSkeleton from './ListSkeleton';
+import ProjectItem from './../../container/ProjectItem';
 
 const ProjectPage = () => {
   const [keyword, setKeyword] = useState('');
   const [type, setType] = useState('');
   const [page, setPage] = useState(1);
   const [action, setAction] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const { data, isLoading, isSuccess } = useQuery(
+    [KEY_QUERIES.FETCH_PROJECT, keyword, type, page],
+    () => projectAPI.all({ keyword, type, page }),
+  );
+  const handleMembersClose = useCallback(() => {
+    setOpen(false);
+    setSelectedProject(null);
+  }, []);
+  const handleProjectClose = useCallback(() => {
+    setAction(null);
+    setSelectedProject(null);
+  }, []);
   const handleFilter = (_, newFilter) => {
     setType(newFilter);
   };
@@ -40,15 +55,22 @@ const ProjectPage = () => {
   const handlePageChange = useCallback((_event, newPage) => {
     setPage(newPage);
   }, []);
-
-  const { data, isLoading, isError, isSuccess } = useQuery(
-    [KEY_QUERIES.FETCH_PROJECT, keyword, type],
-    () => projectAPI.all({ keyword, type }),
+  const handleOpenMembers = useCallback(
+    (project) => {
+      setSelectedProject(project);
+      setOpen(true);
+    },
+    [open],
   );
+  const handleOpenEdit = useCallback((dataProject) => {
+    setSelectedProject(dataProject);
+    setAction('edit');
+  }, []);
+
   return (
     <Box>
       <Container maxWidth={false}>
-        <Box paddingY={3}>
+        <Box pb={3}>
           <Box sx={{ paddingY: 2 }}>
             <Box
               display="flex"
@@ -61,7 +83,13 @@ const ProjectPage = () => {
                 </Typography>
               </Box>
               <Box display={'flex'}>
-                <Button variant="contained" onClick={() => setAction('create')}>
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    setAction('create');
+                    setSelectedProject(null);
+                  }}
+                >
                   <FiPlusCircle />
                   <Box ml={1}>Create Project</Box>
                 </Button>
@@ -84,9 +112,9 @@ const ProjectPage = () => {
             alignItems={'center'}
           >
             <Box>
-              {isSuccess && !!data?.length && (
+              {isSuccess && !!data.data.length && (
                 <Pagination
-                  count={Math.round(data.length / LIMIT)}
+                  count={data.last_page}
                   page={page}
                   defaultPage={1}
                   variant="outlined"
@@ -116,15 +144,45 @@ const ProjectPage = () => {
             </ToggleButtonGroup>
           </Box>
           <Box sx={{ pt: 2 }}>
-            <ListResult
-              isLoading={isLoading}
-              isError={isError}
-              data={data?.slice((page - 1) * LIMIT, page * LIMIT)}
-              keyword={keyword}
-              type={type}
-              action={action}
-              setAction={setAction}
-            />
+            {isLoading && <ListSkeleton />}
+            {isSuccess && (
+              <PerfectScrollbar>
+                <Grid container spacing={2}>
+                  {data.data.map((project) => (
+                    <Grid
+                      key={project.id}
+                      item
+                      xs={12}
+                      sm={6}
+                      lg={4}
+                      xl={3}
+                      mt={3}
+                    >
+                      <ProjectItem
+                        project={project}
+                        handleOpenMembers={handleOpenMembers}
+                        handleOpenEdit={handleOpenEdit}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+                {open && (
+                  <ModalMember
+                    open={open}
+                    project={selectedProject}
+                    handleClose={handleMembersClose}
+                  />
+                )}
+                {action && (
+                  <ModalProject
+                    project={selectedProject}
+                    action={action}
+                    handleCloseForm={handleProjectClose}
+                    keyQuery={[keyword, type, page]}
+                  />
+                )}
+              </PerfectScrollbar>
+            )}
           </Box>
         </Box>
       </Container>

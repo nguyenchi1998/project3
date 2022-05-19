@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Project\ProjectStoreRequest;
+use App\Http\Requests\Project\ProjectUpdateRequest;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -24,8 +25,9 @@ class ProjectController extends Controller
             ->when(!is_null($keyword), function ($query) use ($keyword) {
                 $query->where('name', 'like', '%' . $keyword . '%');
             })
-            ->get()
-            ->load(['members', 'languages']);
+            ->with(['members', 'languages'])
+            ->latest()
+            ->paginate(8);
     }
 
     /**
@@ -36,7 +38,11 @@ class ProjectController extends Controller
      */
     public function store(ProjectStoreRequest $request)
     {
-        return Project::create($request->all());
+        $project = Project::create($request->all());
+
+        $project->languages()->attach($request->languages);
+
+        return $project;
     }
 
     /**
@@ -61,11 +67,13 @@ class ProjectController extends Controller
      * @param int $id
      * @return void
      */
-    public function update(Request $request, $id)
+    public function update(ProjectUpdateRequest $request, $id)
     {
         $project = Project::findOrFail($id);
 
         $project->update($request->all());
+
+        $project->languages()->sync($request->languages);
 
         return $project;
     }

@@ -13,6 +13,10 @@ class Project extends Model
         'type',
         'name',
         'priority',
+        'start_date',
+        'end_date',
+        'status',
+        'source_control'
     ];
 
     public function members()

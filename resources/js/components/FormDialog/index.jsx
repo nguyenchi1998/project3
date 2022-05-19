@@ -6,8 +6,6 @@ import Box from '@mui/material/Box';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import LoadingIndicator from './../LoadingIndicator';
-import CancelIcon from '@mui/icons-material/Cancel';
-import IconButton from '@mui/material/IconButton';
 
 const FormDialog = ({
   children,
@@ -15,9 +13,10 @@ const FormDialog = ({
   onSubmit,
   onClose,
   title,
-  methods,
   isLoading,
+  isPending = false,
   maxWidth = 'sm',
+  formId,
 }) => {
   return (
     <Dialog
@@ -28,33 +27,41 @@ const FormDialog = ({
       disableEnforceFocus
     >
       <DialogTitle>{title}</DialogTitle>
-      {isLoading ? (
-        <Box
-          height="40vh"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <LoadingIndicator />
-        </Box>
-      ) : (
-        <form onSubmit={onSubmit}>
-          <DialogContent dividers>{children}</DialogContent>
-          <DialogActions>
-            <Button
-              variant="outlined"
-              autoFocus
-              color="error"
-              onClick={onClose}
+      <DialogContent dividers>
+        <form onSubmit={onSubmit} id={formId}>
+          {isLoading ? (
+            <Box
+              height="40vh"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
             >
-              Cancel
-            </Button>
-            <Button color="success" type="submit">
-              Submit
-            </Button>
-          </DialogActions>
+              <LoadingIndicator />
+            </Box>
+          ) : (
+            children
+          )}
         </form>
-      )}
+      </DialogContent>
+      <DialogActions>
+        <Button
+          variant="outlined"
+          autoFocus
+          color="error"
+          onClick={onClose}
+          disabled={isPending}
+        >
+          Cancel
+        </Button>
+        <Button
+          color="success"
+          type="submit"
+          form={formId}
+          disabled={isPending}
+        >
+          Submit
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 };

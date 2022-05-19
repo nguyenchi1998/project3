@@ -16,14 +16,17 @@ const find = async (id) => {
   return data;
 };
 
-const store = (resource) => {
-  const { data } = request().post(`${baseResourceUri}`, resource);
+const store = async (resource) => {
+  const { data } = await request().post(`${baseResourceUri}`, resource);
 
   return data;
 };
 
-const update = (resource) => {
-  const { data } = request().put(`${baseResourceUri}/${resource.id}`, resource);
+const update = async (resource) => {
+  const { data } = await request().put(
+    `${baseResourceUri}/${resource.id}`,
+    resource,
+  );
 
   return data;
 };
