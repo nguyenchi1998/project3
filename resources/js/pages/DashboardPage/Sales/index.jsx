@@ -1,12 +1,12 @@
 import React from 'react';
-import { Bar } from 'react-chartjs-2';
+import {Bar} from 'react-chartjs-2';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
-import { useTheme } from '@mui/material';
+import {useTheme} from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
@@ -85,8 +85,8 @@ const Sales = (props) => {
   const options = {
     animation: false,
     cornerRadius: 20,
-    layout: { padding: 0 },
-    legend: { display: false },
+    layout: {padding: 0},
+    legend: {display: false},
     maintainAspectRatio: false,
     responsive: true,
     scales: {
@@ -139,13 +139,13 @@ const Sales = (props) => {
     <Card {...props}>
       <CardHeader
         action={
-          <Button endIcon={<ArrowDropDownIcon />} size="small" variant="text">
+          <Button endIcon={<ArrowDropDownIcon/>} size="small" variant="text">
             This Year
           </Button>
         }
         title="Latest Sales"
       />
-      <Divider />
+      <Divider/>
       <CardContent>
         <Box
           sx={{
@@ -153,10 +153,10 @@ const Sales = (props) => {
             position: 'relative',
           }}
         >
-          <Bar data={data} options={options} />
+          <Bar data={data} options={options}/>
         </Box>
       </CardContent>
-      <Divider />
+      <Divider/>
       <Box
         sx={{
           display: 'flex',
@@ -166,7 +166,7 @@ const Sales = (props) => {
       >
         <Button
           color="primary"
-          endIcon={<ArrowRightIcon />}
+          endIcon={<ArrowRightIcon/>}
           size="small"
           variant="text"
         >

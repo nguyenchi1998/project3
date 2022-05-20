@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, {useCallback, useState} from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import ListResult from 'pages/Manager/StudentPage/ListResult';
@@ -7,9 +7,8 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import InputAdornment from '@mui/material/InputAdornment';
-import SvgIcon from '@mui/material/SvgIcon';
 import TextField from '@mui/material/TextField';
-import { CREATE_ACTION } from 'config/constants';
+import {CREATE_ACTION} from 'config/constants';
 import _debounce from 'lodash/debounce';
 
 const StudentPage = () => {
@@ -21,23 +20,23 @@ const StudentPage = () => {
     }, 500),
     [keyword],
   );
-  const handleChangeKeyword = ({ target: { value } }) => {
+  const handleChangeKeyword = ({target: {value}}) => {
     changeKeyword(value);
   };
   return (
     <Box paddingY={1}>
       <Container maxWidth={false}>
-        <Box sx={{ mt: 1 }}>
+        <Box sx={{mt: 1}}>
           <Card>
             <CardContent>
               <Box display="flex" justifyContent="space-between">
-                <Box sx={{ maxWidth: 500 }}>
+                <Box sx={{maxWidth: 500}}>
                   <TextField
                     fullWidth
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <SearchIcon />
+                          <SearchIcon/>
                         </InputAdornment>
                       ),
                     }}
@@ -60,7 +59,7 @@ const StudentPage = () => {
           </Card>
         </Box>
         <Box pt={2}>
-          <ListResult keyword={keyword} action={action} setAction={setAction} />
+          <ListResult keyword={keyword} action={action} setAction={setAction}/>
         </Box>
       </Container>
     </Box>

@@ -1,20 +1,20 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import managerAPI from 'services/manager';
-import { useMutation, useQueryClient } from 'react-query';
+import {useMutation, useQueryClient} from 'react-query';
 import FormDialog from 'components/FormDialog';
 import FormInputRadio from 'components/FormInputRadio';
 import FormInputDate from 'components/FormInputDate';
-import { useForm } from 'react-hook-form';
+import {useForm} from 'react-hook-form';
 import FormInputText from 'components/FormInputText';
-import { KEY_QUERIES } from 'config/keyQueries';
-import { now } from 'moment';
+import {KEY_QUERIES} from 'config/keyQueries';
+import {now} from 'moment';
 import Avatar from '@mui/material/Avatar';
-import { styled } from '@mui/material/styles';
-import { toast } from 'react-toastify';
+import {styled} from '@mui/material/styles';
+import {toast} from 'react-toastify';
 import * as API_CODE from 'config/API_CODES';
-import { CREATE_ACTION, EDIT_ACTION } from 'config/constants';
+import {CREATE_ACTION, EDIT_ACTION} from 'config/constants';
 
 const Input = styled('input')({
   display: 'none',
@@ -26,8 +26,8 @@ const Label = styled('label')({
 });
 
 const genders = [
-  { label: 'Male', value: 0 },
-  { label: 'Female', value: 1 },
+  {label: 'Male', value: 0},
+  {label: 'Female', value: 1},
 ];
 
 const defaultValues = {
@@ -39,7 +39,7 @@ const defaultValues = {
   birthday: '12/12/1990',
 };
 
-const ManagerForm = ({ action, manager, handleCloseForm }) => {
+const ManagerForm = ({action, manager, handleCloseForm}) => {
   const queryClient = useQueryClient();
   const {
     handleSubmit,
@@ -47,35 +47,35 @@ const ManagerForm = ({ action, manager, handleCloseForm }) => {
     control,
     reset,
     setError,
-    formState: { errors },
+    formState: {errors},
     ...methods
   } = useForm({
     defaultValues,
   });
 
-  const { mutate: mutateStore } = useMutation(managerAPI.store);
-  const { mutate: mutateUpdate } = useMutation(managerAPI.update);
+  const {mutate: mutateStore} = useMutation(managerAPI.store);
+  const {mutate: mutateUpdate} = useMutation(managerAPI.update);
   useEffect(() => {
     if (action === EDIT_ACTION) {
-      reset({ ...manager, address: manager.address ?? '' });
+      reset({...manager, address: manager.address ?? ''});
     } else {
-      reset({ ...defaultValues });
+      reset({...defaultValues});
     }
   }, [manager, reset, action]);
   const handleClose = () => {
-    reset({ ...defaultValues });
+    reset({...defaultValues});
     handleCloseForm();
   };
   const onSubmit = (managerData) => {
     if (action === CREATE_ACTION) {
       mutateStore(managerData, {
-        onError: ({ response }) => {
+        onError: ({response}) => {
           if (response.status === API_CODE.INVALIDATE_DATA)
             Object.entries(response.data.errors).forEach((e) =>
-              setError(e[0], { type: 'custom', message: e[1][0] }),
+              setError(e[0], {type: 'custom', message: e[1][0]}),
             );
         },
-        onSuccess: ({ data }) => {
+        onSuccess: ({data}) => {
           queryClient.setQueryData([KEY_QUERIES.FETCH_MANAGER], (old) => [
             data,
             ...old,
@@ -102,7 +102,7 @@ const ManagerForm = ({ action, manager, handleCloseForm }) => {
         <Box display="flex">
           <Box width={100} m="auto">
             <Label htmlFor="avatar-file">
-              <Avatar sx={{ width: 100, height: 100 }}>Avatar</Avatar>
+              <Avatar sx={{width: 100, height: 100}}>Avatar</Avatar>
               <Input
                 accept="image/*"
                 id="avatar-file"
@@ -140,7 +140,7 @@ const ManagerForm = ({ action, manager, handleCloseForm }) => {
           label="Birthday"
           maxDate={now()}
         />
-        <FormInputText control={control} name="address" label="Address" />
+        <FormInputText control={control} name="address" label="Address"/>
         <FormInputRadio
           control={control}
           name="gender"

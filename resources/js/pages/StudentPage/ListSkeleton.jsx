@@ -9,11 +9,11 @@ import TableRow from '@mui/material/TableRow';
 
 const ListSkeleton = () => {
   return (
-    <Box sx={{ minWidth: 1050 }}>
+    <Box sx={{minWidth: 1050}}>
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell />
+            <TableCell/>
             <TableCell>Name</TableCell>
             <TableCell>Price</TableCell>
             <TableCell>Number</TableCell>
@@ -23,16 +23,16 @@ const ListSkeleton = () => {
           {[...Array(5).keys()].map((i) => (
             <TableRow key={i}>
               <TableCell padding="checkbox">
-                <Skeleton height="45px" />
+                <Skeleton height="45px"/>
               </TableCell>
               <TableCell>
-                <Skeleton height="45px" />
+                <Skeleton height="45px"/>
               </TableCell>
               <TableCell>
-                <Skeleton height="45px" />
+                <Skeleton height="45px"/>
               </TableCell>
               <TableCell>
-                <Skeleton height="45px" />
+                <Skeleton height="45px"/>
               </TableCell>
             </TableRow>
           ))}

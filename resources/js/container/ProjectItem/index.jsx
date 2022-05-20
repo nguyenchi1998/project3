@@ -1,14 +1,15 @@
 import Box from '@mui/material/Box';
-import { PROJECT_TYPES } from '../../config/constants';
+import {PROJECT_TYPES} from '../../config/constants';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Stack from '@mui/material/Stack';
-import { BsFillCalendarDateFill, BsPeopleFill } from 'react-icons/bs';
-import { BsFillCalendarCheckFill } from 'react-icons/bs';
+import {
+  BsFillCalendarCheckFill,
+  BsFillCalendarDateFill,
+  BsPeopleFill
+} from 'react-icons/bs';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import {
   Avatar,
-  AvatarGroup,
   Button,
   ButtonGroup,
   Divider,
@@ -16,14 +17,32 @@ import {
   LinearProgress,
   Paper,
   Typography,
-  IconButton,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import { deepOrange } from '@mui/material/colors';
-import { PATH } from '../../routes/paths';
-import { Link } from 'react-router-dom';
+import {deepOrange} from '@mui/material/colors';
+import {PATH} from '../../routes/paths';
+import {Link} from 'react-router-dom';
+import projectAPI from './../../services/project';
+import {useMutation, useQueryClient} from 'react-query';
+import {KEY_QUERIES} from '../../config/keyQueries';
+import {toast} from 'react-toastify';
 
-const ProjectItem = ({ project, handleOpenMembers, handleOpenEdit }) => {
+const ProjectItem = ({project, handleOpenMembers, handleOpenEdit}) => {
+  const queryClient = useQueryClient();
+  const {mutate} = useMutation(projectAPI.destroy, {
+    onSuccess: () => {
+      toast.success('Project delete successfully');
+      queryClient.setQueryData([KEY_QUERIES.FETCH_PROJECT], (old) =>
+        old.filter(({id}) => project.id !== id),
+      );
+    },
+    onError: () => {
+      toast.success('Project delete failed');
+    },
+  });
+  const handleDelete = () => {
+    mutate(project.id);
+  };
   return (
     <Paper variant="outlined">
       <Box position={'relative'}>
@@ -39,7 +58,7 @@ const ProjectItem = ({ project, handleOpenMembers, handleOpenEdit }) => {
           <Avatar
             component={Link}
             to={`${PATH.PROJECT_PAGE}/${project.id}`}
-            sx={{ bgcolor: deepOrange[500], height: 50, width: 50 }}
+            sx={{bgcolor: deepOrange[500], height: 50, width: 50}}
             variant="square"
           >
             {project.name.charAt(0)}
@@ -63,45 +82,16 @@ const ProjectItem = ({ project, handleOpenMembers, handleOpenEdit }) => {
             <Box display={'flex'}>
               <ButtonGroup variant="outlined" disableElevation>
                 <Button
-                  sx={{ padding: 'unset' }}
+                  sx={{padding: 'unset'}}
                   onClick={() => handleOpenEdit(project)}
                 >
-                  <EditIcon color="success" fontSize="small" />
+                  <EditIcon color="success" fontSize="small"/>
                 </Button>
-                <Button sx={{ padding: 'unset' }}>
-                  <DeleteIcon color="error" fontSize="small" />
+                <Button sx={{padding: 'unset'}} onClick={handleDelete}>
+                  <DeleteIcon color="error" fontSize="small"/>
                 </Button>
               </ButtonGroup>
             </Box>
-          </Box>
-          <Box>
-            {project.members.length ? (
-              <Button
-                sx={{ padding: 0 }}
-                onClick={() => handleOpenMembers(project)}
-              >
-                {project.members.length <= 2 ? (
-                  <AvatarGroup sx={{ justifyContent: 'flex-end' }}>
-                    {project.members.map((member) => (
-                      <Avatar key={member.id} sizes="small" />
-                    ))}
-                  </AvatarGroup>
-                ) : (
-                  <AvatarGroup
-                    total={project.members.length - 2}
-                    sx={{ justifyContent: 'flex-end' }}
-                  >
-                    {project.members.slice(0, 2).map((member) => (
-                      <Avatar key={member.id} sizes="small" />
-                    ))}
-                  </AvatarGroup>
-                )}
-              </Button>
-            ) : (
-              <IconButton onClick={() => handleOpenMembers(project)}>
-                <PersonAddAltIcon fontSize="large" />
-              </IconButton>
-            )}
           </Box>
           <Box>
             <Grid container>
@@ -112,7 +102,7 @@ const ProjectItem = ({ project, handleOpenMembers, handleOpenEdit }) => {
                 justifyContent={'flex-start'}
                 alignItems="center"
               >
-                <BsFillCalendarDateFill />
+                <BsFillCalendarDateFill/>
                 <Box ml={1}>
                   {project.languages
                     .map((language) => language.name)
@@ -128,7 +118,7 @@ const ProjectItem = ({ project, handleOpenMembers, handleOpenEdit }) => {
                 justifyContent={'flex-start'}
                 alignItems="center"
               >
-                <BsFillCalendarCheckFill />
+                <BsFillCalendarCheckFill/>
                 <Box ml={1}>{project.end_date ?? 'Unset'}</Box>
               </Grid>
               <Grid
@@ -140,19 +130,19 @@ const ProjectItem = ({ project, handleOpenMembers, handleOpenEdit }) => {
                 justifyContent={'flex-start'}
                 alignItems="center"
               >
-                <BsPeopleFill />
+                <BsPeopleFill/>
                 <Box ml={1}>{project.members.length} Members</Box>
               </Grid>
             </Grid>
           </Box>
-          <Divider />
+          <Divider/>
           <Box>
             <Box display={'flex'} justifyContent="space-between">
               <Box fontSize={14} fontWeight={'bold'}>
                 Progress
               </Box>
               <Box
-                sx={{ backgroundColor: 'pink' }}
+                sx={{backgroundColor: 'pink'}}
                 paddingX={0.5}
                 paddingY={0.4}
                 borderRadius={2}
@@ -160,18 +150,18 @@ const ProjectItem = ({ project, handleOpenMembers, handleOpenEdit }) => {
                 display="flex"
                 alignItems={'center'}
               >
-                <AccessTimeIcon fontSize="small" />2 month left
+                <AccessTimeIcon fontSize="small"/>2 month left
               </Box>
             </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ width: '100%', mr: 1 }}>
+            <Box sx={{display: 'flex', alignItems: 'center'}}>
+              <Box sx={{width: '100%', mr: 1}}>
                 <LinearProgress
-                  sx={{ height: 8 }}
+                  sx={{height: 8}}
                   variant="determinate"
                   value={10}
                 />
               </Box>
-              <Box sx={{ minWidth: 35 }}>
+              <Box sx={{minWidth: 35}}>
                 <Typography
                   variant="body2"
                   color="text.secondary"

@@ -26,11 +26,11 @@ class UserSeeder extends Seeder
 
         User::factory(1)->create([
             'email' => 'admin@gmail.com',
-            'position' => config('constants.position.director')
+            'position' => config('constant.position.director')
         ]);
         User::factory(4)
             ->create([
-                'position' => config('constants.position.manager'),
+                'position' => config('constant.position.manager'),
                 'group_id' => array_rand($groupIds),
             ])->each(function ($user) use ($languages) {
                 $user->languages()

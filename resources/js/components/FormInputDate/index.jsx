@@ -1,16 +1,16 @@
 import React from 'react';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
-import { Controller } from 'react-hook-form';
+import {Controller} from 'react-hook-form';
 import TextField from '@mui/material/TextField';
-import { FormControl, FormLabel } from '@mui/material';
+import {FormControl} from '@mui/material';
 
-const FormInputDate = ({ name, control, label, maxDate, minDate }) => {
+const FormInputDate = ({name, control, label, maxDate, minDate}) => {
   return (
     <FormControl>
       <Controller
         name={name}
         control={control}
-        render={({ field: { onChange, value } }) => (
+        render={({field: {onChange, value}}) => (
           <DesktopDatePicker
             size="small"
             maxDate={maxDate}

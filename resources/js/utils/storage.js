@@ -1,5 +1,5 @@
 // eslint-disable
-import { ACCESS_TOKEN, REFRESH_TOKEN } from '../config/constants';
+import {ACCESS_TOKEN, REFRESH_TOKEN} from '../config/constants';
 
 const storage = window.localStorage;
 
@@ -15,7 +15,7 @@ export const setAccessToken = (access) => {
   set(ACCESS_TOKEN, access);
 };
 
-export const setAuthToken = ({ access_token, refresh_token }) => {
+export const setAuthToken = ({access_token, refresh_token}) => {
   set(ACCESS_TOKEN, access_token);
   set(REFRESH_TOKEN, refresh_token);
 };

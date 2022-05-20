@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import Dialog from '@mui/material/Dialog';
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
@@ -8,20 +8,22 @@ import DialogTitle from '@mui/material/DialogTitle';
 import LoadingIndicator from './../LoadingIndicator';
 
 const FormDialog = ({
-  children,
-  open,
-  onSubmit,
-  onClose,
-  title,
-  isLoading,
-  isPending = false,
-  maxWidth = 'sm',
-  formId,
-}) => {
+                      children,
+                      open,
+                      onSubmit,
+                      onClose,
+                      title,
+                      isLoading,
+                      isPending = false,
+                      maxWidth = 'sm',
+                      fullWidth = true,
+                      formId,
+                      actionButtonShow = true,
+                    }) => {
   return (
     <Dialog
       open={open}
-      fullWidth
+      fullWidth={fullWidth}
       maxWidth={maxWidth}
       disableEscapeKeyDown
       disableEnforceFocus
@@ -36,32 +38,34 @@ const FormDialog = ({
               alignItems="center"
               justifyContent="center"
             >
-              <LoadingIndicator />
+              <LoadingIndicator/>
             </Box>
           ) : (
             children
           )}
         </form>
       </DialogContent>
-      <DialogActions>
-        <Button
-          variant="outlined"
-          autoFocus
-          color="error"
-          onClick={onClose}
-          disabled={isPending}
-        >
-          Cancel
-        </Button>
-        <Button
-          color="success"
-          type="submit"
-          form={formId}
-          disabled={isPending}
-        >
-          Submit
-        </Button>
-      </DialogActions>
+      {actionButtonShow && (
+        <DialogActions>
+          <Button
+            variant="outlined"
+            autoFocus
+            color="error"
+            onClick={onClose}
+            disabled={isPending}
+          >
+            Cancel
+          </Button>
+          <Button
+            color="success"
+            type="submit"
+            form={formId}
+            disabled={isPending}
+          >
+            Submit
+          </Button>
+        </DialogActions>
+      )}
     </Dialog>
   );
 };

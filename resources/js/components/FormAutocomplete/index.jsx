@@ -1,19 +1,26 @@
 import React from 'react';
-import { Controller } from 'react-hook-form';
-import { TextField, Autocomplete, Checkbox, Box } from '@mui/material';
+import {Controller} from 'react-hook-form';
+import {Autocomplete, TextField} from '@mui/material';
 
-const FormAutocomplete = ({ name, control, ...rest }) => {
+const FormAutocomplete = ({name, control, ...rest}) => {
   return (
     <Controller
       name={name}
       control={control}
-      render={({ field: { onChange, ...props } }) => (
+      render={({field: {onChange, ...props}}) => (
         <Autocomplete
-          multiple
           fullWidth
           autoHighlight
           disableCloseOnSelect
           onChange={(_e, data) => onChange(data)}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              InputProps={{
+                ...params.InputProps,
+              }}
+            />
+          )}
           {...props}
           {...rest}
         />

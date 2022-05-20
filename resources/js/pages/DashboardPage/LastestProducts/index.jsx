@@ -1,5 +1,5 @@
 import React from 'react';
-import { v4 as uuid } from 'uuid';
+import {v4 as uuid} from 'uuid';
 import moment from 'moment';
 import {
   Box,
@@ -55,7 +55,7 @@ const LatestProducts = (props) => (
       subtitle={`${products.length} in total`}
       title="Latest Products"
     />
-    <Divider />
+    <Divider/>
     <List>
       {products.map((product, i) => (
         <ListItem divider={i < products.length - 1} key={product.id}>
@@ -74,12 +74,12 @@ const LatestProducts = (props) => (
             secondary={`Updated ${product.updatedAt.fromNow()}`}
           />
           <IconButton edge="end" size="small">
-            <MoreVertIcon />
+            <MoreVertIcon/>
           </IconButton>
         </ListItem>
       ))}
     </List>
-    <Divider />
+    <Divider/>
     <Box
       sx={{
         display: 'flex',
@@ -89,7 +89,7 @@ const LatestProducts = (props) => (
     >
       <Button
         color="primary"
-        endIcon={<ArrowRightIcon />}
+        endIcon={<ArrowRightIcon/>}
         size="small"
         variant="text"
       >

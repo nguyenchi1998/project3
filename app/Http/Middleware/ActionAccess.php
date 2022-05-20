@@ -20,7 +20,7 @@ class ActionAccess
      */
     public function handle(Request $request, Closure $next, $guard)
     {
-        $position = config('constants.position')[$guard];
+        $position = config('constant.position')[$guard];
         $auth = auth('sanctum')->user();
         if ($auth->position === $position)
             return $next($request);

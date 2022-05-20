@@ -17,13 +17,13 @@ class CreateProjectsTable extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('note', 256)->nullable();
-            $table->char('priority', 1)->default(config('constants.project_priority.normal'));
+            $table->char('priority', 1)->default(config('constant.project_priority.normal'));
             $table->unsignedSmallInteger('group_id')->nullable();
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->smallInteger('status')->nullable();
             $table->string('source_control', 256)->nullable();
-            $table->tinyInteger('type')->default(config('constants.project_type.business'));
+            $table->tinyInteger('type')->default(config('constant.project_type.business'));
             $table->tinyInteger('customer_id')->nullable();
             $table->timestamps();
         });

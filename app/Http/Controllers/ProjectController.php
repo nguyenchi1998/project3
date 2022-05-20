@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Project\ProjectStoreRequest;
 use App\Http\Requests\Project\ProjectUpdateRequest;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
@@ -25,9 +26,12 @@ class ProjectController extends Controller
             ->when(!is_null($keyword), function ($query) use ($keyword) {
                 $query->where('name', 'like', '%' . $keyword . '%');
             })
-            ->with(['members', 'languages'])
+            ->with(['members' => function ($query) {
+                $query->orderBy('role', 'DESC')
+                    ->orderBy('created_at', 'DESC');
+            }, 'languages'])
             ->latest()
-            ->paginate(8);
+            ->get();
     }
 
     /**
@@ -42,7 +46,10 @@ class ProjectController extends Controller
 
         $project->languages()->attach($request->languages);
 
-        return $project;
+        return $project->load(['members' => function ($query) {
+            $query->orderBy('role', 'DESC')
+                ->orderBy('created_at', 'DESC');
+        }, 'languages']);
     }
 
     /**
@@ -54,7 +61,14 @@ class ProjectController extends Controller
     public function show($id)
     {
         $project =  Project::findOrFail($id)
-            ->load(['members.group.division', 'languages', 'customer', 'tasks']);
+            ->load([
+                'members' => function ($query) {
+                    return $query->orderBy('role', 'DESC');
+                }, 'members.group.division', 'languages',
+                'customer',
+                'tasks.author',
+                'tasks.assignee'
+            ]);
 
 
         return $project;
@@ -96,5 +110,41 @@ class ProjectController extends Controller
         return response()->json([
             'message' => 'Error',
         ], ResponseAlias::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function addMembers(Request $request, $id)
+    {
+        $project = Project::find($id);
+        $employeeIds = array_reduce($request->employeeIds, function ($employeeIds, $employeeId) {
+            $employeeIds[$employeeId] = [
+                'role' => intval(config('constant.project_member_role.member'))
+            ];
+            return $employeeIds;
+        }, []);
+        // add created project employee to manager
+        $employeeIds[auth()->user()->id] = [
+            'role' => intval(config('constant.project_member_role.project_manager'))
+        ];
+        $project->members()->syncWithoutDetaching(
+            $employeeIds
+        );
+    }
+
+    public function showEmployeeForAddMembers(Request $request, $id)
+    {
+        $project = Project::find($id);
+        $memberIds = $project->members->pluck('id')->toArray();
+        $employees =   User::whereNotIn('id', array_merge(
+            [auth()->user()->id],
+            $memberIds
+        ))->get();
+
+        return $employees;
+    }
+
+    public function removeMember(Request $request, $id)
+    {
+        $project = Project::find($id);
+        $project->members()->detach($request->memberId);
     }
 }

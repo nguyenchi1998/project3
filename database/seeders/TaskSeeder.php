@@ -20,7 +20,7 @@ class TaskSeeder extends Seeder
         Project::with(['members'])->get()->each(function ($project) {
             // get PM project
             $projectPM = $project->members->filter(function ($member) {
-                return $member->pivot->role === config('constants.project_member_role.project_manager');
+                return $member->pivot->role === config('constant.project_member_role.project_manager');
             })->first();
 
             Task::factory()->count(random_int(0, 10))->create([

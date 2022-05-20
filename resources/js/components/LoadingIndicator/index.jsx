@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 const loading = () => {
   return (
     <Box display="flex" alignItems="center">
-      <LoadingIndicator />
+      <LoadingIndicator/>
     </Box>
   );
 };

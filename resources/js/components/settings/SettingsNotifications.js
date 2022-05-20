@@ -14,8 +14,8 @@ import {
 const SettingsNotifications = (props) => (
   <form {...props}>
     <Card>
-      <CardHeader subheader="Manage the notifications" title="Notifications" />
-      <Divider />
+      <CardHeader subheader="Manage the notifications" title="Notifications"/>
+      <Divider/>
       <CardContent>
         <Grid container spacing={6} wrap="wrap">
           <Grid
@@ -32,16 +32,16 @@ const SettingsNotifications = (props) => (
               Notifications
             </Typography>
             <FormControlLabel
-              control={<Checkbox color="primary" defaultChecked />}
+              control={<Checkbox color="primary" defaultChecked/>}
               label="Email"
             />
             <FormControlLabel
-              control={<Checkbox color="primary" defaultChecked />}
+              control={<Checkbox color="primary" defaultChecked/>}
               label="Push Notifications"
             />
-            <FormControlLabel control={<Checkbox />} label="Text Messages" />
+            <FormControlLabel control={<Checkbox/>} label="Text Messages"/>
             <FormControlLabel
-              control={<Checkbox color="primary" defaultChecked />}
+              control={<Checkbox color="primary" defaultChecked/>}
               label="Phone calls"
             />
           </Grid>
@@ -59,21 +59,21 @@ const SettingsNotifications = (props) => (
               Messages
             </Typography>
             <FormControlLabel
-              control={<Checkbox color="primary" defaultChecked />}
+              control={<Checkbox color="primary" defaultChecked/>}
               label="Email"
             />
             <FormControlLabel
-              control={<Checkbox />}
+              control={<Checkbox/>}
               label="Push Notifications"
             />
             <FormControlLabel
-              control={<Checkbox color="primary" defaultChecked />}
+              control={<Checkbox color="primary" defaultChecked/>}
               label="Phone calls"
             />
           </Grid>
         </Grid>
       </CardContent>
-      <Divider />
+      <Divider/>
       <Box
         sx={{
           display: 'flex',

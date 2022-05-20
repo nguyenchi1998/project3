@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -11,24 +11,24 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { KEY_QUERIES } from 'config/keyQueries';
+import {KEY_QUERIES} from 'config/keyQueries';
 import studentAPI from 'services/student';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import {useMutation, useQuery, useQueryClient} from 'react-query';
 import StudentForm from 'pages/Manager/StudentPage/StudentForm';
 import ListSkeleton from 'pages/Manager/StudentPage/ListSkeleton';
-import { Avatar } from '@mui/material';
-import { EDIT_ACTION } from 'config/constants';
+import {Avatar} from '@mui/material';
+import {EDIT_ACTION} from 'config/constants';
 import DeleteConfirmModal from 'components/ConfirmDialog';
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 
-const ListResult = ({ action, setAction, keyword }) => {
+const ListResult = ({action, setAction, keyword}) => {
   const queryClient = useQueryClient();
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [openDelete, setOpenDelete] = useState(false);
   const [limit, setLimit] = useState(5);
   const [page, setPage] = useState(0);
-  const { mutate } = useMutation(studentAPI.destroy);
-  const { data, isLoading, isError, error } = useQuery(
+  const {mutate} = useMutation(studentAPI.destroy);
+  const {data, isLoading, isError, error} = useQuery(
     [KEY_QUERIES.FETCH_STUDENT, keyword],
     () => studentAPI.all(keyword),
     {
@@ -39,7 +39,7 @@ const ListResult = ({ action, setAction, keyword }) => {
     return <>{error.message}</>;
   }
   if (isLoading) {
-    return <ListSkeleton />;
+    return <ListSkeleton/>;
   }
 
   const renderData = () => {
@@ -50,7 +50,7 @@ const ListResult = ({ action, setAction, keyword }) => {
     );
   };
 
-  const handleLimitChange = ({ target: { value } }) => {
+  const handleLimitChange = ({target: {value}}) => {
     setLimit(value);
     setPage(0);
   };
@@ -92,7 +92,7 @@ const ListResult = ({ action, setAction, keyword }) => {
     <>
       <Card>
         <PerfectScrollbar>
-          <Box sx={{ minWidth: 1050 }}>
+          <Box sx={{minWidth: 1050}}>
             <Table>
               <TableHead>
                 <TableRow>
@@ -114,7 +114,7 @@ const ListResult = ({ action, setAction, keyword }) => {
                           display: 'flex',
                         }}
                       >
-                        <Avatar />
+                        <Avatar/>
                         <Box ml={1}>{student.name}</Box>
                       </Box>
                     </TableCell>
@@ -136,13 +136,13 @@ const ListResult = ({ action, setAction, keyword }) => {
                           color="primary"
                           onClick={() => handleEdit(student)}
                         >
-                          <EditIcon />
+                          <EditIcon/>
                         </IconButton>
                         <IconButton
                           color="error"
                           onClick={() => handleConfirmDelete(student)}
                         >
-                          <DeleteIcon />
+                          <DeleteIcon/>
                         </IconButton>
                       </Box>
                     </TableCell>

@@ -19,7 +19,7 @@ class CreateTasksTable extends Migration
             $table->unsignedInteger('project_id');
             $table->unsignedInteger('type');
             $table->text('description')->nullable();
-            $table->unsignedInteger('priority')->default(config('constants.task_priority.C'));
+            $table->unsignedInteger('priority')->default(config('constant.task_priority.C'));
             $table->unsignedInteger('assign_user_id')->nullable();
             $table->unsignedInteger('created_user_id');
             $table->unsignedInteger('parent_task_id')->nullable();
@@ -28,7 +28,7 @@ class CreateTasksTable extends Migration
             $table->unsignedFloat('estimate_time')->nullable();
             $table->unsignedFloat('actual_time')->nullable();
             $table->unsignedFloat('progress_percent')->default(0);
-            $table->tinyInteger('status')->default(config('constants.task_status.new'));
+            $table->tinyInteger('status')->default(config('constant.task_status.new'));
             $table->softDeletes();
             $table->timestamps();
         });

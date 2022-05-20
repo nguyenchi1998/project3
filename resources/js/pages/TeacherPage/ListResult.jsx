@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -10,16 +10,16 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-import { KEY_QUERIES } from 'config/keyQueries';
+import {KEY_QUERIES} from 'config/keyQueries';
 import userAPI from 'services/user';
-import { useQuery } from 'react-query';
+import {useQuery} from 'react-query';
 import ListSkeleton from 'pages/Manager/ManagerPage/ListSkeleton';
 
 const ListResult = () => {
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
   const [limit, setLimit] = useState(5);
   const [page, setPage] = useState(0);
-  const { data, isLoading, isError, error } = useQuery(
+  const {data, isLoading, isError, error} = useQuery(
     [KEY_QUERIES.FETCH_MANAGER],
     userAPI.fetchManager,
   );
@@ -27,7 +27,7 @@ const ListResult = () => {
     return <>{error.message}</>;
   }
   if (isLoading) {
-    return <ListSkeleton />;
+    return <ListSkeleton/>;
   }
   const handleSelectAll = (event) => {
     let newSelectedCustomerIds;
@@ -66,7 +66,7 @@ const ListResult = () => {
     setSelectedCustomerIds(newSelectedCustomerIds);
   };
 
-  const handleLimitChange = ({ target: { value } }) => {
+  const handleLimitChange = ({target: {value}}) => {
     setLimit(value);
   };
 
@@ -77,7 +77,7 @@ const ListResult = () => {
   return (
     <Card>
       <PerfectScrollbar>
-        <Box sx={{ minWidth: 1050 }}>
+        <Box sx={{minWidth: 1050}}>
           <Table>
             <TableHead>
               <TableRow>
@@ -98,7 +98,7 @@ const ListResult = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.map(({ id, name, email, address }) => (
+              {data.map(({id, name, email, address}) => (
                 <TableRow
                   hover
                   key={id}

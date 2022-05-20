@@ -15,9 +15,9 @@ class TaskFactory extends Factory
     {
         return [
             'name' => $this->faker->sentence(),
-            'type' => $this->faker->randomElement(array_values(config('constants.task_type'))),
+            'type' => $this->faker->randomElement(array_values(config('constant.task_type'))),
             'description' => $this->faker->paragraph(),
-            'priority' => $this->faker->randomElement(array_values(config('constants.task_priority'))),
+            'priority' => $this->faker->randomElement(array_values(config('constant.task_priority'))),
         ];
     }
 }

@@ -1,13 +1,13 @@
 import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
-import { isAuthenticated } from '../services/auth';
+import {Redirect, Route} from 'react-router-dom';
+import {isAuthenticated} from '../services/auth';
 
-const PrivateRoute = ({ children, ...rest }) => {
+const PrivateRoute = ({children, ...rest}) => {
   return (
     <Route
       {...rest}
       render={(props) =>
-        isAuthenticated() ? children : <Redirect to="/login" />
+        isAuthenticated() ? children : <Redirect to="/login"/>
       }
     />
   );

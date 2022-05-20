@@ -17,7 +17,7 @@ class CreateLanguageUserTable extends Migration
             $table->id();
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('language_id');
-            $table->tinyInteger('level')->default(config('constants.language_level.beginner'));
+            $table->tinyInteger('level')->default(config('constant.language_level.beginner'));
             $table->timestamps();
         });
     }

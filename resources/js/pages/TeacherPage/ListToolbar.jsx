@@ -5,12 +5,11 @@ import {
   Card,
   CardContent,
   InputAdornment,
-  SvgIcon,
   TextField,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-const ListToolbar = ({ onChange }) => {
+const ListToolbar = ({onChange}) => {
   return (
     <Box>
       <Box
@@ -20,18 +19,18 @@ const ListToolbar = ({ onChange }) => {
         }}
       >
         <Button>Import</Button>
-        <Button sx={{ mx: 1 }}>Export</Button>
+        <Button sx={{mx: 1}}>Export</Button>
       </Box>
-      <Box sx={{ mt: 3 }}>
+      <Box sx={{mt: 3}}>
         <Card>
           <CardContent>
-            <Box sx={{ maxWidth: 500 }}>
+            <Box sx={{maxWidth: 500}}>
               <TextField
                 fullWidth
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <SearchIcon />
+                      <SearchIcon/>
                     </InputAdornment>
                   ),
                 }}

@@ -1,18 +1,14 @@
 import React from 'react';
-import {
-  NavLink as RouterLink,
-  matchPath,
-  useLocation,
-} from 'react-router-dom';
-import { Box, Button, ListItem } from '@mui/material';
+import {matchPath, NavLink as RouterLink, useLocation,} from 'react-router-dom';
+import {Box, Button, ListItem} from '@mui/material';
 
-const NavItem = ({ href, icon: Icon, title, ...rest }) => {
+const NavItem = ({href, icon: Icon, title, ...rest}) => {
   const location = useLocation();
   const active = href
     ? !!matchPath(location.pathname, {
-        path: href,
-        exact: true,
-      })
+      path: href,
+      exact: true,
+    })
     : false;
 
   return (
@@ -47,7 +43,7 @@ const NavItem = ({ href, icon: Icon, title, ...rest }) => {
         to={href}
       >
         <Box px={2} display="flex">
-          {Icon && <Icon size="20" />}
+          {Icon && <Icon size="20"/>}
           <span>{title}</span>
         </Box>
       </Button>

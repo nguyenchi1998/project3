@@ -1,12 +1,12 @@
 import React from 'react';
-import { Doughnut } from 'react-chartjs-2';
+import {Doughnut} from 'react-chartjs-2';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
-import { colors, useTheme } from '@mui/material';
+import {colors, useTheme} from '@mui/material';
 import LaptopMacIcon from '@mui/icons-material/LaptopMac';
 import PhoneIcon from '@mui/icons-material/Phone';
 import TabletIcon from '@mui/icons-material/Tablet';
@@ -34,7 +34,7 @@ const TrafficByDevice = (props) => {
   const options = {
     animation: false,
     cutoutPercentage: 80,
-    layout: { padding: 0 },
+    layout: {padding: 0},
     legend: {
       display: false,
     },
@@ -76,8 +76,8 @@ const TrafficByDevice = (props) => {
 
   return (
     <Card {...props}>
-      <CardHeader title="Traffic by Device" />
-      <Divider />
+      <CardHeader title="Traffic by Device"/>
+      <Divider/>
       <CardContent>
         <Box
           sx={{
@@ -85,7 +85,7 @@ const TrafficByDevice = (props) => {
             position: 'relative',
           }}
         >
-          <Doughnut data={data} options={options} />
+          <Doughnut data={data} options={options}/>
         </Box>
         <Box
           sx={{
@@ -94,7 +94,7 @@ const TrafficByDevice = (props) => {
             pt: 2,
           }}
         >
-          {devices.map(({ color, icon: Icon, title, value }) => (
+          {devices.map(({color, icon: Icon, title, value}) => (
             <Box
               key={title}
               sx={{
@@ -102,11 +102,11 @@ const TrafficByDevice = (props) => {
                 textAlign: 'center',
               }}
             >
-              <Icon color="action" />
+              <Icon color="action"/>
               <Typography color="textPrimary" variant="body1">
                 {title}
               </Typography>
-              <Typography style={{ color }} variant="h2">
+              <Typography style={{color}} variant="h2">
                 {value}%
               </Typography>
             </Box>

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, {useCallback, useState} from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -10,22 +10,22 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-import { KEY_QUERIES } from 'config/keyQueries';
+import {KEY_QUERIES} from 'config/keyQueries';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import managerAPI from 'services/manager';
 import TableContainer from '@mui/material/TableContainer';
-import { useQuery } from 'react-query';
+import {useQuery} from 'react-query';
 import ListSkeleton from 'pages/Manager/ManagerPage/ListSkeleton';
 import ManagerForm from 'pages/Manager/ManagerPage/ManagerForm';
-import { EDIT_ACTION } from 'config/constants';
+import {EDIT_ACTION} from 'config/constants';
 
-const ListResult = ({ action, setAction }) => {
+const ListResult = ({action, setAction}) => {
   const [selectedManager, setSelectedManager] = useState(null);
   const [limit, setLimit] = useState(5);
   const [page, setPage] = useState(0);
-  const { data, isLoading, isError, error } = useQuery(
+  const {data, isLoading, isError, error} = useQuery(
     [KEY_QUERIES.FETCH_MANAGER],
     managerAPI.all,
     {
@@ -39,15 +39,16 @@ const ListResult = ({ action, setAction }) => {
     return <>{error.message}</>;
   }
   if (isLoading) {
-    return <ListSkeleton />;
+    return <ListSkeleton/>;
   }
-  const handleLimitChange = ({ target: { value } }) => {
+  const handleLimitChange = ({target: {value}}) => {
     setLimit(value);
   };
   const handlePageChange = (_event, newPage) => {
     setPage(newPage);
   };
-  const handleDelete = () => {};
+  const handleDelete = () => {
+  };
   const handleEdit = (manager) => {
     setSelectedManager(manager);
     setAction(EDIT_ACTION);
@@ -62,7 +63,7 @@ const ListResult = ({ action, setAction }) => {
     <>
       <Card>
         <PerfectScrollbar>
-          <Box sx={{ minWidth: 1050 }}>
+          <Box sx={{minWidth: 1050}}>
             <TableContainer component={Paper}>
               <Table>
                 <TableHead>
@@ -98,13 +99,13 @@ const ListResult = ({ action, setAction }) => {
                             color="primary"
                             onClick={() => handleEdit(manager)}
                           >
-                            <EditIcon />
+                            <EditIcon/>
                           </IconButton>
                           <IconButton
                             color="error"
                             onClick={() => handleDelete(manager.uuid)}
                           >
-                            <DeleteIcon />
+                            <DeleteIcon/>
                           </IconButton>
                         </Box>
                       </TableCell>

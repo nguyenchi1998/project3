@@ -17,13 +17,13 @@ class CreateAssignsTable extends Migration
             $table->id();
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('project_id');
-            $table->tinyInteger('assign_type')->default(config('constants.assign_type.main'));
+            $table->tinyInteger('assign_type')->default(config('constant.assign_type.main'));
             $table->unsignedFloat('standard_assign_hour');
             $table->unsignedFloat('assign_hour');
             $table->unsignedInteger('language_id');
             $table->date('start_date');
             $table->date('end_date');
-            $table->tinyInteger('status')->default(config('constants.assign_status.active'));
+            $table->tinyInteger('status')->default(config('constant.assign_status.active'));
             $table->timestamps();
         });
     }

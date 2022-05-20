@@ -1,22 +1,22 @@
-import React, { useCallback, useState } from 'react';
+import React, {useCallback, useState} from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import {
   Button,
   Divider,
+  Grid,
   Pagination,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
-  Grid,
 } from '@mui/material';
-import { FiPlusCircle } from 'react-icons/fi';
-import { KEY_QUERIES } from '../../config/keyQueries';
-import { useQuery } from 'react-query';
+import {FiPlusCircle} from 'react-icons/fi';
+import {KEY_QUERIES} from '../../config/keyQueries';
+import {useQuery} from 'react-query';
 import projectAPI from '../../services/project';
-import { PROJECT_STATUS } from '../../config/constants';
-import { debounce } from 'lodash';
+import {PAGINATE_LIMIT, PROJECT_STATUS} from '../../config/constants';
+import {debounce} from 'lodash';
 import ModalProject from './ModalProject';
 import ModalMember from './ModalMember';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -30,9 +30,9 @@ const ProjectPage = () => {
   const [action, setAction] = useState(null);
   const [open, setOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
-  const { data, isLoading, isSuccess } = useQuery(
-    [KEY_QUERIES.FETCH_PROJECT, keyword, type, page],
-    () => projectAPI.all({ keyword, type, page }),
+  const {data, isLoading, isSuccess} = useQuery(
+    [KEY_QUERIES.FETCH_PROJECT],
+    () => projectAPI.all(),
   );
   const handleMembersClose = useCallback(() => {
     setOpen(false);
@@ -49,7 +49,7 @@ const ProjectPage = () => {
     debounce((value) => setKeyword(value), 500),
     [],
   );
-  const handleChangeKeyword = ({ target: { value } }) => {
+  const handleChangeKeyword = ({target: {value}}) => {
     debounceChangeKeyword(value);
   };
   const handlePageChange = useCallback((_event, newPage) => {
@@ -71,7 +71,7 @@ const ProjectPage = () => {
     <Box>
       <Container maxWidth={false}>
         <Box pb={3}>
-          <Box sx={{ paddingY: 2 }}>
+          <Box sx={{paddingY: 2}}>
             <Box
               display="flex"
               justifyContent="space-between"
@@ -90,7 +90,7 @@ const ProjectPage = () => {
                     setSelectedProject(null);
                   }}
                 >
-                  <FiPlusCircle />
+                  <FiPlusCircle/>
                   <Box ml={1}>Create Project</Box>
                 </Button>
                 <Box ml={2}>
@@ -98,13 +98,13 @@ const ProjectPage = () => {
                     variant="outlined"
                     size="small"
                     placeholder="Search"
-                    sx={{ minWidth: 300, backgroundColor: 'white' }}
+                    sx={{minWidth: 300, backgroundColor: 'white'}}
                     onChange={handleChangeKeyword}
                   />
                 </Box>
               </Box>
             </Box>
-            <Divider sx={{ paddingY: 1 }} />
+            <Divider sx={{paddingY: 1}}/>
           </Box>
           <Box
             display={'flex'}
@@ -112,9 +112,9 @@ const ProjectPage = () => {
             alignItems={'center'}
           >
             <Box>
-              {isSuccess && !!data.data.length && (
+              {isSuccess && !!data.length && (
                 <Pagination
-                  count={data.last_page}
+                  count={Math.floor(data.length / PAGINATE_LIMIT)}
                   page={page}
                   defaultPage={1}
                   variant="outlined"
@@ -129,42 +129,44 @@ const ProjectPage = () => {
               color="primary"
               onChange={handleFilter}
             >
-              <ToggleButton value="" sx={{ paddingX: 2, paddingY: 0.8 }}>
+              <ToggleButton value="" sx={{paddingX: 2, paddingY: 0.8}}>
                 All
               </ToggleButton>
               {PROJECT_STATUS.map((status, index) => (
                 <ToggleButton
                   value={index}
                   key={index}
-                  sx={{ paddingX: 2, paddingY: 0.8 }}
+                  sx={{paddingX: 2, paddingY: 0.8}}
                 >
                   {status}
                 </ToggleButton>
               ))}
             </ToggleButtonGroup>
           </Box>
-          <Box sx={{ pt: 2 }}>
-            {isLoading && <ListSkeleton />}
+          <Box sx={{pt: 2}}>
+            {isLoading && <ListSkeleton/>}
             {isSuccess && (
               <PerfectScrollbar>
                 <Grid container spacing={2}>
-                  {data.data.map((project) => (
-                    <Grid
-                      key={project.id}
-                      item
-                      xs={12}
-                      sm={6}
-                      lg={4}
-                      xl={3}
-                      mt={3}
-                    >
-                      <ProjectItem
-                        project={project}
-                        handleOpenMembers={handleOpenMembers}
-                        handleOpenEdit={handleOpenEdit}
-                      />
-                    </Grid>
-                  ))}
+                  {data
+                    .slice(PAGINATE_LIMIT * (page - 1), page * PAGINATE_LIMIT)
+                    .map((project) => (
+                      <Grid
+                        key={project.id}
+                        item
+                        xs={12}
+                        sm={6}
+                        lg={4}
+                        xl={3}
+                        mt={3}
+                      >
+                        <ProjectItem
+                          project={project}
+                          handleOpenMembers={handleOpenMembers}
+                          handleOpenEdit={handleOpenEdit}
+                        />
+                      </Grid>
+                    ))}
                 </Grid>
                 {open && (
                   <ModalMember
@@ -177,7 +179,7 @@ const ProjectPage = () => {
                   <ModalProject
                     project={selectedProject}
                     action={action}
-                    handleCloseForm={handleProjectClose}
+                    handleClose={handleProjectClose}
                     keyQuery={[keyword, type, page]}
                   />
                 )}

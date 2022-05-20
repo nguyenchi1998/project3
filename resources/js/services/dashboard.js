@@ -1,22 +1,22 @@
-import { request } from 'utils/request';
+import {request} from 'utils/request';
 
 const fetchBudget = async () => {
-  const { data } = await request().get('/budget');
+  const {data} = await request().get('/budget');
 
   return data;
 };
 const fetchCustomer = async () => {
-  const { data } = await request().get('/customers');
+  const {data} = await request().get('/customers');
 
   return data;
 };
 const fetchTaskProgress = async () => {
-  const { data } = await request().get('/task-progress');
+  const {data} = await request().get('/task-progress');
 
   return data;
 };
 const fetchTotalProfit = async () => {
-  const { data } = await request().get('/total-profit');
+  const {data} = await request().get('/total-profit');
 
   return data;
 };

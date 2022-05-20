@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { Route, Switch } from 'react-router-dom';
-import { styled } from '@mui/material/styles';
+import React, {useState} from 'react';
+import {Route, Switch} from 'react-router-dom';
+import {styled} from '@mui/material/styles';
 import DashboardSidebar from './SideBar';
-import { PATH } from '../routes/paths';
+import {PATH} from '../routes/paths';
 import DashboardPage from '../pages/DashboardPage';
 import ProjectPage from '../pages/ProjectPage';
 import DetailProjectPage from '../pages/DetailProjectPage';
 import DashboardNavbar from './Navbar';
 
-const DashboardLayoutRoot = styled('div')(({ theme }) => ({
+const DashboardLayoutRoot = styled('div')(({theme}) => ({
   backgroundColor: theme.palette.background.default,
   display: 'flex',
   height: '100%',
@@ -16,7 +16,7 @@ const DashboardLayoutRoot = styled('div')(({ theme }) => ({
   width: '100%',
 }));
 
-const DashboardLayoutWrapper = styled('div')(({ theme }) => ({
+const DashboardLayoutWrapper = styled('div')(({theme}) => ({
   display: 'flex',
   flex: '1 1 auto',
   overflow: 'hidden',
@@ -43,7 +43,7 @@ const ManagerLayout = () => {
 
   return (
     <DashboardLayoutRoot>
-      <DashboardNavbar onMobileNavOpen={() => setMobileNavOpen(true)} />
+      <DashboardNavbar onMobileNavOpen={() => setMobileNavOpen(true)}/>
       <DashboardSidebar
         onMobileClose={() => setMobileNavOpen(false)}
         openMobile={isMobileNavOpen}
@@ -53,13 +53,13 @@ const ManagerLayout = () => {
           <DashboardLayoutContent>
             <Switch>
               <Route path={`${PATH.PROJECT_PAGE}/:projectId`} exact>
-                <DetailProjectPage />
+                <DetailProjectPage/>
               </Route>
               <Route path={PATH.PROJECT_PAGE} exact>
-                <ProjectPage />
+                <ProjectPage/>
               </Route>
               <Route path={PATH.HOME_PAGE}>
-                <DashboardPage />
+                <DashboardPage/>
               </Route>
             </Switch>
           </DashboardLayoutContent>

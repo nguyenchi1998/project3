@@ -7,14 +7,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContentText from '@mui/material/DialogContentText';
 
 const ConfirmDialog = ({
-  open,
-  message = 'Are you sure to action?',
-  onConfirm,
-  onCancel,
-  title = 'Warning Action',
-  confirmButtonText = 'Agree',
-  cancelButtonText = 'Cancel',
-}) => {
+                         open,
+                         message = 'Are you sure to action?',
+                         onConfirm,
+                         onCancel,
+                         title = 'Warning Action',
+                         confirmButtonText = 'Agree',
+                         cancelButtonText = 'Cancel',
+                       }) => {
   return (
     <Dialog
       open={open}
@@ -23,7 +23,7 @@ const ConfirmDialog = ({
       disableEscapeKeyDown
       disableEnforceFocus
     >
-      <DialogTitle style={{ fontSize: 20, fontWeight: 'bold' }}>
+      <DialogTitle style={{fontSize: 20, fontWeight: 'bold'}}>
         {title}
       </DialogTitle>
       <DialogContent>

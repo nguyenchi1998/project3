@@ -21,3 +21,5 @@ export const TASK_TYPES = ['Backlog', 'Task', 'Bug'];
 export const TASK_STATUS = ['New', 'Assigned', 'To Be Confirm', 'Suspended'];
 
 export const TASK_PRIORITIES = ['C', 'B', 'A', 'S'];
+
+export const PAGINATE_LIMIT = 8;

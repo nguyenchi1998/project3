@@ -1,15 +1,15 @@
 import axios from 'axios';
-import { API_URL, AUTH_API } from '../config';
+import {API_URL, AUTH_API} from '../config';
 import {
   INTERNAL_ERROR,
-  UNAUTHORIZED,
   PAGE_NOT_FOUND,
+  UNAUTHORIZED,
 } from '../config/API_CODES';
 import {
   getAccessToken,
   getRefreshToken,
-  setAccessToken,
   removeAuthToken,
+  setAccessToken,
 } from './storage';
 
 export const handle500Error = () => {
@@ -33,7 +33,7 @@ const getNewToken = () => {
   });
   return new Promise((resolve, reject) => {
     instance
-      .post(AUTH_API.REFRESH_TOKEN, { refresh: getRefreshToken() })
+      .post(AUTH_API.REFRESH_TOKEN, {refresh: getRefreshToken()})
       .then((response) => {
         const newToken = response.data.access;
         setAccessToken(newToken);
@@ -47,7 +47,7 @@ const getNewToken = () => {
   });
 };
 
-export const baseRequest = () => axios.create({ baseURL: API_URL });
+export const baseRequest = () => axios.create({baseURL: API_URL});
 
 export const request = (responseType = 'json') => {
   const instance = axios.create({
@@ -77,7 +77,7 @@ export const request = (responseType = 'json') => {
           return Promise.reject(error);
         }
         return getNewToken().then((token) => {
-          const { config } = error;
+          const {config} = error;
           config.headers.Authorization = `Bearer ${token}`;
           return axios.request(config);
         });
