@@ -1,27 +1,27 @@
-import {request} from '../utils/request';
+import { request } from '../utils/request';
 
 const baseResourceUri = '/projects';
 
 const all = async () => {
-  const {data} = await request().get(`${baseResourceUri}`);
+  const { data } = await request().get(`${baseResourceUri}`);
 
   return data;
 };
 
 const find = async (id) => {
-  const {data} = await request().get(`${baseResourceUri}/${id}`);
+  const { data } = await request().get(`${baseResourceUri}/${id}`);
 
   return data;
 };
 
 const store = async (resource) => {
-  const {data} = await request().post(`${baseResourceUri}`, resource);
+  const { data } = await request().post(`${baseResourceUri}`, resource);
 
   return data;
 };
 
 const update = async (resource) => {
-  const {data} = await request().put(
+  const { data } = await request().put(
     `${baseResourceUri}/${resource.id}`,
     resource,
   );
@@ -30,19 +30,19 @@ const update = async (resource) => {
 };
 
 const destroy = async (id) => {
-  const {data} = await request().delete(`${baseResourceUri}/${id}`);
+  const { data } = await request().delete(`${baseResourceUri}/${id}`);
 
   return data;
 };
 
 const showEmployeeFormAddMembers = async (id) => {
-  const {data} = await request().get(`${baseResourceUri}/${id}/add-members`);
+  const { data } = await request().get(`${baseResourceUri}/${id}/add-members`);
 
   return data;
 };
 
-const addMembers = async ({id, employeeIds}) => {
-  const {data} = await request().post(
+const addMembers = async ({ id, employeeIds }) => {
+  const { data } = await request().post(
     `${baseResourceUri}/${id}/add-members`,
     {
       employeeIds,
@@ -52,13 +52,33 @@ const addMembers = async ({id, employeeIds}) => {
   return data;
 };
 
-const removeMember = async ({id, memberId}) => {
-  const {data} = await request().post(
+const removeMember = async ({ id, memberId }) => {
+  const { data } = await request().post(
     `${baseResourceUri}/${id}/remove-member`,
     {
       memberId,
     },
   );
+
+  return data;
+};
+
+const trackerIssuesStatistic = async (id) => {
+  const { data } = await request().get(
+    `${baseResourceUri}/${id}/tracker-issues-statistic`,
+  );
+
+  return data;
+};
+
+const getMembers = async (id) => {
+  const { data } = await request().get(`${baseResourceUri}/${id}/members`);
+
+  return data;
+};
+
+const getIssues = async (id) => {
+  const { data } = await request().get(`${baseResourceUri}/${id}/issues`);
 
   return data;
 };
@@ -72,4 +92,7 @@ export default {
   showEmployeeFormAddMembers,
   addMembers,
   removeMember,
+  trackerIssuesStatistic,
+  getMembers,
+  getIssues,
 };

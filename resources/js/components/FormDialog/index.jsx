@@ -8,18 +8,18 @@ import DialogTitle from '@mui/material/DialogTitle';
 import LoadingIndicator from './../LoadingIndicator';
 
 const FormDialog = ({
-                      children,
-                      open,
-                      onSubmit,
-                      onClose,
-                      title,
-                      isLoading,
-                      isPending = false,
-                      maxWidth = 'sm',
-                      fullWidth = true,
-                      formId,
-                      actionButtonShow = true,
-                    }) => {
+  children,
+  open,
+  onSubmit,
+  onClose,
+  title,
+  isLoading,
+  isPending = false,
+  maxWidth = 'sm',
+  fullWidth = true,
+  formId,
+  actionButtonShow = true,
+}) => {
   return (
     <Dialog
       open={open}
@@ -38,7 +38,7 @@ const FormDialog = ({
               alignItems="center"
               justifyContent="center"
             >
-              <LoadingIndicator/>
+              <LoadingIndicator />
             </Box>
           ) : (
             children

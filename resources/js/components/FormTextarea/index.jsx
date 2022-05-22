@@ -1,13 +1,13 @@
 import React from 'react';
-import {Controller} from 'react-hook-form';
-import {TextareaAutosize} from '@mui/material';
+import { Controller } from 'react-hook-form';
+import { TextareaAutosize } from '@mui/material';
 
-const FormTextarea = ({name, control, placeholder}) => {
+const FormTextarea = ({ name, control, placeholder }) => {
   return (
     <Controller
       name={name}
       control={control}
-      render={({field: {onChange, value}}) => (
+      render={({ field: { onChange, value } }) => (
         <TextareaAutosize
           style={{
             width: '100%',

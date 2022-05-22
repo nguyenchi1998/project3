@@ -1,11 +1,11 @@
 import Box from '@mui/material/Box';
-import {PROJECT_TYPES} from '../../config/constants';
+import { PROJECT_TYPES } from '../../config/constants';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Stack from '@mui/material/Stack';
 import {
   BsFillCalendarCheckFill,
   BsFillCalendarDateFill,
-  BsPeopleFill
+  BsPeopleFill,
 } from 'react-icons/bs';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import {
@@ -19,21 +19,21 @@ import {
   Typography,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import {deepOrange} from '@mui/material/colors';
-import {PATH} from '../../routes/paths';
-import {Link} from 'react-router-dom';
+import { deepOrange } from '@mui/material/colors';
+import { PATH, PROJECT_PATH } from '../../routes/paths';
+import { Link, useHistory } from 'react-router-dom';
 import projectAPI from './../../services/project';
-import {useMutation, useQueryClient} from 'react-query';
-import {KEY_QUERIES} from '../../config/keyQueries';
-import {toast} from 'react-toastify';
+import { useMutation, useQueryClient } from 'react-query';
+import { KEY_QUERIES } from '../../config/keyQueries';
+import { toast } from 'react-toastify';
 
-const ProjectItem = ({project, handleOpenMembers, handleOpenEdit}) => {
+const ProjectItem = ({ project, handleOpenMembers, handleOpenEdit }) => {
   const queryClient = useQueryClient();
-  const {mutate} = useMutation(projectAPI.destroy, {
+  const { mutate } = useMutation(projectAPI.destroy, {
     onSuccess: () => {
       toast.success('Project delete successfully');
       queryClient.setQueryData([KEY_QUERIES.FETCH_PROJECT], (old) =>
-        old.filter(({id}) => project.id !== id),
+        old.filter(({ id }) => project.id !== id),
       );
     },
     onError: () => {
@@ -43,6 +43,7 @@ const ProjectItem = ({project, handleOpenMembers, handleOpenEdit}) => {
   const handleDelete = () => {
     mutate(project.id);
   };
+  const handleRedirectToTask = () => {};
   return (
     <Paper variant="outlined">
       <Box position={'relative'}>
@@ -57,15 +58,15 @@ const ProjectItem = ({project, handleOpenMembers, handleOpenEdit}) => {
         >
           <Avatar
             component={Link}
-            to={`${PATH.PROJECT_PAGE}/${project.id}`}
-            sx={{bgcolor: deepOrange[500], height: 50, width: 50}}
+            to={`${PATH.PROJECT_PAGE}/${project.id}/${PROJECT_PATH.OVERVIEW}`}
+            sx={{ bgcolor: deepOrange[500], height: 50, width: 50 }}
             variant="square"
           >
             {project.name.charAt(0)}
           </Avatar>
           <Box
             component={Link}
-            to={`${PATH.PROJECT_PAGE}/${project.id}`}
+            to={`${PATH.PROJECT_PAGE}/${project.id}/${PROJECT_PATH.OVERVIEW}`}
             fontWeight={'bold'}
           >
             {project.name}
@@ -78,17 +79,21 @@ const ProjectItem = ({project, handleOpenMembers, handleOpenEdit}) => {
             width="100%"
             justifyContent={'space-between'}
           >
-            <Typography>{PROJECT_TYPES[project.type]}</Typography>
+            <Link
+              to={`${PATH.PROJECT_PAGE}/${project.id}/${PROJECT_PATH.TASK}`}
+            >
+              List Task
+            </Link>
             <Box display={'flex'}>
               <ButtonGroup variant="outlined" disableElevation>
                 <Button
-                  sx={{padding: 'unset'}}
+                  sx={{ padding: 'unset' }}
                   onClick={() => handleOpenEdit(project)}
                 >
-                  <EditIcon color="success" fontSize="small"/>
+                  <EditIcon color="success" fontSize="small" />
                 </Button>
-                <Button sx={{padding: 'unset'}} onClick={handleDelete}>
-                  <DeleteIcon color="error" fontSize="small"/>
+                <Button sx={{ padding: 'unset' }} onClick={handleDelete}>
+                  <DeleteIcon color="error" fontSize="small" />
                 </Button>
               </ButtonGroup>
             </Box>
@@ -102,7 +107,7 @@ const ProjectItem = ({project, handleOpenMembers, handleOpenEdit}) => {
                 justifyContent={'flex-start'}
                 alignItems="center"
               >
-                <BsFillCalendarDateFill/>
+                <BsFillCalendarDateFill />
                 <Box ml={1}>
                   {project.languages
                     .map((language) => language.name)
@@ -118,8 +123,8 @@ const ProjectItem = ({project, handleOpenMembers, handleOpenEdit}) => {
                 justifyContent={'flex-start'}
                 alignItems="center"
               >
-                <BsFillCalendarCheckFill/>
-                <Box ml={1}>{project.end_date ?? 'Unset'}</Box>
+                <BsFillCalendarCheckFill />
+                <Box ml={1}>{project.start_date ?? 'N/A'}</Box>
               </Grid>
               <Grid
                 item
@@ -130,19 +135,43 @@ const ProjectItem = ({project, handleOpenMembers, handleOpenEdit}) => {
                 justifyContent={'flex-start'}
                 alignItems="center"
               >
-                <BsPeopleFill/>
+                <BsFillCalendarCheckFill />
+                <Box ml={1}>{project.end_date ?? 'N/A'}</Box>
+              </Grid>
+              <Grid
+                item
+                xs={6}
+                flexGrow={1}
+                textAlign={'left'}
+                display="flex"
+                justifyContent={'flex-start'}
+                alignItems="center"
+              >
+                <BsPeopleFill />
                 <Box ml={1}>{project.members.length} Members</Box>
+              </Grid>
+              <Grid
+                item
+                xs={6}
+                flexGrow={1}
+                textAlign={'left'}
+                display="flex"
+                justifyContent={'flex-start'}
+                alignItems="center"
+              >
+                <BsPeopleFill />
+                <Box ml={1}>{PROJECT_TYPES[project.type]}</Box>
               </Grid>
             </Grid>
           </Box>
-          <Divider/>
+          <Divider />
           <Box>
             <Box display={'flex'} justifyContent="space-between">
               <Box fontSize={14} fontWeight={'bold'}>
                 Progress
               </Box>
               <Box
-                sx={{backgroundColor: 'pink'}}
+                sx={{ backgroundColor: 'pink' }}
                 paddingX={0.5}
                 paddingY={0.4}
                 borderRadius={2}
@@ -150,18 +179,18 @@ const ProjectItem = ({project, handleOpenMembers, handleOpenEdit}) => {
                 display="flex"
                 alignItems={'center'}
               >
-                <AccessTimeIcon fontSize="small"/>2 month left
+                <AccessTimeIcon fontSize="small" />2 month left
               </Box>
             </Box>
-            <Box sx={{display: 'flex', alignItems: 'center'}}>
-              <Box sx={{width: '100%', mr: 1}}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ width: '100%', mr: 1 }}>
                 <LinearProgress
-                  sx={{height: 8}}
+                  sx={{ height: 8 }}
                   variant="determinate"
                   value={10}
                 />
               </Box>
-              <Box sx={{minWidth: 35}}>
+              <Box sx={{ minWidth: 35 }}>
                 <Typography
                   variant="body2"
                   color="text.secondary"

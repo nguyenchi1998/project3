@@ -39,21 +39,17 @@ return [
         'intermediate' => 1,
         'proficient' => 2
     ],
-    'task_type' => [
-        'backlog' => 0,
-        'task' => 1,
-        'bug' => 2,
-    ],
-    'task_status' => [
+    'issue_status' => [
         'new' => 0,
         'assigned' => 1,
         'to_be_confirm' => 2,
         'suspended' => 3,
+        'closed' => 4
     ],
-    'task_priority' => [
-        'C' => 0,
-        'B' => 1,
-        'A' => 2,
-        'S' => 3
+    'issue_priority' => [
+        'low' => 0,
+        'normal' => 1,
+        'high' => 2,
+        'immediate' => 3
     ]
 ];

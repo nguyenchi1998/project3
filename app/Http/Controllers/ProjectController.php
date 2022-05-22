@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Project\ProjectStoreRequest;
 use App\Http\Requests\Project\ProjectUpdateRequest;
 use App\Models\Project;
+use App\Models\Tracker;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
@@ -14,7 +17,7 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Database\Eloquent\Collection|Project[]
+     * @return Collection|Project[]
      */
     public function index(Request $request)
     {
@@ -44,7 +47,13 @@ class ProjectController extends Controller
     {
         $project = Project::create($request->all());
 
-        $project->languages()->attach($request->languages);
+        $project->languages()->attach($request->get('languages'));
+
+        $project->members()->attach([
+            auth()->id() => [
+                'role' => config('constant.project_member_role.project_manager')
+            ]
+        ]);
 
         return $project->load(['members' => function ($query) {
             $query->orderBy('role', 'DESC')
@@ -60,14 +69,15 @@ class ProjectController extends Controller
      */
     public function show($id)
     {
-        $project =  Project::findOrFail($id)
+        $project = Project::findOrFail($id)
             ->load([
                 'members' => function ($query) {
                     return $query->orderBy('role', 'DESC');
                 }, 'members.group.division', 'languages',
                 'customer',
-                'tasks.author',
-                'tasks.assignee'
+                'issues.author',
+                'issues.assignee',
+                'issues.tracker'
             ]);
 
 
@@ -81,13 +91,13 @@ class ProjectController extends Controller
      * @param int $id
      * @return void
      */
-    public function update(ProjectUpdateRequest $request, $id)
+    public function update(Request $request, int $id)
     {
         $project = Project::findOrFail($id);
 
         $project->update($request->all());
 
-        $project->languages()->sync($request->languages);
+        $project->languages()->sync($request->get('languages'));
 
         return $project;
     }
@@ -96,7 +106,7 @@ class ProjectController extends Controller
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function destroy($id)
     {
@@ -134,7 +144,7 @@ class ProjectController extends Controller
     {
         $project = Project::find($id);
         $memberIds = $project->members->pluck('id')->toArray();
-        $employees =   User::whereNotIn('id', array_merge(
+        $employees = User::whereNotIn('id', array_merge(
             [auth()->user()->id],
             $memberIds
         ))->get();
@@ -146,5 +156,34 @@ class ProjectController extends Controller
     {
         $project = Project::find($id);
         $project->members()->detach($request->memberId);
+    }
+
+    public function trackerIssuesStatistic($id)
+    {
+        return Tracker::with(['issues' => function ($query) use ($id) {
+            $query->where('project_id', $id);
+        }])->get();
+    }
+
+    public function getMembers($id)
+    {
+        $project = Project::find($id)
+            ->load(['members' => function ($query) {
+                $query->orderBy('id', 'desc');
+            }]);
+        $members = $project->members;
+
+        return $members;
+    }
+
+    public function getIssues($id)
+    {
+        $project = Project::find($id)
+            ->load(['issues' => function ($query) {
+                $query->orderBy('id', 'desc');
+            }, 'issues.tracker', 'issues.author', 'issues.assignee']);
+        $issues = $project->issues;
+
+        return $issues;
     }
 }

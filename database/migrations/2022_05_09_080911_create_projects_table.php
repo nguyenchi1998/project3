@@ -17,7 +17,7 @@ class CreateProjectsTable extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('note', 256)->nullable();
-            $table->char('priority', 1)->default(config('constant.project_priority.normal'));
+            $table->tinyInteger('priority')->default(config('constant.project_priority.normal'));
             $table->unsignedSmallInteger('group_id')->nullable();
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();

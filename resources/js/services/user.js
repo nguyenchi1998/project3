@@ -1,29 +1,29 @@
-import {request} from '../utils/request';
+import { request } from '../utils/request';
 
 const baseResourceUri = '/employees';
 
 const all = async (filter) => {
-  const {data} = await request().get(`${baseResourceUri}`, {
-    params: {...filter},
+  const { data } = await request().get(`${baseResourceUri}`, {
+    params: { ...filter },
   });
 
   return data;
 };
 
 const find = async (id) => {
-  const {data} = await request().get(`${baseResourceUri}/${id}`);
+  const { data } = await request().get(`${baseResourceUri}/${id}`);
 
   return data;
 };
 
 const store = async (resource) => {
-  const {data} = await request().post(`${baseResourceUri}`, resource);
+  const { data } = await request().post(`${baseResourceUri}`, resource);
 
   return data;
 };
 
 const update = async (resource) => {
-  const {data} = await request().put(
+  const { data } = await request().put(
     `${baseResourceUri}/${resource.id}`,
     resource,
   );
@@ -32,7 +32,7 @@ const update = async (resource) => {
 };
 
 const destroy = async (id) => {
-  const {data} = await request().delete(`${baseResourceUri}/${id}`);
+  const { data } = await request().delete(`${baseResourceUri}/${id}`);
 
   return data;
 };

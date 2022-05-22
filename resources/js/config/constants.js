@@ -1,9 +1,12 @@
+import { colors } from '@mui/material';
 export const ACCESS_TOKEN = 'access_token';
+
 export const REFRESH_TOKEN = 'refresh_token';
 
 export const DATE_FORMAT = 'yyyy/MM/dd';
 
 export const CREATE_ACTION = 'create';
+
 export const EDIT_ACTION = 'edit';
 
 export const PROJECT_TYPES = ['Strategy', 'Business'];
@@ -16,10 +19,32 @@ export const PROJECT_MEMBER_ROLES = ['Member', 'Team Leader', 'Manager'];
 
 export const POSITIONS = ['Employee', 'Manager', 'Director'];
 
-export const TASK_TYPES = ['Backlog', 'Task', 'Bug'];
+export const ISSUE_TYPES = [
+  'Backlog',
+  'Task',
+  'Bug',
+  'Q&A',
+  'Bug after Release',
+  'Other',
+];
 
-export const TASK_STATUS = ['New', 'Assigned', 'To Be Confirm', 'Suspended'];
+export const ISSUE_STATUS = [
+  'New',
+  'Assigned',
+  'To Be Confirm',
+  'Suspended',
+  'Closed',
+];
 
-export const TASK_PRIORITIES = ['C', 'B', 'A', 'S'];
+export const ISSUE_PRIORITIES = ['Low', 'Normal', 'High', 'Immediate'];
+
+export const ISSUE_PRIORITY_COLORS = [
+  'unset',
+  'unset',
+  colors.deepOrange[50],
+  colors.red[100],
+];
 
 export const PAGINATE_LIMIT = 8;
+
+export const PROGRESS_PERCENT = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];

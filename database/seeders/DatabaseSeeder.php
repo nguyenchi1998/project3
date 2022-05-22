@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->resetDatabase();
+        $this->call(TrackerSeeder::class);
         $this->call(RoleSeeder::class);
         $this->call(PositionSeeder::class);
         $this->call(DivisionSeeder::class);
@@ -23,7 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call(LanguageSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(ProjectSeeder::class);
-        $this->call(TaskSeeder::class);
+        $this->call(IssueSeeder::class);
     }
 
     private function resetDatabase()

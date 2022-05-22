@@ -16,12 +16,15 @@ class Project extends Model
         'start_date',
         'end_date',
         'status',
-        'source_control'
+        'source_control',
+        'type'
     ];
 
     public function members()
     {
-        return $this->belongsToMany(User::class)->withPivot('role')->withTimestamps();
+        return $this->belongsToMany(User::class)
+            ->withPivot(['role', 'effort'])
+            ->withTimestamps();
     }
 
     public function languages()
@@ -34,8 +37,8 @@ class Project extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    public function tasks()
+    public function issues()
     {
-        return $this->hasMany(Task::class);
+        return $this->hasMany(Issue::class);
     }
 }

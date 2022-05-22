@@ -9,6 +9,8 @@ const SIGN_IN_PAGE = 'SIGN_IN_PAGE';
 const INTERNAL_ERROR_PAGE = 'INTERNAL_ERROR_PAGE';
 const NOT_FOUND_PAGE = 'NOT_FOUND_PAGE';
 const PROJECT_PAGE = 'PROJECT_PAGE';
+const OVERVIEW_PAGE = 'OVERVIEW';
+const ISSUE_PAGE = 'ISSUE';
 
 export const AUTH_PATH = {
   [SIGN_IN_PAGE]: '/login',
@@ -28,4 +30,9 @@ export const PATH = {
   [TEACHER_PAGE]: `/teachers`,
   [SUBJECT_PAGE]: `/subjects`,
   [PROJECT_PAGE]: `/projects`,
+};
+
+export const PROJECT_PATH = {
+  [OVERVIEW_PAGE]: 'overview',
+  [ISSUE_PAGE]: 'issues',
 };

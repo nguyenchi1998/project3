@@ -37,7 +37,9 @@ class ProjectSeeder extends Seeder
                 // add member to project
                 $project->members()->attach(
                     array_rand($employee, random_int(2, 5)),
-                    ['role' => config('constant.project_member_role.member')]
+                    [
+                        'role' => config('constant.project_member_role.member'),
+                    ]
                 );
             });
     }
