@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import Box from '@mui/material/Box';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import projectAPI from '../../services/project';
@@ -8,7 +8,6 @@ import {
   Button,
   colors,
   Container,
-  Link,
   Pagination,
   Paper,
   Table,
@@ -46,7 +45,7 @@ const IssuesProjectPage = () => {
   }, []);
   const { data, isLoading, isSuccess, isError, error } = useQuery(
     [KEY_QUERIES.FETCH_PROJECT_ISSUE, projectId],
-    () => projectAPI.getIssues(projectId),
+    () => projectAPI.getIssues({ projectId }),
   );
   if (isError) {
     return <>{error.message}</>;
@@ -107,16 +106,14 @@ const IssuesProjectPage = () => {
                   >
                     <TableCell>
                       <Link
-                        href={`${PATH.PROJECT_PAGE}/${projectId}/${PROJECT_PATH.ISSUE}/${issue.id}`}
-                        underline="hover"
+                        to={`${PATH.PROJECT_PAGE}/${projectId}/${PROJECT_PATH.ISSUE}/${issue.id}`}
                       >
                         <Box color={theme.palette.text.primary}>{issue.id}</Box>
                       </Link>
                     </TableCell>
                     <TableCell>
                       <Link
-                        href={`${PATH.PROJECT_PAGE}/${projectId}/${PROJECT_PATH.ISSUE}/${issue.id}`}
-                        underline="hover"
+                        to={`${PATH.PROJECT_PAGE}/${projectId}/${PROJECT_PATH.ISSUE}/${issue.id}`}
                       >
                         <Box color={theme.palette.text.primary}>
                           {issue.name}
@@ -127,7 +124,7 @@ const IssuesProjectPage = () => {
                     <TableCell>{ISSUE_STATUS[issue.status]}</TableCell>
                     <TableCell>{ISSUE_PRIORITIES[issue.priority]}</TableCell>
                     <TableCell>
-                      <Link href="#" underline="hover">
+                      <Link to="#">
                         <Box color={theme.palette.text.primary}>
                           {issue.author.name}
                         </Box>

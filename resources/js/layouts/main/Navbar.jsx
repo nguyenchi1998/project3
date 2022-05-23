@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Link as RouterLink, useHistory} from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Badge from '@mui/material/Badge';
 import Typography from '@mui/material/Typography';
@@ -11,10 +11,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/NotificationsOutlined';
 import InputIcon from '@mui/icons-material/Input';
 import Logo from './Logo';
-import {AUTH_PATH} from '../../routes/paths';
-import {signOut} from '../../services/auth';
+import { AUTH_PATH } from '../../routes/paths';
+import { signOut } from '../../services/auth';
 
-const DashboardNavbar = ({onMobileNavOpen, ...rest}) => {
+const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
   const [notifications] = useState([]);
   const history = useHistory();
 
@@ -26,12 +26,12 @@ const DashboardNavbar = ({onMobileNavOpen, ...rest}) => {
     <AppBar elevation={0} {...rest}>
       <Toolbar>
         <RouterLink to="/">
-          <Logo/>
+          <Logo />
         </RouterLink>
         <Box pl={2}>
           <Typography variant="h5">Data Warehouse</Typography>
         </Box>
-        <Box sx={{flexGrow: 1}}/>
+        <Box sx={{ flexGrow: 1 }} />
         <Hidden mdDown>
           <IconButton color="inherit" size="large">
             <Badge
@@ -39,16 +39,16 @@ const DashboardNavbar = ({onMobileNavOpen, ...rest}) => {
               color="primary"
               variant="dot"
             >
-              <NotificationsIcon/>
+              <NotificationsIcon />
             </Badge>
           </IconButton>
           <IconButton color="inherit" size="large" onClick={handleLogout}>
-            <InputIcon/>
+            <InputIcon />
           </IconButton>
         </Hidden>
         <Hidden mdUp>
           <IconButton color="inherit" onClick={onMobileNavOpen} size="large">
-            <MenuIcon/>
+            <MenuIcon />
           </IconButton>
         </Hidden>
       </Toolbar>

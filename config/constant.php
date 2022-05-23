@@ -44,6 +44,7 @@ return [
         'assigned' => 1,
         'to_be_confirm' => 2,
         'suspended' => 3,
+        'done',
         'closed' => 4
     ],
     'issue_priority' => [
@@ -51,5 +52,9 @@ return [
         'normal' => 1,
         'high' => 2,
         'immediate' => 3
+    ],
+    'relative_issue_action' => [
+        'link' => 1,
+        'unlink' => 0
     ]
 ];

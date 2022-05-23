@@ -4,23 +4,23 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import {Controller} from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 
-const FormInputRadio = ({name, control, options, isRow = false}) => {
+const FormInputRadio = ({ name, control, options, isRow = false }) => {
   return (
     <Controller
       name={name}
       control={control}
-      render={({field}) => {
+      render={({ field }) => {
         return (
           <FormControl component="fieldset">
             <FormLabel>Gender</FormLabel>
             <RadioGroup row={isRow} name="gender" {...field}>
-              {options.map(({label, value: gender}) => (
+              {options.map(({ label, value: gender }) => (
                 <FormControlLabel
                   key={label}
                   value={gender}
-                  control={<Radio/>}
+                  control={<Radio />}
                   label={label}
                 />
               ))}

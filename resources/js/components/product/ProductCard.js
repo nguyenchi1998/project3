@@ -10,7 +10,7 @@ import {
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import GetAppIcon from '@mui/icons-material/GetApp';
 
-const ProductCard = ({product, ...rest}) => (
+const ProductCard = ({ product, ...rest }) => (
   <Card
     sx={{
       display: 'flex',
@@ -27,7 +27,7 @@ const ProductCard = ({product, ...rest}) => (
           pb: 3,
         }}
       >
-        <Avatar alt="Product" src={product.media} variant="square"/>
+        <Avatar alt="Product" src={product.media} variant="square" />
       </Box>
       <Typography align="center" color="textPrimary" gutterBottom variant="h4">
         {product.title}
@@ -36,10 +36,10 @@ const ProductCard = ({product, ...rest}) => (
         {product.description}
       </Typography>
     </CardContent>
-    <Box sx={{flexGrow: 1}}/>
-    <Divider/>
-    <Box sx={{p: 2}}>
-      <Grid container spacing={2} sx={{justifyContent: 'space-between'}}>
+    <Box sx={{ flexGrow: 1 }} />
+    <Divider />
+    <Box sx={{ p: 2 }}>
+      <Grid container spacing={2} sx={{ justifyContent: 'space-between' }}>
         <Grid
           item
           sx={{
@@ -47,11 +47,11 @@ const ProductCard = ({product, ...rest}) => (
             display: 'flex',
           }}
         >
-          <AccessTimeIcon color="action"/>
+          <AccessTimeIcon color="action" />
           <Typography
             color="textSecondary"
             display="inline"
-            sx={{pl: 1}}
+            sx={{ pl: 1 }}
             variant="body2"
           >
             Updated 2hr ago
@@ -64,11 +64,11 @@ const ProductCard = ({product, ...rest}) => (
             display: 'flex',
           }}
         >
-          <GetAppIcon color="action"/>
+          <GetAppIcon color="action" />
           <Typography
             color="textSecondary"
             display="inline"
-            sx={{pl: 1}}
+            sx={{ pl: 1 }}
             variant="body2"
           >
             {product.totalDownloads} Downloads

@@ -1,9 +1,9 @@
-import {Checkbox, Stack, TextField} from '@mui/material';
-import {format, isValid} from 'date-fns';
-import {useCallback, useEffect} from 'react';
-import {useForm} from 'react-hook-form';
-import {useMutation, useQuery, useQueryClient} from 'react-query';
-import {toast} from 'react-toastify';
+import { Checkbox, Stack, TextField } from '@mui/material';
+import { format, isValid } from 'date-fns';
+import { useCallback, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { toast } from 'react-toastify';
 import FormAutocomplete from '../../components/FormAutocomplete';
 import FormDialog from '../../components/FormDialog';
 import FormInputDate from '../../components/FormInputDate';
@@ -12,9 +12,9 @@ import FormTextarea from '../../components/FormTextarea';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import * as API_CODES from '../../config/API_CODES';
-import {PROJECT_PRIORITIES, PROJECT_TYPES} from '../../config/constants';
-import {KEY_QUERIES} from '../../config/keyQueries';
-import FormInputText from './../../components/FormInputText';
+import { PROJECT_PRIORITIES, PROJECT_TYPES } from '../../config/constants';
+import { KEY_QUERIES } from '../../config/keyQueries';
+import FormTextField from './../../components/FormTextField';
 import groupAPI from './../../services/group';
 import languageAPI from './../../services/language';
 import projectAPI from './../../services/project';
@@ -28,18 +28,18 @@ const defaultValues = {
   end_date: null,
   languages: [],
 };
-const ModalProject = ({handleClose, project, keyQuery, action}) => {
+const ModalProject = ({ handleClose, project, keyQuery, action }) => {
   const queryClient = useQueryClient();
   const {
     handleSubmit,
     control,
     reset,
     setError,
-    formState: {errors},
+    formState: { errors },
   } = useForm({
     defaultValues,
   });
-  const {mutate, isLoading: isStorePending} = useMutation(projectAPI.store, {
+  const { mutate, isLoading: isStorePending } = useMutation(projectAPI.store, {
     onSuccess: (data) => {
       queryClient.setQueryData([KEY_QUERIES.FETCH_PROJECT], (old) => {
         return [data, ...old];
@@ -47,16 +47,16 @@ const ModalProject = ({handleClose, project, keyQuery, action}) => {
       handleClose();
       toast.success('Project created successfully');
     },
-    onError: ({response: {data, status}}) => {
+    onError: ({ response: { data, status } }) => {
       if (status == API_CODES.INVALID_DATA) {
         Object.entries(data.errors).forEach((error) => {
           const [name, message] = error;
-          setError(name, {type: 'custom', message: message[0]});
+          setError(name, { type: 'custom', message: message[0] });
         });
       }
     },
   });
-  const {mutate: updateMutate, isLoading: isUpdatePending} = useMutation(
+  const { mutate: updateMutate, isLoading: isUpdatePending } = useMutation(
     projectAPI.update,
     {
       onSuccess: () => {
@@ -64,20 +64,20 @@ const ModalProject = ({handleClose, project, keyQuery, action}) => {
         handleClose();
         toast.success('Project updated successfully');
       },
-      onError: ({response: {data, status}}) => {
+      onError: ({ response: { data, status } }) => {
         if (status == API_CODES.INVALID_DATA) {
           Object.entries(data.errors).forEach((error) => {
             const [name, message] = error;
-            setError(name, {type: 'custom', message: message[0]});
+            setError(name, { type: 'custom', message: message[0] });
           });
         }
       },
     },
   );
-  const {data, isLoading} = useQuery([KEY_QUERIES.FETCH_GROUP], () =>
+  const { data, isLoading } = useQuery([KEY_QUERIES.FETCH_GROUP], () =>
     groupAPI.all(),
   );
-  const {data: languages, isLoading: isLanguageLoading} = useQuery(
+  const { data: languages, isLoading: isLanguageLoading } = useQuery(
     [KEY_QUERIES.FETCH_LANGUAGE],
     () => languageAPI.all(),
   );
@@ -92,7 +92,7 @@ const ModalProject = ({handleClose, project, keyQuery, action}) => {
         end_date: isValid(data.end_date)
           ? format(data.end_date, 'yyyy-MM-dd')
           : null,
-        languages: data.languages.map(({value}) => value),
+        languages: data.languages.map(({ value }) => value),
       });
     } else {
       updateMutate({
@@ -105,28 +105,28 @@ const ModalProject = ({handleClose, project, keyQuery, action}) => {
           data.end_date && isValid(new Date(data.end_date))
             ? format(new Date(data.end_date), 'yyyy-MM-dd')
             : null,
-        languages: data.languages.map(({value}) => value),
+        languages: data.languages.map(({ value }) => value),
       });
     }
   };
   useEffect(() => {
     if (action === 'edit') {
       project &&
-      reset({
-        ...project,
-        group_id: project.group_id ?? '',
-        languages: project.languages.map(({name, id}) => ({
-          label: name,
-          value: id,
-        })),
-      });
+        reset({
+          ...project,
+          group_id: project.group_id ?? '',
+          languages: project.languages.map(({ name, id }) => ({
+            label: name,
+            value: id,
+          })),
+        });
     } else {
-      reset({...defaultValues});
+      reset({ ...defaultValues });
     }
   }, [project, reset]);
 
   const handleCloseForm = useCallback(() => {
-    reset({...defaultValues});
+    reset({ ...defaultValues });
     handleClose();
   }, []);
   return (
@@ -140,7 +140,7 @@ const ModalProject = ({handleClose, project, keyQuery, action}) => {
       formId="form-project"
     >
       <Stack spacing={2}>
-        <FormInputText
+        <FormTextField
           control={control}
           name="name"
           label="Name"
@@ -186,17 +186,17 @@ const ModalProject = ({handleClose, project, keyQuery, action}) => {
           isOptionEqualToValue={(option, value) => option.value == value.value}
           getOptionLabel={(option) => option.label}
           options={
-            languages?.map(({name, id}) => ({
+            languages?.map(({ name, id }) => ({
               label: name,
               value: id,
             })) ?? []
           }
-          renderOption={(props, option, {selected}) => (
+          renderOption={(props, option, { selected }) => (
             <li {...props}>
               <Checkbox
-                icon={<CheckBoxOutlineBlankIcon fontSize="small"/>}
-                checkedIcon={<CheckBoxIcon fontSize="small"/>}
-                style={{marginRight: 8}}
+                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                checkedIcon={<CheckBoxIcon fontSize="small" />}
+                style={{ marginRight: 8 }}
                 checked={selected}
               />
               {option.label}
@@ -221,13 +221,13 @@ const ModalProject = ({handleClose, project, keyQuery, action}) => {
           label="Group"
           fullWidth
           options={
-            data?.map(({name, id, division}) => ({
+            data?.map(({ name, id, division }) => ({
               key: `${name} - ${division.name}`,
               val: id,
             })) ?? []
           }
         />
-        <FormTextarea control={control} name="group" placeholder="Note"/>
+        <FormTextarea control={control} name="group" placeholder="Note" />
       </Stack>
     </FormDialog>
   );

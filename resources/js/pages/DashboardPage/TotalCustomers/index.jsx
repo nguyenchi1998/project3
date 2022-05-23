@@ -7,23 +7,23 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import PeopleIcon from '@mui/icons-material/PeopleOutlined';
-import {useQuery} from 'react-query';
+import { useQuery } from 'react-query';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import {KEY_QUERIES} from 'config/keyQueries';
+import { KEY_QUERIES } from 'config/keyQueries';
 import dashboardAPI from 'services/dashboard';
 import Skeleton from 'pages/Manager/DashboardPage/Skeleton';
 
-import {green, red} from '@mui/material/colors';
+import { green, red } from '@mui/material/colors';
 
-const STATUS = {DOWN: 'down', UP: 'up'};
+const STATUS = { DOWN: 'down', UP: 'up' };
 
 const TotalCustomers = () => {
-  const {data, isLoading, isError, error} = useQuery(
+  const { data, isLoading, isError, error } = useQuery(
     [KEY_QUERIES.FETCH_CUSTOMER],
     dashboardAPI.fetchCustomer,
   );
   if (isLoading) {
-    return <Skeleton/>;
+    return <Skeleton />;
   }
   if (isError) {
     return <Box>{error.message}</Box>;
@@ -32,7 +32,7 @@ const TotalCustomers = () => {
   return (
     <Card>
       <CardContent>
-        <Grid container spacing={3} sx={{justifyContent: 'space-between'}}>
+        <Grid container spacing={3} sx={{ justifyContent: 'space-between' }}>
           <Grid item>
             <Typography color="textSecondary" gutterBottom variant="h6">
               TOTAL CUSTOMERS
@@ -49,7 +49,7 @@ const TotalCustomers = () => {
                 width: 56,
               }}
             >
-              <PeopleIcon/>
+              <PeopleIcon />
             </Avatar>
           </Grid>
         </Grid>
@@ -61,9 +61,9 @@ const TotalCustomers = () => {
           }}
         >
           {data.status === STATUS.DOWN ? (
-            <ArrowDownwardIcon sx={{color: red[900]}}/>
+            <ArrowDownwardIcon sx={{ color: red[900] }} />
           ) : (
-            <ArrowUpwardIcon sx={{color: green[900]}}/>
+            <ArrowUpwardIcon sx={{ color: green[900] }} />
           )}
           <Typography
             variant="body2"

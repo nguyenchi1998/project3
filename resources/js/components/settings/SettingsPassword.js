@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import {
   Box,
   Button,
@@ -25,8 +25,8 @@ const SettingsPassword = (props) => {
   return (
     <form {...props}>
       <Card>
-        <CardHeader subheader="Update password" title="Password"/>
-        <Divider/>
+        <CardHeader subheader="Update password" title="Password" />
+        <Divider />
         <CardContent>
           <TextField
             fullWidth
@@ -49,7 +49,7 @@ const SettingsPassword = (props) => {
             variant="outlined"
           />
         </CardContent>
-        <Divider/>
+        <Divider />
         <Box
           sx={{
             display: 'flex',

@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Box,
   Button,
   Container,
@@ -7,10 +6,6 @@ import {
   Link,
   Paper,
   Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
   Typography,
 } from '@mui/material';
 import { useCallback, useState } from 'react';
@@ -22,7 +17,10 @@ import { ISSUE_PRIORITIES, ISSUE_STATUS } from '../../config/constants';
 import HeaderDetailIssuePage from './HeaderDetailIssuePage';
 import ModalIssue from './ModalIssue';
 import { useTheme } from '@emotion/react';
-import { diffForHumans } from '../../utils/common';
+import IssueHistories from './IssueHistories';
+import RelativeIssues from './RelativeIssues';
+import SubIssues from './SubIssues';
+import LoadingIndicator from './../../components/LoadingIndicator';
 
 const InfoItem = ({ label, value }) => {
   return (
@@ -53,7 +51,17 @@ const DetailIssuePage = () => {
     return <>{error.message}</>;
   }
   if (isLoading) {
-    return <Typography>Loading</Typography>;
+    return (
+      <Box
+        width={'100%'}
+        height="100%"
+        display="flex"
+        justifyContent="center"
+        alignItems={'flex-start'}
+      >
+        <LoadingIndicator />
+      </Box>
+    );
   }
   return (
     <Container maxWidth={false}>
@@ -84,7 +92,7 @@ const DetailIssuePage = () => {
                   alignItems={'center'}
                   fontSize={14}
                 >
-                  Add By <Box ml={0.5}>{data.author.name}</Box>
+                  Add By <Box ml={0.5}>{data?.author?.name}</Box>
                 </Box>
                 <Stack spacing={1}>
                   <Box mt={1} display="flex">
@@ -120,176 +128,32 @@ const DetailIssuePage = () => {
                       <Stack spacing={0.5}>
                         <InfoItem label="start date" value={data.start_date} />
                         <InfoItem label="end date" value={data.end_date} />
-                        <InfoItem label="% Done" value={data.percent_done} />
+                        <InfoItem
+                          label="% Done"
+                          value={`${data.progress_percent} %`}
+                        />
                       </Stack>
                     </Box>
                   </Box>
                   <Box>
                     <Divider />
                     <Box py={2}>
-                      <Typography gutterBottom>Description</Typography>
+                      <Typography gutterBottom variant="body1">
+                        <strong>Description</strong>
+                      </Typography>
                       <Box>{data.description}</Box>
                     </Box>
                   </Box>
-                  <Box>
-                    <Divider />
-                    <Box py={2}>
-                      <Typography gutterBottom>Sub Issue</Typography>
-                      {data?.subIssues?.length && (
-                        <Table>
-                          <TableBody>
-                            <TableRow>
-                              <TableCell>Ahiih</TableCell>
-                            </TableRow>
-                          </TableBody>
-                        </Table>
-                      )}
-                    </Box>
-                  </Box>
-                  <Box>
-                    <Divider />
-                    <Box py={2}>
-                      <Typography gutterBottom>Relative Issue</Typography>
-                      {data?.relativeIssues?.length && (
-                        <Table>
-                          <TableBody>
-                            <TableRow>
-                              <TableCell>Ahiih</TableCell>
-                            </TableRow>
-                          </TableBody>
-                        </Table>
-                      )}
-                    </Box>
-                  </Box>
+                  <SubIssues subIssues={data?.sub_issues} />
+                  <RelativeIssues
+                    relativeIssues={data?.relative_issues}
+                    issueId={issueId}
+                  />
                 </Stack>
               </Box>
             </Paper>
           </Stack>
-          <Box>
-            <Box py={1} position="sticky" top={0} zIndex={99} bgcolor={'white'}>
-              <Typography variant="h6">History</Typography>
-            </Box>
-            <Divider />
-            <Box pt={1.5}>
-              <Stack spacing={1.5} divider={<Divider />}>
-                {data?.histories?.map((history) => (
-                  <Box key={history.id}>
-                    <Box
-                      display={'flex'}
-                      alignItems="flex-start"
-                      justifyContent={'flex-start'}
-                    >
-                      <Avatar sx={{ width: 28, height: 28, mr: 1 }} />
-                      <Box>
-                        <Typography
-                          gutterBottom
-                          variant="subtitle2"
-                          component={Box}
-                          fontWeight="bold"
-                        >
-                          <Typography
-                            variant="subtitle2"
-                            display={'inline'}
-                            fontWeight="bold"
-                            mr={0.5}
-                          >
-                            Updated by
-                          </Typography>
-                          <Typography display={'inline'} variant="subtitle2">
-                            <Link
-                              href="#"
-                              underline="hover"
-                              sx={{ fontWeight: 'bold' }}
-                            >
-                              {`${history.updated_user.name} about `}
-                            </Link>
-                          </Typography>
-                          <Typography display={'inline'} variant="subtitle2">
-                            <Link
-                              href="#"
-                              underline="hover"
-                              sx={{ fontWeight: 'bold' }}
-                            >
-                              {diffForHumans(
-                                new Date(),
-                                new Date(history.created_at),
-                              ) === 0
-                                ? 'just now'
-                                : `${diffForHumans(
-                                    new Date(),
-                                    new Date(history.created_at),
-                                  )}`}
-                            </Link>
-                          </Typography>
-                          <Typography
-                            sx={{ ml: 0.5 }}
-                            display={'inline'}
-                            variant="subtitle2"
-                          >
-                            ago
-                          </Typography>
-                        </Typography>
-                        <ul>
-                          <Stack spacing={1}>
-                            {history.detail_histories.map((detail) => (
-                              <li key={detail.id}>
-                                <Typography component={Box}>
-                                  <Typography
-                                    fontWeight={'bold'}
-                                    textTransform="capitalize"
-                                    display={'inline'}
-                                    variant="body2"
-                                    color={theme.palette.text.secondary}
-                                  >
-                                    {detail.key}
-                                  </Typography>
-                                  <Typography
-                                    display={'inline'}
-                                    variant="body2"
-                                    marginLeft={0.5}
-                                    color={theme.palette.text.secondary}
-                                  >
-                                    changed from
-                                  </Typography>
-                                  <Typography
-                                    fontStyle={'italic'}
-                                    display={'inline'}
-                                    variant="body2"
-                                    marginLeft={0.5}
-                                    color={theme.palette.text.secondary}
-                                  >
-                                    {detail.old_value}
-                                  </Typography>
-                                  <Typography
-                                    display={'inline'}
-                                    variant="body2"
-                                    marginLeft={0.5}
-                                    color={theme.palette.text.secondary}
-                                  >
-                                    to
-                                  </Typography>
-                                  <Typography
-                                    fontStyle={'italic'}
-                                    display={'inline'}
-                                    variant="body2"
-                                    color={theme.palette.text.secondary}
-                                    marginLeft={0.5}
-                                  >
-                                    {detail.new_value}
-                                  </Typography>
-                                </Typography>
-                              </li>
-                            ))}
-                          </Stack>
-                        </ul>
-                      </Box>
-                    </Box>
-                    {data.note && <Typography>{data.note}</Typography>}
-                  </Box>
-                ))}
-              </Stack>
-            </Box>
-          </Box>
+          <IssueHistories histories={data.histories} />
         </Box>
       </Box>
       {!!editIssueId && (

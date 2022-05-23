@@ -47,4 +47,24 @@ class Issue extends Model
     {
         return $this->hasMany(IssueHistory::class)->oldest();
     }
+
+    public function parentIssue()
+    {
+        return $this->belongsTo(Issue::class, 'parent_issue_id');
+    }
+
+    public function subIssues()
+    {
+        return $this->hasMany(Issue::class, 'parent_issue_id');
+    }
+
+    public function relativeIssues()
+    {
+        return $this->hasMany(RelativeIssue::class);
+    }
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
 }

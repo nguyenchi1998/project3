@@ -6,28 +6,28 @@ import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import {useQuery} from 'react-query';
-import {KEY_QUERIES} from 'config/keyQueries';
+import { useQuery } from 'react-query';
+import { KEY_QUERIES } from 'config/keyQueries';
 import dashboardAPI from 'services/dashboard';
 import Skeleton from 'pages/Manager/DashboardPage/Skeleton';
-import {indigo} from '@mui/material/colors';
+import { indigo } from '@mui/material/colors';
 
 const TotalProfit = () => {
-  const {data, isLoading, isError, error} = useQuery(
+  const { data, isLoading, isError, error } = useQuery(
     [KEY_QUERIES.FETCH_TOTAL_PROFIT],
     dashboardAPI.fetchTotalProfit,
   );
   if (isLoading) {
-    return <Skeleton/>;
+    return <Skeleton />;
   }
   if (isError) {
     return <Box>{error.message}</Box>;
   }
 
   return (
-    <Card sx={{height: '100%'}}>
+    <Card sx={{ height: '100%' }}>
       <CardContent>
-        <Grid container spacing={3} sx={{justifyContent: 'space-between'}}>
+        <Grid container spacing={3} sx={{ justifyContent: 'space-between' }}>
           <Grid item>
             <Typography color="textSecondary" gutterBottom variant="h6">
               TOTAL PROFIT
@@ -44,7 +44,7 @@ const TotalProfit = () => {
                 width: 56,
               }}
             >
-              <AttachMoneyIcon/>
+              <AttachMoneyIcon />
             </Avatar>
           </Grid>
         </Grid>

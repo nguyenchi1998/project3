@@ -77,8 +77,13 @@ const getMembers = async (id) => {
   return data;
 };
 
-const getIssues = async (id) => {
-  const { data } = await request().get(`${baseResourceUri}/${id}/issues`);
+const getIssues = async ({ projectId, ...filter }) => {
+  const { data } = await request().get(
+    `${baseResourceUri}/${projectId}/issues`,
+    {
+      params: { ...filter },
+    },
+  );
 
   return data;
 };

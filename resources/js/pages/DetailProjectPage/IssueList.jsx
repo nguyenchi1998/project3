@@ -29,7 +29,6 @@ import {
   PROJECT_MEMBER_ROLES,
   ISSUE_PRIORITIES,
   ISSUE_STATUS,
-  ISSUE_TYPES,
 } from '../../config/constants';
 import { format } from 'date-fns';
 
@@ -39,7 +38,7 @@ const IssueList = () => {
   const { projectId } = useParams();
   const { data, isLoading, isError, error } = useQuery(
     [KEY_QUERIES.FETCH_PROJECT_TASK, projectId],
-    () => projectAPI.getIssues(projectId),
+    () => projectAPI.getIssues({ projectId }),
   );
   if (isError) {
     return <>{error.message}</>;

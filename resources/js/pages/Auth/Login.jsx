@@ -1,16 +1,16 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import {makeStyles} from '@mui/styles';
-import {useHistory} from 'react-router-dom';
-import {joiResolver} from '@hookform/resolvers/joi';
+import { makeStyles } from '@mui/styles';
+import { useHistory } from 'react-router-dom';
+import { joiResolver } from '@hookform/resolvers/joi';
 import * as joi from 'joi';
-import {useForm} from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import Stack from '@mui/material/Stack';
 import LoadingButton from '@mui/lab/LoadingButton';
-import {signIn} from '../../services/auth';
-import FormInputText from '../../components/FormInputText';
-import {PATH} from '../../routes/paths';
+import { signIn } from '../../services/auth';
+import FormTextField from '../../components/FormTextField';
+import { PATH } from '../../routes/paths';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,7 +54,7 @@ const LoginPage = () => {
     register,
     control,
     reset,
-    formState: {errors},
+    formState: { errors },
   } = useForm({
     defaultValues,
     resolver: joiResolver(schema),
@@ -68,10 +68,10 @@ const LoginPage = () => {
       })
       .catch(
         ({
-           response: {
-             data: {message},
-           },
-         }) => {
+          response: {
+            data: { message },
+          },
+        }) => {
           setIsLoading(false);
           setErrorMessage(message);
         },
@@ -86,7 +86,7 @@ const LoginPage = () => {
             Data Warehouse
           </Box>
         </Typography>
-        <Box sx={{height: 25}}>
+        <Box sx={{ height: 25 }}>
           <Typography align="center" color="error">
             {errorMessage}
           </Typography>
@@ -94,13 +94,13 @@ const LoginPage = () => {
         <Box padding={3}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Stack spacing={2}>
-              <FormInputText
+              <FormTextField
                 control={control}
                 name="email"
                 label="Email"
                 error={errors.email}
               />
-              <FormInputText
+              <FormTextField
                 type="password"
                 control={control}
                 name="password"

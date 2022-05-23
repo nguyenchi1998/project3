@@ -39,6 +39,7 @@ Route::group(['middleware' => ['auth:sanctum', 'access:director']], function () 
     Route::resource('languages', LanguageController::class);
     Route::resource('users', UserController::class);
     Route::resource('issues', IssueController::class);
+    Route::post('issues/{id}/toggle-link-issue', [IssueController::class, 'toggleLinkIssue']);
     Route::resource('trackers', TrackerController::class);
 });
 Route::resource('employees', EmployeeController::class);

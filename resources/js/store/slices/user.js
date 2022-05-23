@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 const userSlice = createSlice({
   name: 'user',
@@ -13,7 +13,7 @@ const userSlice = createSlice({
   },
 });
 
-export const {setUser} = userSlice.actions;
+export const { setUser } = userSlice.actions;
 export const selectUser = (state) => state.user.user;
 
 export default userSlice.reducer;

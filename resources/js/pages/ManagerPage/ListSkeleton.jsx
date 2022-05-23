@@ -7,7 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableContainer from '@mui/material/TableContainer';
 
-const ListSkeleton = ({number = 5}) => {
+const ListSkeleton = ({ number = 5 }) => {
   return (
     <TableContainer>
       <Table>
@@ -24,19 +24,19 @@ const ListSkeleton = ({number = 5}) => {
           {[...Array(number).keys()].map((i) => (
             <TableRow key={i}>
               <TableCell padding="checkbox">
-                <Skeleton height="45px"/>
+                <Skeleton height="45px" />
               </TableCell>
               <TableCell>
-                <Skeleton height="45px"/>
+                <Skeleton height="45px" />
               </TableCell>
               <TableCell>
-                <Skeleton height="45px"/>
+                <Skeleton height="45px" />
               </TableCell>
               <TableCell>
-                <Skeleton height="45px"/>
+                <Skeleton height="45px" />
               </TableCell>
               <TableCell>
-                <Skeleton height="45px"/>
+                <Skeleton height="45px" />
               </TableCell>
             </TableRow>
           ))}

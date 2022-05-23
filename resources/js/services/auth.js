@@ -1,6 +1,10 @@
-import {baseRequest, request} from '../utils/request';
-import {getAccessToken, removeAuthToken, setAuthToken,} from '../utils/storage';
-import {AUTH_API} from '../config';
+import { baseRequest, request } from '../utils/request';
+import {
+  getAccessToken,
+  removeAuthToken,
+  setAuthToken,
+} from '../utils/storage';
+import { AUTH_API } from '../config';
 
 export const isAuthenticated = () => !!getAccessToken();
 
@@ -19,7 +23,7 @@ export const signIn = (credential) => {
 };
 
 export const fetchAuthUser = async () => {
-  const {data} = await request().get(AUTH_API.PROFILE);
+  const { data } = await request().get(AUTH_API.PROFILE);
 
   return data;
 };

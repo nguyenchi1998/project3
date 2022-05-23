@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import {
   Box,
   Button,
@@ -45,8 +45,8 @@ const AccountProfileDetails = (props) => {
   return (
     <form autoComplete="off" noValidate {...props}>
       <Card>
-        <CardHeader subheader="The information can be edited" title="Profile"/>
-        <Divider/>
+        <CardHeader subheader="The information can be edited" title="Profile" />
+        <Divider />
         <CardContent>
           <Grid container spacing={3}>
             <Grid item md={6} xs={12}>
@@ -113,7 +113,7 @@ const AccountProfileDetails = (props) => {
                 onChange={handleChange}
                 required
                 select
-                SelectProps={{native: true}}
+                SelectProps={{ native: true }}
                 value={values.state}
                 variant="outlined"
               >
@@ -126,7 +126,7 @@ const AccountProfileDetails = (props) => {
             </Grid>
           </Grid>
         </CardContent>
-        <Divider/>
+        <Divider />
         <Box
           sx={{
             display: 'flex',

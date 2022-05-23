@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import {Link as RouterLink, useLocation} from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -7,14 +7,14 @@ import Drawer from '@mui/material/Drawer';
 import Hidden from '@mui/material/Hidden';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
-import {PATH} from '../../routes/paths';
+import { PATH } from '../../routes/paths';
 import NavItem from './NavItem';
 import FilterIcon from '@mui/icons-material/Filter';
 import BarChartIcon from '@mui/icons-material/BarChart';
-import {KEY_QUERIES} from '../../config/keyQueries';
-import {useQuery} from 'react-query';
+import { KEY_QUERIES } from '../../config/keyQueries';
+import { useQuery } from 'react-query';
 import * as authAPI from '../../services/auth';
-import {POSITIONS} from '../../config/constants';
+import { POSITIONS } from '../../config/constants';
 
 const user = {
   avatar: '/static/images/avatars/avatar_6.png',
@@ -35,9 +35,9 @@ const items = [
   },
 ];
 
-const DashboardSidebar = ({onMobileClose, openMobile}) => {
+const DashboardSidebar = ({ onMobileClose, openMobile }) => {
   const location = useLocation();
-  const {data, isLoading, isError} = useQuery(
+  const { data, isLoading, isError } = useQuery(
     [KEY_QUERIES.FETCH_AUTH],
     authAPI.fetchAuthUser,
   );
@@ -86,7 +86,7 @@ const DashboardSidebar = ({onMobileClose, openMobile}) => {
           </Box>
         )}
       </Box>
-      <Divider/>
+      <Divider />
       <List>
         {items.map((item) => (
           <NavItem
@@ -97,7 +97,7 @@ const DashboardSidebar = ({onMobileClose, openMobile}) => {
           />
         ))}
       </List>
-      <Box sx={{flexGrow: 1}}/>
+      <Box sx={{ flexGrow: 1 }} />
     </Box>
   );
 

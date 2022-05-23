@@ -1,27 +1,27 @@
-import {request} from '../utils/request';
+import { request } from '../utils/request';
 
 const baseResourceUri = '/issues';
 
 const all = async () => {
-  const {data} = await request().get(`${baseResourceUri}`);
+  const { data } = await request().get(`${baseResourceUri}`);
 
   return data;
 };
 
 const find = async (id) => {
-  const {data} = await request().get(`${baseResourceUri}/${id}`);
+  const { data } = await request().get(`${baseResourceUri}/${id}`);
 
   return data;
 };
 
 const store = async (resource) => {
-  const {data} = await request().post(`${baseResourceUri}`, resource);
+  const { data } = await request().post(`${baseResourceUri}`, resource);
 
   return data;
 };
 
 const update = async (resource) => {
-  const {data} = await request().put(
+  const { data } = await request().put(
     `${baseResourceUri}/${resource.id}`,
     resource,
   );
@@ -30,7 +30,19 @@ const update = async (resource) => {
 };
 
 const destroy = async (id) => {
-  const {data} = await request().delete(`${baseResourceUri}/${id}`);
+  const { data } = await request().delete(`${baseResourceUri}/${id}`);
+
+  return data;
+};
+
+const linkIssue = async ({ id, relative_issue_id, action }) => {
+  const { data } = await request().post(
+    `${baseResourceUri}/${id}/toggle-link-issue`,
+    {
+      relative_issue_id,
+      action,
+    },
+  );
 
   return data;
 };
@@ -41,4 +53,5 @@ export default {
   store,
   update,
   destroy,
+  linkIssue,
 };

@@ -1,18 +1,14 @@
-import { Box, Stack, TextField, Typography } from '@mui/material';
+import { Stack, TextField } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import FormDialog from '../../components/FormDialog';
 import FormInputDate from '../../components/FormInputDate';
 import { useParams } from 'react-router-dom';
-import FormInputText from '../../components/FormInputText';
+import FormTextField from '../../components/FormTextField';
 import FormSelect from '../../components/FormSelect';
 import FormAutocomplete from '../../components/FormAutocomplete';
 import FormTextarea from '../../components/FormTextarea';
-import {
-  ISSUE_PRIORITIES,
-  ISSUE_STATUS,
-  ISSUE_TYPES,
-} from '../../config/constants';
+import { ISSUE_PRIORITIES, ISSUE_STATUS } from '../../config/constants';
 import * as API_CODES from '../../config/API_CODES';
 import taskAPI from '../../services/issue';
 import { KEY_QUERIES } from '../../config/keyQueries';
@@ -99,7 +95,7 @@ const ModalIssue = ({ open, handleClose }) => {
       isLoading={isMembersLoading || isTrackersLoading}
     >
       <Stack spacing={2}>
-        <FormInputText
+        <FormTextField
           control={control}
           name="name"
           label="Name"
@@ -153,7 +149,7 @@ const ModalIssue = ({ open, handleClose }) => {
           label="End Date"
           errors={errors}
         />
-        <FormInputText
+        <FormTextField
           control={control}
           name="estimate_time"
           label="Estimate Time"

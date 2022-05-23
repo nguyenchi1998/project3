@@ -19,22 +19,16 @@ export const PROJECT_MEMBER_ROLES = ['Member', 'Team Leader', 'Manager'];
 
 export const POSITIONS = ['Employee', 'Manager', 'Director'];
 
-export const ISSUE_TYPES = [
-  'Backlog',
-  'Task',
-  'Bug',
-  'Q&A',
-  'Bug after Release',
-  'Other',
-];
-
 export const ISSUE_STATUS = [
   'New',
   'Assigned',
   'To Be Confirm',
   'Suspended',
+  'Done',
   'Closed',
 ];
+
+export const ISSUE_STATUS_CLOSED = 4;
 
 export const ISSUE_PRIORITIES = ['Low', 'Normal', 'High', 'Immediate'];
 
@@ -48,3 +42,7 @@ export const ISSUE_PRIORITY_COLORS = [
 export const PAGINATE_LIMIT = 8;
 
 export const PROGRESS_PERCENT = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+
+export const LINK_ISSUE_ACTION = 1;
+
+export const UNLINK_ISSUE_ACTION = 0;

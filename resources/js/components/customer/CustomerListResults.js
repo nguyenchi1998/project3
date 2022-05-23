@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
@@ -15,7 +15,7 @@ import {
   Typography,
 } from '@mui/material';
 
-const CustomerListResults = ({customers, ...rest}) => {
+const CustomerListResults = ({ customers, ...rest }) => {
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
@@ -70,7 +70,7 @@ const CustomerListResults = ({customers, ...rest}) => {
   return (
     <Card {...rest}>
       <PerfectScrollbar>
-        <Box sx={{minWidth: 1050}}>
+        <Box sx={{ minWidth: 1050 }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -113,7 +113,7 @@ const CustomerListResults = ({customers, ...rest}) => {
                         display: 'flex',
                       }}
                     >
-                      <Avatar src={customer.avatarUrl} sx={{mr: 2}}>
+                      <Avatar src={customer.avatarUrl} sx={{ mr: 2 }}>
                         {customer.name}
                       </Avatar>
                       <Typography color="textPrimary" variant="body1">

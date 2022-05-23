@@ -1,17 +1,16 @@
-import { Box, Stack, TextField, Typography } from '@mui/material';
+import { Box, Stack, TextField, Grid, FormLabel } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import FormDialog from '../../components/FormDialog';
 import FormInputDate from '../../components/FormInputDate';
 import { useParams } from 'react-router-dom';
-import FormInputText from '../../components/FormInputText';
+import FormTextField from '../../components/FormTextField';
 import FormSelect from '../../components/FormSelect';
 import FormAutocomplete from '../../components/FormAutocomplete';
 import FormTextarea from '../../components/FormTextarea';
 import {
   ISSUE_PRIORITIES,
   ISSUE_STATUS,
-  ISSUE_TYPES,
   PROGRESS_PERCENT,
 } from '../../config/constants';
 import * as API_CODES from '../../config/API_CODES';
@@ -33,6 +32,8 @@ const defaultValues = {
   assign_user_id: null,
   progress_percent: 0,
   estimate_time: 0,
+  parent_issue_id: null,
+  note: '',
 };
 
 const ModalIssue = ({ issueId, handleClose }) => {
@@ -78,6 +79,7 @@ const ModalIssue = ({ issueId, handleClose }) => {
           : null,
       id: issueId,
       assign_user_id: data?.assign_user_id?.id,
+      parent_issue_id: data?.parent_issue_id?.id,
     });
   };
   const { data, isLoading: isMembersLoading } = useQuery(
@@ -87,6 +89,10 @@ const ModalIssue = ({ issueId, handleClose }) => {
   const { data: trackers, isLoading: isTrackersLoading } = useQuery(
     [KEY_QUERIES.FETCH_TRACKER, projectId],
     () => trackerAPI.all({ projectId }),
+  );
+  const { data: issues, isLoading: isIssuesLoading } = useQuery(
+    [KEY_QUERIES.FETCH_PARENT_ISSUE, projectId, issueId],
+    () => projectAPI.getIssues({ projectId, ignoreIds: [issueId] }),
   );
   const {
     data: issue,
@@ -106,6 +112,7 @@ const ModalIssue = ({ issueId, handleClose }) => {
         end_date,
         status,
         assignee,
+        parent_issue,
         progress_percent,
         estimate_time,
         description,
@@ -118,6 +125,7 @@ const ModalIssue = ({ issueId, handleClose }) => {
         end_date,
         status,
         assign_user_id: assignee,
+        parent_issue_id: parent_issue,
         progress_percent,
         estimate_time: estimate_time ?? 0,
         description,
@@ -134,10 +142,15 @@ const ModalIssue = ({ issueId, handleClose }) => {
       isPending={isLoading}
       formId="form-issue"
       maxWidth="md"
-      isLoading={isMembersLoading || isTrackersLoading || isIssueLoading}
+      isLoading={
+        isMembersLoading ||
+        isTrackersLoading ||
+        isIssueLoading ||
+        isIssuesLoading
+      }
     >
       <Stack spacing={2}>
-        <FormInputText
+        <FormTextField
           control={control}
           name="name"
           label="Name"
@@ -146,58 +159,9 @@ const ModalIssue = ({ issueId, handleClose }) => {
         />
         <FormTextarea
           control={control}
-          name="note"
+          name="description"
           placeholder="Description..."
-        />
-        <FormSelect
-          control={control}
-          name="tracker_id"
-          label="Tracker"
-          fullWidth
-          options={trackers?.map((tracker) => ({
-            key: tracker?.name,
-            val: tracker?.id,
-          }))}
-        />
-        <FormSelect
-          control={control}
-          name="priority"
-          label="Priority"
-          fullWidth
-          options={ISSUE_PRIORITIES.map((priority, index) => ({
-            key: priority,
-            val: index,
-          }))}
-        />
-        <FormSelect
-          control={control}
-          name="status"
-          label="Status"
-          fullWidth
-          options={ISSUE_STATUS.map((status, index) => ({
-            key: status,
-            val: index,
-          }))}
-        />
-        <FormInputDate
-          control={control}
-          name={'start_date'}
-          label="Start Date"
-          errors={errors}
-        />
-        <FormInputDate
-          control={control}
-          name={'end_date'}
-          label="End Date"
-          errors={errors}
-        />
-        <FormInputText
-          control={control}
-          name="estimate_time"
-          label="Estimate Time"
-          type="number"
-          errors={errors}
-          fullWidth
+          label="Description"
         />
         <FormAutocomplete
           control={control}
@@ -209,15 +173,124 @@ const ModalIssue = ({ issueId, handleClose }) => {
           isOptionEqualToValue={(option, value) => option.id === value.id}
           renderInput={(params) => <TextField {...params} label="Assignee" />}
         />
-        <FormSelect
+        <Grid container>
+          <Grid item xs={6}>
+            <Box pr={1}>
+              <FormSelect
+                fullWidth
+                control={control}
+                name="priority"
+                label="Priority"
+                options={ISSUE_PRIORITIES.map((priority, index) => ({
+                  key: priority,
+                  val: index,
+                }))}
+              />
+            </Box>
+          </Grid>
+          <Grid item xs={6}>
+            <Box pl={1}>
+              <FormSelect
+                fullWidth
+                control={control}
+                name="tracker_id"
+                label="Tracker"
+                options={trackers?.map((tracker) => ({
+                  key: tracker?.name,
+                  val: tracker?.id,
+                }))}
+              />
+            </Box>
+          </Grid>
+        </Grid>
+        <Grid container>
+          <Grid item xs={6}>
+            <Box pr={1}>
+              <FormSelect
+                control={control}
+                name="status"
+                label="Status"
+                fullWidth
+                options={ISSUE_STATUS.map((status, index) => ({
+                  key: status,
+                  val: index,
+                }))}
+              />
+            </Box>
+          </Grid>
+          <Grid item xs={6}>
+            <Box pl={1}>
+              <FormTextField
+                control={control}
+                name="estimate_time"
+                label="Estimate Time"
+                type="number"
+                errors={errors}
+                fullWidth
+              />
+            </Box>
+          </Grid>
+        </Grid>
+        <Grid container>
+          <Grid item xs={6}>
+            <Box pr={1}>
+              <FormInputDate
+                fullWidth
+                control={control}
+                name={'start_date'}
+                label="Start Date"
+                errors={errors}
+              />
+            </Box>
+          </Grid>
+          <Grid item xs={6}>
+            <Box pl={1}>
+              <FormInputDate
+                fullWidth
+                control={control}
+                name={'end_date'}
+                label="End Date"
+                errors={errors}
+              />
+            </Box>
+          </Grid>
+        </Grid>
+        <Grid container>
+          <Grid item xs={6}>
+            <Box pr={1}>
+              <FormSelect
+                control={control}
+                name="progress_percent"
+                label="Progress Percent"
+                fullWidth
+                options={PROGRESS_PERCENT.map((percent) => ({
+                  key: `${percent}%`,
+                  val: percent,
+                }))}
+              />
+            </Box>
+          </Grid>
+          <Grid item xs={6}>
+            <Box pl={1}>
+              <FormAutocomplete
+                control={control}
+                name="parent_issue_id"
+                disableCloseOnSelect={false}
+                getOptionLabel={(option) => `Issue #${option.id}`}
+                options={(issues ?? [])?.map(({ id, name }) => ({ id, name }))}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                renderInput={(params) => (
+                  <TextField {...params} label="Parent Issue" />
+                )}
+              />
+            </Box>
+          </Grid>
+        </Grid>
+        <FormTextarea
           control={control}
-          name="progress_percent"
-          label="Progress Percent"
-          fullWidth
-          options={PROGRESS_PERCENT.map((percent) => ({
-            key: `${percent}%`,
-            val: percent,
-          }))}
+          name="note"
+          placeholder="Note..."
+          label="Note"
         />
       </Stack>
     </FormDialog>

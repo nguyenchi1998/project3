@@ -47,7 +47,7 @@ const AccountProfile = (props) => (
         </Typography>
       </Box>
     </CardContent>
-    <Divider/>
+    <Divider />
     <CardActions>
       <Button color="primary" fullWidth variant="text">
         Upload picture

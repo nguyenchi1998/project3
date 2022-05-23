@@ -1,27 +1,27 @@
-import {request} from 'utils/request';
+import { request } from 'utils/request';
 
 const all = async (keyword) => {
-  const {data} = await request().get('/specializations', {
-    params: {keyword},
+  const { data } = await request().get('/specializations', {
+    params: { keyword },
   });
 
   return data;
 };
 
 const find = async (uuid) => {
-  const {data} = await request().get(`/specializations/${uuid}`);
+  const { data } = await request().get(`/specializations/${uuid}`);
 
   return data;
 };
 
 const store = (specialization) => {
-  const {data} = request().post(`/specializations`, specialization);
+  const { data } = request().post(`/specializations`, specialization);
 
   return data;
 };
 
 const update = (specialization) => {
-  const {data} = request().put(
+  const { data } = request().put(
     `/specializations/${specialization.uuid}`,
     specialization,
   );
@@ -30,7 +30,7 @@ const update = (specialization) => {
 };
 
 const destroy = (uuid) => {
-  const {data} = request().delete(`/specializations/${uuid}`);
+  const { data } = request().delete(`/specializations/${uuid}`);
 
   return data;
 };

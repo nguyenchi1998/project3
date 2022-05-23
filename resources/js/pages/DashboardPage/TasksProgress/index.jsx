@@ -8,15 +8,15 @@ import {
   LinearProgress,
   Typography,
 } from '@mui/material';
-import {orange} from '@mui/material/colors';
+import { orange } from '@mui/material/colors';
 import InsertChartIcon from '@mui/icons-material/InsertChartOutlined';
-import {useQuery} from 'react-query';
-import {KEY_QUERIES} from '../../../config/keyQueries';
+import { useQuery } from 'react-query';
+import { KEY_QUERIES } from '../../../config/keyQueries';
 import dashboardAPI from '../../../services/dashboard';
 import Skeleton from '../Skeleton';
 
 const TasksProgress = () => {
-  const {data, isLoading, isError, error} = useQuery(
+  const { data, isLoading, isError, error } = useQuery(
     [KEY_QUERIES.FETCH_TASK_PROGRESS],
     dashboardAPI.fetchTaskProgress,
   );
@@ -26,12 +26,12 @@ const TasksProgress = () => {
   }
 
   if (isLoading) {
-    return <Skeleton/>;
+    return <Skeleton />;
   }
   return (
-    <Card sx={{height: '100%'}}>
+    <Card sx={{ height: '100%' }}>
       <CardContent>
-        <Grid container spacing={3} sx={{justifyContent: 'space-between'}}>
+        <Grid container spacing={3} sx={{ justifyContent: 'space-between' }}>
           <Grid item>
             <Typography color="textSecondary" gutterBottom variant="h6">
               TASKS PROGRESS
@@ -48,12 +48,12 @@ const TasksProgress = () => {
                 width: 56,
               }}
             >
-              <InsertChartIcon/>
+              <InsertChartIcon />
             </Avatar>
           </Grid>
         </Grid>
-        <Box sx={{pt: 3}}>
-          <LinearProgress value={data.value} variant="determinate"/>
+        <Box sx={{ pt: 3 }}>
+          <LinearProgress value={data.value} variant="determinate" />
         </Box>
       </CardContent>
     </Card>

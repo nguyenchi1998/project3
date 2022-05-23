@@ -8,16 +8,16 @@ import Avatar from '@mui/material/Avatar';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import MoneyIcon from '@mui/icons-material/Money';
-import {green, red} from '@mui/material/colors';
-import {useQuery} from 'react-query';
-import {KEY_QUERIES} from 'config/keyQueries';
+import { green, red } from '@mui/material/colors';
+import { useQuery } from 'react-query';
+import { KEY_QUERIES } from 'config/keyQueries';
 import dashboardAPI from 'services/dashboard';
 import Skeleton from 'pages/Manager/DashboardPage/Skeleton';
 
-const STATUS = {DOWN: 'down', UP: 'up'};
+const STATUS = { DOWN: 'down', UP: 'up' };
 
 const Budget = () => {
-  const {data, isLoading, isError, error} = useQuery(
+  const { data, isLoading, isError, error } = useQuery(
     [KEY_QUERIES.FETCH_BUDGET],
     dashboardAPI.fetchBudget,
   );
@@ -25,13 +25,13 @@ const Budget = () => {
     return <>{error.message}</>;
   }
   if (isLoading) {
-    return <Skeleton/>;
+    return <Skeleton />;
   }
 
   return (
-    <Card sx={{height: '100%'}}>
+    <Card sx={{ height: '100%' }}>
       <CardContent>
-        <Grid container spacing={3} sx={{justifyContent: 'space-between'}}>
+        <Grid container spacing={3} sx={{ justifyContent: 'space-between' }}>
           <Grid item>
             <Typography color="textSecondary" gutterBottom variant="h6">
               BUDGET
@@ -48,7 +48,7 @@ const Budget = () => {
                 width: 56,
               }}
             >
-              <MoneyIcon/>
+              <MoneyIcon />
             </Avatar>
           </Grid>
         </Grid>
@@ -60,9 +60,9 @@ const Budget = () => {
           }}
         >
           {data.status === STATUS.DOWN ? (
-            <ArrowDownwardIcon sx={{color: red[900]}}/>
+            <ArrowDownwardIcon sx={{ color: red[900] }} />
           ) : (
-            <ArrowUpwardIcon sx={{color: green[900]}}/>
+            <ArrowUpwardIcon sx={{ color: green[900] }} />
           )}
           <Typography
             sx={{

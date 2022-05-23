@@ -176,12 +176,24 @@ class ProjectController extends Controller
         return $members;
     }
 
-    public function getIssues($id)
+    public function getIssues($id, Request $request)
     {
+        $ignoreIds = $request->get('ignoreIds');
         $project = Project::find($id)
-            ->load(['issues' => function ($query) {
-                $query->orderBy('id', 'desc');
-            }, 'issues.tracker', 'issues.author', 'issues.assignee']);
+            ->load([
+                'issues' => function ($query) {
+                    $query->orderBy('id', 'desc');
+                },
+                'issues' => function ($query) use ($ignoreIds) {
+                    $query->when(isset($ignoreIds), function ($query) use ($ignoreIds) {
+                        $query->whereNotIn('id', $ignoreIds);
+                    });
+                },
+                'issues.tracker',
+                'issues.author',
+                'issues.assignee',
+
+            ]);
         $issues = $project->issues;
 
         return $issues;
