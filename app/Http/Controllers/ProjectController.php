@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Project\ProjectStoreRequest;
 use App\Http\Requests\Project\ProjectUpdateRequest;
+use App\Models\Issue;
 use App\Models\Project;
 use App\Models\Tracker;
 use App\Models\User;
@@ -179,22 +180,41 @@ class ProjectController extends Controller
     public function getIssues($id, Request $request)
     {
         $ignoreIds = $request->get('ignoreIds');
-        $project = Project::find($id)
-            ->load([
-                'issues' => function ($query) {
-                    $query->orderBy('id', 'desc');
-                },
-                'issues' => function ($query) use ($ignoreIds) {
-                    $query->when(isset($ignoreIds), function ($query) use ($ignoreIds) {
-                        $query->whereNotIn('id', $ignoreIds);
-                    });
-                },
-                'issues.tracker',
-                'issues.author',
-                'issues.assignee',
-
+        $filters = $request->only([
+            'keyword',
+            'assigneeId',
+            'trackerId',
+            'status',
+            'priority',
+        ]);
+        $issues = Issue::where('project_id', $id)
+            ->when(isset($ignoreIds), function ($query) use ($ignoreIds) {
+                $query->whereNotIn('id', $ignoreIds);
+            })
+            ->when(count($filters), function ($query) use ($filters) {
+                $query->orWhere(function ($query) use ($filters) {
+                    $query->when(isset($filters['keyword']), function ($query) use ($filters) {
+                        $query->where('name', 'like', '%' . $filters['keyword'] . '%');
+                    })
+                        ->when(isset($filters['assigneeId']), function ($query) use ($filters) {
+                            $query->where('assign_user_id',  $filters['assigneeId']);
+                        })
+                        ->when(isset($filters['trackerId']), function ($query) use ($filters) {
+                            $query->where('tracker_id', $filters['trackerId']);
+                        })
+                        ->when(isset($filters['status']), function ($query) use ($filters) {
+                            $query->where('status', $filters['status']);
+                        })
+                        ->when(isset($filters['priority']), function ($query) use ($filters) {
+                            $query->where('priority',  $filters['priority']);
+                        });
+                });
+            })
+            ->orderBy('id', 'desc')->get()->load([
+                'tracker',
+                'author',
+                'assignee',
             ]);
-        $issues = $project->issues;
 
         return $issues;
     }
