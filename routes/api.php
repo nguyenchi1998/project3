@@ -29,11 +29,11 @@ Route::group(['prefix' => 'auth'], function () {
 });
 Route::group(['middleware' => ['auth:sanctum', 'access:director']], function () {
     Route::resource('projects', ProjectController::class);
-    Route::get('projects/{id}/add-members', [ProjectController::class, 'showEmployeeForAddMembers']);
     Route::get('projects/{id}/tracker-issues-statistic', [ProjectController::class, 'trackerIssuesStatistic']);
-    Route::post('projects/{id}/add-members', [ProjectController::class, 'addMembers']);
-    Route::post('projects/{id}/remove-member', [ProjectController::class, 'removeMember']);
     Route::get('projects/{id}/members', [ProjectController::class, 'getMembers']);
+    Route::post('projects/{id}/members', [ProjectController::class, 'addMember']);
+    Route::put('projects/{id}/members/{memberId}', [ProjectController::class, 'updateMember']);
+    Route::delete('projects/{id}/members/{memberId}', [ProjectController::class, 'removeMember']);
     Route::get('projects/{id}/issues', [ProjectController::class, 'getIssues']);
     Route::resource('groups', GroupController::class);
     Route::resource('languages', LanguageController::class);

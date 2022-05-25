@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Project\FilterIssueRequest;
 use App\Http\Requests\Project\ProjectStoreRequest;
 use App\Http\Requests\Project\ProjectUpdateRequest;
 use App\Models\Issue;
@@ -123,40 +124,33 @@ class ProjectController extends Controller
         ], ResponseAlias::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    public function addMembers(Request $request, $id)
+    public function addMember(Request $request, $id)
     {
-        $project = Project::find($id);
-        $employeeIds = array_reduce($request->employeeIds, function ($employeeIds, $employeeId) {
-            $employeeIds[$employeeId] = [
-                'role' => intval(config('constant.project_member_role.member'))
-            ];
-            return $employeeIds;
-        }, []);
-        // add created project employee to manager
-        $employeeIds[auth()->user()->id] = [
-            'role' => intval(config('constant.project_member_role.project_manager'))
-        ];
-        $project->members()->syncWithoutDetaching(
-            $employeeIds
+        $employeeData = $request->only(
+            'role',
+            'effort'
         );
+        $project = Project::find($id);
+        $project->members()->attach(
+            $request->get('employeeId'),
+            $employeeData
+        );
+        $members = $project->members()
+            ->orderBy('role', 'desc')
+            ->orderBy('id', 'desc')->get();
+
+        return $members;
     }
 
-    public function showEmployeeForAddMembers(Request $request, $id)
+    public function removeMember($projectId, $memberId)
     {
-        $project = Project::find($id);
-        $memberIds = $project->members->pluck('id')->toArray();
-        $employees = User::whereNotIn('id', array_merge(
-            [auth()->user()->id],
-            $memberIds
-        ))->get();
+        $project = Project::find($projectId);
+        $project->members()->detach($memberId);
+        $members = $project->members()
+            ->orderBy('role', 'desc')
+            ->orderBy('id', 'desc')->get();
 
-        return $employees;
-    }
-
-    public function removeMember(Request $request, $id)
-    {
-        $project = Project::find($id);
-        $project->members()->detach($request->memberId);
+        return $members;
     }
 
     public function trackerIssuesStatistic($id)
@@ -166,48 +160,74 @@ class ProjectController extends Controller
         }])->get();
     }
 
-    public function getMembers($id)
+    public function getMembers($id, Request $request)
     {
+        $filters = $request->only(['keyword']);
         $project = Project::find($id)
-            ->load(['members' => function ($query) {
-                $query->orderBy('id', 'desc');
+            ->load(['members' => function ($query) use ($filters) {
+                $query->when(isset($filters['keyword']), function ($query) use ($filters) {
+                    $query->where('name', 'like',  '%' . $filters['keyword'] . '%');
+                })->orderBy('role', 'desc')->orderBy('id', 'desc');
             }]);
         $members = $project->members;
 
         return $members;
     }
 
-    public function getIssues($id, Request $request)
+    public function updateMember($id, $memberId, Request $request)
+    {
+        $updateData = $request->only(['effort', 'role']);
+        $project = Project::find($id)->load(['members' => function ($query) {
+            $query->orderBy('role', 'desc')
+                ->orderBy('id', 'desc');
+        }]);
+        $project->members()->updateExistingPivot(
+            $memberId,
+            $updateData
+        );
+        $members = $project->members()
+            ->orderBy('role', 'desc')
+            ->orderBy('id', 'desc')->get();
+
+        return $members;
+    }
+
+    public function getIssues($id, FilterIssueRequest $request)
     {
         $ignoreIds = $request->get('ignoreIds');
         $filters = $request->only([
-            'keyword',
+            'name',
             'assigneeId',
+            'authorId',
             'trackerId',
             'status',
             'priority',
+            'startDate',
+            'endDate',
         ]);
         $issues = Issue::where('project_id', $id)
             ->when(isset($ignoreIds), function ($query) use ($ignoreIds) {
                 $query->whereNotIn('id', $ignoreIds);
             })
             ->when(count($filters), function ($query) use ($filters) {
-                $query->orWhere(function ($query) use ($filters) {
+                $query->where(function ($query) use ($filters) {
                     $query->when(isset($filters['keyword']), function ($query) use ($filters) {
-                        $query->where('name', 'like', '%' . $filters['keyword'] . '%');
-                    })
-                        ->when(isset($filters['assigneeId']), function ($query) use ($filters) {
-                            $query->where('assign_user_id',  $filters['assigneeId']);
-                        })
-                        ->when(isset($filters['trackerId']), function ($query) use ($filters) {
-                            $query->where('tracker_id', $filters['trackerId']);
-                        })
-                        ->when(isset($filters['status']), function ($query) use ($filters) {
-                            $query->where('status', $filters['status']);
-                        })
-                        ->when(isset($filters['priority']), function ($query) use ($filters) {
-                            $query->where('priority',  $filters['priority']);
-                        });
+                        $query->where('name', 'like', '%' . $filters['name'] . '%');
+                    })->when(isset($filters['assigneeId']), function ($query) use ($filters) {
+                        $query->where('assign_user_id',  $filters['assigneeId']);
+                    })->when(isset($filters['authorId']), function ($query) use ($filters) {
+                        $query->where('created_user_id',  $filters['authorId']);
+                    })->when(isset($filters['trackerId']), function ($query) use ($filters) {
+                        $query->where('tracker_id', $filters['trackerId']);
+                    })->when(isset($filters['status']) && $filters['status'] != 'all', function ($query) use ($filters) {
+                        $query->where('status', $filters['status']);
+                    })->when(isset($filters['priority']) && $filters['priority'] != 'all', function ($query) use ($filters) {
+                        $query->where('priority',  $filters['priority']);
+                    })->when(isset($filters['startDate']), function ($query) use ($filters) {
+                        $query->whereDate('start_date', '>=', $filters['startDate']);
+                    })->when(isset($filters['endDate']), function ($query) use ($filters) {
+                        $query->whereDate('end_date', '<=', $filters['endDate']);
+                    });
                 });
             })
             ->orderBy('id', 'desc')->get()->load([

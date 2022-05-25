@@ -15,12 +15,13 @@ import { KEY_QUERIES } from '../../config/keyQueries';
 import issueAPI from '../../services/issue';
 import { ISSUE_PRIORITIES, ISSUE_STATUS } from '../../config/constants';
 import HeaderDetailIssuePage from './HeaderDetailIssuePage';
-import ModalIssue from './ModalIssue';
+import ModalEditIssue from './ModalEditIssue';
 import { useTheme } from '@emotion/react';
 import IssueHistories from './IssueHistories';
 import RelativeIssues from './RelativeIssues';
 import SubIssues from './SubIssues';
 import LoadingIndicator from './../../components/LoadingIndicator';
+import ModalSubIssue from './ModalSubIssue';
 
 const InfoItem = ({ label, value }) => {
   return (
@@ -43,6 +44,7 @@ const DetailIssuePage = () => {
   const handleOpenIssue = useCallback(() => {
     setIssueId(issueId);
   }, []);
+
   const { data, isLoading, isError, error } = useQuery(
     [KEY_QUERIES.FETCH_ISSUE, issueId],
     () => issueAPI.find(issueId),
@@ -144,7 +146,7 @@ const DetailIssuePage = () => {
                       <Box>{data.description}</Box>
                     </Box>
                   </Box>
-                  <SubIssues subIssues={data?.sub_issues} />
+                  <SubIssues issue={data} />
                   <RelativeIssues
                     relativeIssues={data?.relative_issues}
                     issueId={issueId}
@@ -157,7 +159,7 @@ const DetailIssuePage = () => {
         </Box>
       </Box>
       {!!editIssueId && (
-        <ModalIssue handleClose={handleCloseIssue} issueId={editIssueId} />
+        <ModalEditIssue handleClose={handleCloseIssue} issueId={editIssueId} />
       )}
     </Container>
   );

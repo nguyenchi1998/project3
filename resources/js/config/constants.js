@@ -43,6 +43,8 @@ export const PAGINATE_LIMIT = 8;
 
 export const PROGRESS_PERCENT = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
 
+export const EFFORTS = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+
 export const LINK_ISSUE_ACTION = 1;
 
 export const UNLINK_ISSUE_ACTION = 0;

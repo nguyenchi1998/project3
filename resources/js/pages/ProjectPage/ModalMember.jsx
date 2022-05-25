@@ -97,7 +97,7 @@ const MemberItem = ({ member, projectId }) => {
 const ModalMember = ({ open, handleClose, project }) => {
   const queryClient = useQueryClient();
   const { mutate, isLoading: isAddMemberPending } = useMutation(
-    projectAPI.addMembers,
+    projectAPI.addMember,
     {
       onSuccess: () => {
         queryClient.invalidateQueries([KEY_QUERIES.FETCH_PROJECT, project.id]);

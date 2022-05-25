@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Tracker\TrackerStoreRequest;
 use App\Models\Tracker;
 use Illuminate\Http\Request;
 
@@ -14,9 +15,17 @@ class TrackerController extends Controller
      */
     public function index(Request $request)
     {
-        return Tracker::where('project_id', $request->get('project_id'))
-            ->orWhere('project_id', null)
-            ->get();
+        $filters = $request->only([
+            'keyword',
+            'project_id',
+        ]);
+
+        return Tracker::when(isset($filters['project_id']), function ($query) use ($filters) {
+            $query->where('project_id', $filters['project_id'])
+                ->orWhere('project_id', null);
+        })->when(isset($filters['keyword']), function ($query) use ($filters) {
+            $query->where('name', 'like', '%' . $filters['keyword'] . '%');
+        })->get();
     }
 
     /**
@@ -25,9 +34,9 @@ class TrackerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TrackerStoreRequest $request)
     {
-        //
+        return Tracker::create($request->only('name'));
     }
 
     /**
@@ -50,7 +59,10 @@ class TrackerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $tracker = Tracker::find($id);
+        $tracker->update($request->only('name'));
+
+        return $tracker;
     }
 
     /**
@@ -61,6 +73,8 @@ class TrackerController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $tracker = Tracker::destroy($id);
+
+        return $id;
     }
 }

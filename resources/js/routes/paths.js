@@ -11,6 +11,8 @@ const NOT_FOUND_PAGE = 'NOT_FOUND_PAGE';
 const PROJECT_PAGE = 'PROJECT_PAGE';
 const OVERVIEW_PAGE = 'OVERVIEW';
 const ISSUE_PAGE = 'ISSUE';
+const TRACKER_PAGE = 'TRACKER';
+const MEMBER_PAGE = 'MEMBER';
 
 export const AUTH_PATH = {
   [SIGN_IN_PAGE]: '/login',
@@ -35,4 +37,6 @@ export const PATH = {
 export const PROJECT_PATH = {
   [OVERVIEW_PAGE]: 'overview',
   [ISSUE_PAGE]: 'issues',
+  [TRACKER_PAGE]: 'trackers',
+  [MEMBER_PAGE]: 'members',
 };

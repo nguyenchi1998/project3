@@ -26,7 +26,6 @@ import {
   useTheme,
 } from '@mui/material';
 import { PROJECT_MEMBER_ROLES } from '../../config/constants';
-import ModalIssue from '../IssuesProjectPage/ModalIssue';
 import TypeIssuesStatistic from './TypeIssuesStatistic';
 import IssueList from './IssueList';
 
@@ -34,7 +33,7 @@ const MemberList = () => {
   const { projectId } = useParams();
   const { data, isLoading, isError, error } = useQuery(
     [KEY_QUERIES.FETCH_PROJECT_MEMBER, projectId],
-    () => projectAPI.getMembers(projectId),
+    () => projectAPI.getMembers({ projectId }),
   );
   if (isError) {
     return <>{error.message}</>;

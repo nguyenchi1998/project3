@@ -11,14 +11,22 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { memo } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { ISSUE_STATUS, ISSUE_STATUS_CLOSED } from '../../config/constants';
 import LinkOffIcon from '@mui/icons-material/LinkOff';
 import { useTheme } from '@emotion/react';
 import { Link } from 'react-router-dom';
+import ModalSubIssue from './ModalSubIssue';
 
-const SubIssues = ({ subIssues }) => {
+const SubIssues = ({ issue }) => {
   const theme = useTheme();
+  const [subIssueOpen, setSubIssueOpen] = useState(false);
+  const handleCloseSubIssue = useCallback(() => {
+    setSubIssueOpen(false);
+  }, []);
+  const handleOpenSubIssue = useCallback(() => {
+    setSubIssueOpen(true);
+  }, []);
   return (
     <Box>
       <Divider />
@@ -31,13 +39,15 @@ const SubIssues = ({ subIssues }) => {
           <Typography component={Box} flexGrow={1} gutterBottom variant="body1">
             <strong>Sub Issue</strong>
           </Typography>
-          <Button size="small">Add</Button>
+          <Button size="small" onClick={handleOpenSubIssue}>
+            Add
+          </Button>
         </Box>
-        {!!subIssues?.length && (
+        {!!issue?.sub_issues?.length && (
           <TableContainer>
             <Table>
               <TableBody>
-                {subIssues.map((issue) => (
+                {issue?.sub_issues.map((issue) => (
                   <TableRow key={issue.id}>
                     <TableCell size="small">
                       <Typography component={Box} variant="body2">
@@ -94,6 +104,13 @@ const SubIssues = ({ subIssues }) => {
           </TableContainer>
         )}
       </Box>
+      {subIssueOpen && (
+        <ModalSubIssue
+          open={subIssueOpen}
+          handleClose={handleCloseSubIssue}
+          issue={issue}
+        />
+      )}
     </Box>
   );
 };

@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import { PATH, PROJECT_PATH } from '../../routes/paths';
 import NavItem from './NavItem';
 import FilterIcon from '@mui/icons-material/Filter';
+import GroupIcon from '@mui/icons-material/Group';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import { useQuery } from 'react-query';
@@ -25,12 +26,6 @@ const user = {
 
 const items = [
   {
-    href: PATH.HOME_PAGE,
-    isHome: true,
-    icon: BarChartIcon,
-    title: 'Home',
-  },
-  {
     href: PROJECT_PATH.OVERVIEW,
     icon: BarChartIcon,
     title: 'Overview',
@@ -39,6 +34,16 @@ const items = [
     href: PROJECT_PATH.ISSUE,
     icon: FilterIcon,
     title: 'Issues',
+  },
+  {
+    href: PROJECT_PATH.TRACKER,
+    icon: FilterIcon,
+    title: 'Trackers',
+  },
+  {
+    href: PROJECT_PATH.MEMBER,
+    icon: GroupIcon,
+    title: 'Members',
   },
 ];
 const DashboardSidebar = ({ onMobileClose, openMobile, projectId }) => {

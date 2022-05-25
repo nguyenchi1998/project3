@@ -9,6 +9,8 @@ class Tracker extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name'];
+
     public function issues()
     {
         return $this->hasMany(Issue::class);

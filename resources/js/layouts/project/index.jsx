@@ -7,6 +7,8 @@ import DetailProjectPage from '../../pages/DetailProjectPage';
 import ProjectNavbar from './Navbar';
 import DetailIssuePage from '../../pages/DetailIssuePage';
 import IssuesProjectPage from '../../pages/IssuesProjectPage';
+import TrackerPage from '../../pages/TrackerPage';
+import MemberProjectPage from '../../pages/MemberProjectPage';
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -70,6 +72,18 @@ const ProjectLayout = () => {
                 exact
               >
                 <DetailProjectPage />
+              </Route>
+              <Route
+                path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.TRACKER}`}
+                exact
+              >
+                <TrackerPage />
+              </Route>
+              <Route
+                path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.MEMBER}`}
+                exact
+              >
+                <MemberProjectPage projectId={projectId} />
               </Route>
             </Switch>
           </DashboardLayoutContent>

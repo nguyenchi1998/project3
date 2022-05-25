@@ -67,8 +67,10 @@ const HeaderDetailIssuePage = ({ issue }) => {
               <PersonIcon fontSize="medium" />
             </Box>
             <Box>
-              <Typography>Author</Typography>
-              <Typography>{issue?.author?.name}</Typography>
+              <Typography variant="subtitle1">Author</Typography>
+              <Typography variant="subtitle2">
+                {issue?.author?.name ?? ''}
+              </Typography>
             </Box>
           </Box>
         </Paper>
@@ -94,8 +96,10 @@ const HeaderDetailIssuePage = ({ issue }) => {
               <PersonIcon fontSize="medium" />
             </Box>
             <Box>
-              <Typography>Assignee</Typography>
-              <Typography>{issue?.assignee?.name}</Typography>
+              <Typography variant="subtitle1">Assignee</Typography>
+              <Typography variant="subtitle2">
+                {issue?.assignee?.name ?? ''}
+              </Typography>
             </Box>
           </Box>
         </Paper>
@@ -121,7 +125,7 @@ const HeaderDetailIssuePage = ({ issue }) => {
               <AssignmentLateIcon fontSize="medium" />
             </Box>
             <Box>
-              <Typography>Priority</Typography>
+              <Typography variant="subtitle1">Priority</Typography>
               <Box
                 px={1}
                 borderRadius={1}

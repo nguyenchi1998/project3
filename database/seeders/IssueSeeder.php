@@ -22,7 +22,7 @@ class IssueSeeder extends Seeder
                 return $member->pivot->role === config('constant.project_member_role.project_manager');
             })->first();
             $trackerIds = Tracker::all()->pluck('id')->toArray();
-            Issue::factory()->count(random_int(0, 100))
+            Issue::factory()->count(random_int(0, 200))
                 ->create([
                     'project_id' => $project->id,
                     'created_user_id' => $projectPM->id,

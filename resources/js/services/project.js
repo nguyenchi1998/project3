@@ -35,17 +35,11 @@ const destroy = async (id) => {
   return data;
 };
 
-const showEmployeeFormAddMembers = async (id) => {
-  const { data } = await request().get(`${baseResourceUri}/${id}/add-members`);
-
-  return data;
-};
-
-const addMembers = async ({ id, employeeIds }) => {
+const addMember = async ({ projectId, ...rest }) => {
   const { data } = await request().post(
-    `${baseResourceUri}/${id}/add-members`,
+    `${baseResourceUri}/${projectId}/members`,
     {
-      employeeIds,
+      ...rest,
     },
   );
 
@@ -71,8 +65,24 @@ const trackerIssuesStatistic = async (id) => {
   return data;
 };
 
-const getMembers = async (id) => {
-  const { data } = await request().get(`${baseResourceUri}/${id}/members`);
+const getMembers = async ({ projectId, ...rest }) => {
+  const { data } = await request().get(
+    `${baseResourceUri}/${projectId}/members`,
+    {
+      params: { ...rest },
+    },
+  );
+
+  return data;
+};
+
+const updateMember = async ({ projectId, memberId, ...rest }) => {
+  const { data } = await request().put(
+    `${baseResourceUri}/${projectId}/members/${memberId}`,
+    {
+      ...rest,
+    },
+  );
 
   return data;
 };
@@ -88,16 +98,25 @@ const getIssues = async ({ projectId, ...filter }) => {
   return data;
 };
 
+const deleteMember = async ({ projectId, memberId }) => {
+  const { data } = await request().delete(
+    `${baseResourceUri}/${projectId}/members/${memberId}`,
+  );
+
+  return data;
+};
+
 export default {
   all,
   find,
   store,
   update,
   destroy,
-  showEmployeeFormAddMembers,
-  addMembers,
+  addMember,
   removeMember,
   trackerIssuesStatistic,
   getMembers,
+  updateMember,
   getIssues,
+  deleteMember,
 };
