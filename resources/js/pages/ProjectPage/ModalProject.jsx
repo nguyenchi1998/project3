@@ -41,35 +41,54 @@ const ModalProject = ({ handleClose, project, keyQuery, action }) => {
   });
   const { mutate, isLoading: isStorePending } = useMutation(projectAPI.store, {
     onSuccess: (data) => {
-      queryClient.setQueryData([KEY_QUERIES.FETCH_PROJECT], (old) => {
-        return [data, ...old];
-      });
+      queryClient.setQueryData(
+        [KEY_QUERIES.FETCH_PROJECT, { ...keyQuery }],
+        (old) => {
+          return [data, ...old];
+        },
+      );
       handleClose();
+      reset({ ...defaultValues });
       toast.success('Project created successfully');
     },
     onError: ({ response: { data, status } }) => {
-      if (status == API_CODES.INVALID_DATA) {
+      if (status === API_CODES.INVALID_DATA) {
         Object.entries(data.errors).forEach((error) => {
           const [name, message] = error;
           setError(name, { type: 'custom', message: message[0] });
         });
+      } else {
+        handleClose();
+        reset({ ...defaultValues });
+        toast.error(data.message);
       }
     },
   });
   const { mutate: updateMutate, isLoading: isUpdatePending } = useMutation(
     projectAPI.update,
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries([KEY_QUERIES.FETCH_PROJECT, ...keyQuery]);
+      onSuccess: (response) => {
+        queryClient.setQueryData(
+          [KEY_QUERIES.FETCH_PROJECT, { ...keyQuery }],
+          (old) =>
+            old.map((oldProject) =>
+              oldProject.id === response.id ? response : oldProject,
+            ),
+        );
         handleClose();
+        reset({ ...defaultValues });
         toast.success('Project updated successfully');
       },
       onError: ({ response: { data, status } }) => {
-        if (status == API_CODES.INVALID_DATA) {
+        if (status === API_CODES.INVALID_DATA) {
           Object.entries(data.errors).forEach((error) => {
             const [name, message] = error;
             setError(name, { type: 'custom', message: message[0] });
           });
+        } else {
+          handleClose();
+          reset({ ...defaultValues });
+          toast.error(data.message);
         }
       },
     },

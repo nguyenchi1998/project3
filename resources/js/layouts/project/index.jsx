@@ -3,7 +3,7 @@ import { Route, Switch, useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import ProjectSidebar from './SideBar';
 import { PATH, PROJECT_PATH } from '../../routes/paths';
-import DetailProjectPage from '../../pages/DetailProjectPage';
+import OverviewProjectPage from '../../pages/OverviewProjectPage';
 import ProjectNavbar from './Navbar';
 import DetailIssuePage from '../../pages/DetailIssuePage';
 import IssuesProjectPage from '../../pages/IssuesProjectPage';
@@ -71,7 +71,7 @@ const ProjectLayout = () => {
                 path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.OVERVIEW}`}
                 exact
               >
-                <DetailProjectPage />
+                <OverviewProjectPage />
               </Route>
               <Route
                 path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.TRACKER}`}

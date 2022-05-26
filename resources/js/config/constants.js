@@ -32,11 +32,18 @@ export const ISSUE_STATUS_CLOSED = 4;
 
 export const ISSUE_PRIORITIES = ['Low', 'Normal', 'High', 'Immediate'];
 
+export const CHART_ISSUE_PRIORITY_COLORS = [
+  colors.lightBlue[100],
+  colors.indigo[500],
+  colors.orange[600],
+  colors.red[600],
+];
+
 export const ISSUE_PRIORITY_COLORS = [
   'unset',
   'unset',
   colors.deepOrange[50],
-  colors.red[100],
+  colors.red[200],
 ];
 
 export const PAGINATE_LIMIT = 8;

@@ -14,13 +14,13 @@ import {
   PROGRESS_PERCENT,
 } from '../../config/constants';
 import * as API_CODES from '../../config/API_CODES';
-import taskAPI from '../../services/issue';
+import issueAPI from '../../services/issue';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import projectAPI from '../../services/project';
 import trackerAPI from '../../services/tracker';
-import issueAPI from '../../services/issue';
 import { format, isValid } from 'date-fns';
 import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 const defaultValues = {
   name: '',
@@ -39,14 +39,15 @@ const defaultValues = {
 const ModalEditIssue = ({ issueId, handleClose }) => {
   const queryClient = useQueryClient();
   const { projectId } = useParams();
-  const { mutate, isLoading } = useMutation(taskAPI.update, {
+  const { mutate, isLoading } = useMutation(issueAPI.update, {
     onSuccess: (response) => {
       queryClient.setQueryData([KEY_QUERIES.FETCH_ISSUE, issueId], (old) => ({
         ...old,
         ...response,
       }));
-      reset({ ...defaultValues });
       handleClose();
+      reset({ ...defaultValues });
+      toast.success('Update issue successfully');
     },
     onError: ({ response: { data, status } }) => {
       if (status == API_CODES.INVALID_DATA) {
@@ -54,6 +55,10 @@ const ModalEditIssue = ({ issueId, handleClose }) => {
           const [name, message] = error;
           setError(name, { type: 'custom', message: message[0] });
         });
+      } else {
+        handleClose();
+        reset({ ...defaultValues });
+        toast.error(data.message);
       }
     },
   });

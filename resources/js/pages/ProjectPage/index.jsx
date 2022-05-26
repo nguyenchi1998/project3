@@ -11,29 +11,30 @@ import {
   ToggleButtonGroup,
   Typography,
 } from '@mui/material';
-import { FiPlusCircle } from 'react-icons/fi';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import { useQuery } from 'react-query';
 import projectAPI from '../../services/project';
 import { PAGINATE_LIMIT, PROJECT_STATUS } from '../../config/constants';
-import { debounce } from 'lodash';
 import ModalProject from './ModalProject';
 import ModalMember from './ModalMember';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import ListSkeleton from './ListSkeleton';
 import ProjectItem from './../../container/ProjectItem';
+import useDebounce from './../../hooks/useDebounce';
+import useQueryParam from '../../hooks/useQueryParam';
 
 const ProjectPage = () => {
-  const [keyword, setKeyword] = useState('');
-  const [type, setType] = useState('');
+  const params = useQueryParam();
+  const [filter, setFilter] = useState({
+    keyword: '',
+    type: '',
+    ...params,
+  });
   const [page, setPage] = useState(1);
   const [action, setAction] = useState(null);
   const [open, setOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
-  const { data, isLoading, isSuccess } = useQuery(
-    [KEY_QUERIES.FETCH_PROJECT],
-    () => projectAPI.all(),
-  );
+
   const handleMembersClose = useCallback(() => {
     setOpen(false);
     setSelectedProject(null);
@@ -42,30 +43,25 @@ const ProjectPage = () => {
     setAction(null);
     setSelectedProject(null);
   }, []);
-  const handleFilter = (_, newFilter) => {
-    setType(newFilter);
+  const handleTypeFilter = (_, type) => {
+    setFilter({ ...filter, ...{ type: type } });
   };
-  const debounceChangeKeyword = useCallback(
-    debounce((value) => setKeyword(value), 500),
-    [],
-  );
-  const handleChangeKeyword = ({ target: { value } }) => {
-    debounceChangeKeyword(value);
+  const handleChangeFilter = ({ target: { name, value } }) => {
+    setFilter({ [name]: value });
   };
+  const debounceFilter = useDebounce(filter, 500, true);
   const handlePageChange = useCallback((_event, newPage) => {
     setPage(newPage);
   }, []);
-  const handleOpenMembers = useCallback(
-    (project) => {
-      setSelectedProject(project);
-      setOpen(true);
-    },
-    [open],
-  );
+
   const handleOpenEdit = useCallback((dataProject) => {
     setSelectedProject(dataProject);
     setAction('edit');
   }, []);
+  const { data, isLoading, isSuccess } = useQuery(
+    [KEY_QUERIES.FETCH_PROJECT, { ...debounceFilter }],
+    () => projectAPI.all({ ...debounceFilter }),
+  );
 
   return (
     <Container maxWidth={false}>
@@ -82,22 +78,21 @@ const ProjectPage = () => {
           </Box>
           <Box display={'flex'}>
             <Button
-              variant="contained"
               onClick={() => {
                 setAction('create');
                 setSelectedProject(null);
               }}
             >
-              <FiPlusCircle />
               <Box ml={1}>Create Project</Box>
             </Button>
             <Box ml={2}>
               <TextField
                 variant="outlined"
+                placeholder="Search..."
+                onChange={handleChangeFilter}
+                value={filter.keyword}
+                name="keyword"
                 size="small"
-                placeholder="Search"
-                sx={{ minWidth: 300, backgroundColor: 'white' }}
-                onChange={handleChangeKeyword}
               />
             </Box>
           </Box>
@@ -121,10 +116,10 @@ const ProjectPage = () => {
             )}
           </Box>
           <ToggleButtonGroup
-            value={type}
+            value={filter.type}
             exclusive
             color="primary"
-            onChange={handleFilter}
+            onChange={handleTypeFilter}
           >
             <ToggleButton value="" sx={{ paddingX: 2, paddingY: 0.8 }}>
               All
@@ -159,7 +154,6 @@ const ProjectPage = () => {
                     >
                       <ProjectItem
                         project={project}
-                        handleOpenMembers={handleOpenMembers}
                         handleOpenEdit={handleOpenEdit}
                       />
                     </Grid>
@@ -177,7 +171,7 @@ const ProjectPage = () => {
                   project={selectedProject}
                   action={action}
                   handleClose={handleProjectClose}
-                  keyQuery={[keyword, type, page]}
+                  keyQuery={debounceFilter}
                 />
               )}
             </PerfectScrollbar>

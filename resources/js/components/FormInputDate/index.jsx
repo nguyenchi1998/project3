@@ -12,7 +12,6 @@ const FormInputDate = ({ name, control, label, maxDate, minDate, ...rest }) => {
         control={control}
         render={({ field: { onChange, value } }) => (
           <DesktopDatePicker
-            size="small"
             maxDate={maxDate}
             minDate={minDate}
             onChange={(e) => onChange(e)}

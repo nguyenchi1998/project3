@@ -26,6 +26,7 @@ import ListHeader from './ListHeader';
 import { format } from 'date-fns';
 import ModalMemberProject from './ModalMemberProject';
 import { toast } from 'react-toastify';
+import ConfirmDialog from './../../components/ConfirmDialog';
 
 const MemberProjectPage = ({ projectId }) => {
   const queryClient = useQueryClient();
@@ -34,10 +35,17 @@ const MemberProjectPage = ({ projectId }) => {
     keyword: '',
     ...params,
   });
+  const [deleteId, setDeleteId] = useState(null);
   const [action, setAction] = useState(null);
   const [selectedMember, setSelectedMember] = useState(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const handleConfirmDeleteMember = useCallback((memberId) => {
+    setDeleteId(memberId);
+  }, []);
+  const handleCloseConfirmDeleteMember = useCallback(() => {
+    setDeleteId(null);
+  }, []);
   const handleChangePage = useCallback((_event, newPage) => {
     setPage(newPage);
   }, []);
@@ -63,13 +71,11 @@ const MemberProjectPage = ({ projectId }) => {
         );
         toast.success('Member deleted successfully');
       },
-      onError: ({ response: { data, status } }) => {
-        if (status == API_CODES.INVALID_DATA) {
-          Object.entries(data.errors).forEach((error) => {
-            const [name, message] = error;
-            setError(name, { type: 'custom', message: message[0] });
-          });
-        }
+      onError: ({ response: { data } }) => {
+        toast.error(data.message);
+      },
+      onSettled: () => {
+        handleCloseConfirmDeleteMember();
       },
     },
   );
@@ -81,8 +87,9 @@ const MemberProjectPage = ({ projectId }) => {
     setSelectedMember(data);
     setAction('edit');
   }, []);
-  const handleRemoveMember = (memberId) => {
-    deleteMutate({ projectId, memberId });
+
+  const handleRemoveMember = () => {
+    deleteMutate({ projectId, memberId: deleteId });
   };
   return (
     <Container maxWidth={false}>
@@ -97,7 +104,6 @@ const MemberProjectPage = ({ projectId }) => {
           </Box>
           <Box display={'flex'}>
             <Button
-              variant="contained"
               onClick={() => {
                 setAction('create');
                 setSelectedMember(null);
@@ -108,11 +114,11 @@ const MemberProjectPage = ({ projectId }) => {
             <Box ml={2}>
               <TextField
                 variant="outlined"
-                size="small"
                 placeholder="Search..."
                 onChange={handleChangeFilter}
                 value={filter.keyword}
                 name="keyword"
+                size="small"
               />
             </Box>
           </Box>
@@ -137,28 +143,26 @@ const MemberProjectPage = ({ projectId }) => {
                 <TableBody>
                   {data.map((member) => (
                     <TableRow key={member.id}>
-                      <TableCell size="small">{member.name}</TableCell>
-                      <TableCell size="small">
+                      <TableCell>{member.name}</TableCell>
+                      <TableCell>
                         {PROJECT_MEMBER_ROLES[member?.pivot?.role]}
                       </TableCell>
-                      <TableCell size="small">{member.email}</TableCell>
-                      <TableCell size="small">
-                        {member?.pivot?.effort}
-                      </TableCell>
-                      <TableCell size="small">
+                      <TableCell>{member.email}</TableCell>
+                      <TableCell>{member?.pivot?.effort}</TableCell>
+                      <TableCell>
                         {format(
                           new Date(member?.pivot?.created_at),
                           'yyyy-MM-dd',
                         )}
                       </TableCell>
-                      <TableCell width={150} size="small">
+                      <TableCell width={150}>
                         <Box display="flex">
                           <IconButton onClick={() => handleOpenEdit(member)}>
                             <EditIcon />
                           </IconButton>
                           <IconButton
                             disabled={isDestroyPending}
-                            onClick={() => handleRemoveMember(member.id)}
+                            onClick={() => handleConfirmDeleteMember(member.id)}
                           >
                             <DeleteIcon color="error" />
                           </IconButton>
@@ -180,6 +184,12 @@ const MemberProjectPage = ({ projectId }) => {
               members={data ?? []}
             />
           )}
+          <ConfirmDialog
+            open={!!deleteId}
+            onConfirm={handleRemoveMember}
+            onCancel={handleCloseConfirmDeleteMember}
+            message="Remove this member?"
+          />
         </Box>
       </Box>
     </Container>

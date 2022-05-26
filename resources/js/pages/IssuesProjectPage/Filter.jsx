@@ -1,19 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Box from '@mui/material/Box';
 import { useQuery } from 'react-query';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import projectAPI from '../../services/project';
-import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
-import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import {
-  Button,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
   Stack,
   TextField,
-  Typography,
 } from '@mui/material';
 import {
   ISSUE_PRIORITIES,
@@ -27,8 +23,13 @@ import { DesktopDatePicker } from '@mui/lab';
 import { isValid } from 'date-fns';
 import { format } from 'date-fns/esm';
 
-const Filter = ({ projectId, filter, onChangeFilter }) => {
-  const [filterOpen, setFilterOpen] = useState(true);
+const Filter = ({
+  projectId,
+  totalFilter,
+  onChangeFilter,
+  filterOpen,
+  handleToggleFilter,
+}) => {
   const { data: members, isLoading: isMembersLoading } = useQuery(
     [KEY_QUERIES.FETCH_PROJECT_MEMBER, projectId],
     () => projectAPI.getMembers({ projectId }),
@@ -43,45 +44,29 @@ const Filter = ({ projectId, filter, onChangeFilter }) => {
   const handleChangeAutocomplete = (_, value, name) => {
     onChangeFilter({ [name]: value?.id });
   };
-  const handleToggleFilter = () => {
-    setFilterOpen(!filterOpen);
-  };
+
   const onChangeDate = (value, name) => {
     onChangeFilter({
       [name]: isValid(value) ? format(new Date(value), 'yyyy-MM-dd') : null,
     });
   };
   return (
-    <Box pl={2}>
-      {filterOpen ? (
-        <Box minWidth={200} py={1}>
-          <Box
-            py={1}
-            display="flex"
-            justifyContent="space-between"
-            alginItems="center"
-          >
-            <Typography flexGrow={1} variant="h6">
-              Filter
-            </Typography>
-            <Button onClick={handleToggleFilter} variant="contained">
-              <KeyboardDoubleArrowRightIcon />
-            </Button>
-          </Box>
+    <Box>
+      {filterOpen && (
+        <Box minWidth={200} py={1} pl={2}>
           <Stack spacing={2}>
             <FormControl fullWidth>
               <TextField
-                size="small"
                 label="Name"
                 name="name"
-                value={filter?.name}
+                value={totalFilter?.name}
                 onChange={handleChange}
               />
             </FormControl>
-            <FormControl fullWidth size="small">
+            <FormControl fullWidth>
               <InputLabel>Status</InputLabel>
               <Select
-                value={filter.status}
+                value={totalFilter.status}
                 label="status"
                 onChange={handleChange}
                 name="status"
@@ -94,10 +79,10 @@ const Filter = ({ projectId, filter, onChangeFilter }) => {
                 ))}
               </Select>
             </FormControl>
-            <FormControl fullWidth size="small">
+            <FormControl fullWidth>
               <InputLabel>Priority</InputLabel>
               <Select
-                value={filter.priority}
+                value={totalFilter.priority}
                 label="Priority"
                 onChange={handleChange}
                 name="priority"
@@ -110,10 +95,10 @@ const Filter = ({ projectId, filter, onChangeFilter }) => {
                 ))}
               </Select>
             </FormControl>
-            <FormControl fullWidth size="small">
+            <FormControl fullWidth>
               <InputLabel>Percent Done</InputLabel>
               <Select
-                value={filter.percent}
+                value={totalFilter.percent}
                 label="Progress Percent"
                 onChange={handleChange}
                 name="percent"
@@ -131,27 +116,26 @@ const Filter = ({ projectId, filter, onChangeFilter }) => {
                 clearable
                 onChange={(e) => onChangeDate(e, 'startDate')}
                 label="Start Date"
-                value={filter.startDate}
-                renderInput={(params) => <TextField size="small" {...params} />}
+                value={totalFilter.startDate}
+                renderInput={(params) => <TextField {...params} />}
               />
             </FormControl>
             <FormControl>
               <DesktopDatePicker
                 clearable
-                size="small"
                 onChange={(e) => onChangeDate(e, 'endDate')}
                 label="End Date"
-                value={filter.endDate}
-                renderInput={(params) => <TextField size="small" {...params} />}
+                value={totalFilter.endDate}
+                renderInput={(params) => <TextField {...params} />}
               />
             </FormControl>
             <Autocomplete
-              size="small"
               onChange={(e, value) =>
                 handleChangeAutocomplete(e, value, 'authorId')
               }
               value={
-                members?.find((member) => member.id == filter?.authorId) ?? null
+                members?.find((member) => member.id == totalFilter?.authorId) ??
+                null
               }
               options={members ?? []}
               loading={isMembersLoading}
@@ -176,13 +160,13 @@ const Filter = ({ projectId, filter, onChangeFilter }) => {
               )}
             />
             <Autocomplete
-              size="small"
               onChange={(e, value) =>
                 handleChangeAutocomplete(e, value, 'assigneeId')
               }
               value={
-                members?.find((member) => member.id == filter?.assigneeId) ??
-                null
+                members?.find(
+                  (member) => member.id == totalFilter?.assigneeId,
+                ) ?? null
               }
               options={members ?? []}
               loading={isMembersLoading}
@@ -207,13 +191,13 @@ const Filter = ({ projectId, filter, onChangeFilter }) => {
               )}
             />
             <Autocomplete
-              size="small"
               onChange={(e, value) =>
                 handleChangeAutocomplete(e, value, 'trackerId')
               }
               value={
-                trackers?.find((tracker) => tracker.id == filter?.trackerId) ??
-                null
+                trackers?.find(
+                  (tracker) => tracker.id == totalFilter?.trackerId,
+                ) ?? null
               }
               options={trackers ?? []}
               loading={isTrackersLoading}
@@ -238,12 +222,6 @@ const Filter = ({ projectId, filter, onChangeFilter }) => {
               )}
             />
           </Stack>
-        </Box>
-      ) : (
-        <Box py={2}>
-          <Button onClick={handleToggleFilter} variant="contained">
-            <KeyboardDoubleArrowLeftIcon />
-          </Button>
         </Box>
       )}
     </Box>

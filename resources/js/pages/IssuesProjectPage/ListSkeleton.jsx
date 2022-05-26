@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import ListHead from './ListHead';
 
-const ListSkeleton = () => {
+const ListSkeleton = ({ columnCount, numberRow = 5 }) => {
   return (
     <>
       <Box display={'flex'} justifyContent="flex-end">
@@ -21,32 +21,13 @@ const ListSkeleton = () => {
         <Table stickyHeader>
           <ListHead />
           <TableBody>
-            {[...Array(5).keys()].map((i) => (
+            {[...Array(numberRow).keys()].map((i) => (
               <TableRow key={i}>
-                <TableCell>
-                  <Skeleton height="45px" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton height="45px" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton height="45px" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton height="45px" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton height="45px" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton height="45px" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton height="45px" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton height="45px" />
-                </TableCell>
+                {[...Array(columnCount).keys()].map((i) => (
+                  <TableCell key={i}>
+                    <Skeleton height="45px" />
+                  </TableCell>
+                ))}
               </TableRow>
             ))}
           </TableBody>

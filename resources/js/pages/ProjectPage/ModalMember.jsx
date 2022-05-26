@@ -143,7 +143,6 @@ const ModalMember = ({ open, handleClose, project }) => {
           <FormAutocomplete
             control={control}
             name="employees"
-            size="small"
             sx={{ flexGrow: 1 }}
             multiple
             limitTags={1}

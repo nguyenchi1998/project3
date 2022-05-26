@@ -69,12 +69,6 @@ const ManagerForm = ({ action, manager, handleCloseForm }) => {
   const onSubmit = (managerData) => {
     if (action === CREATE_ACTION) {
       mutateStore(managerData, {
-        onError: ({ response }) => {
-          if (response.status === API_CODE.INVALIDATE_DATA)
-            Object.entries(response.data.errors).forEach((e) =>
-              setError(e[0], { type: 'custom', message: e[1][0] }),
-            );
-        },
         onSuccess: ({ data }) => {
           queryClient.setQueryData([KEY_QUERIES.FETCH_MANAGER], (old) => [
             data,
@@ -82,6 +76,12 @@ const ManagerForm = ({ action, manager, handleCloseForm }) => {
           ]);
           handleClose();
           toast('Wow so easy!');
+        },
+        onError: ({ response }) => {
+          if (response.status === API_CODE.INVALIDATE_DATA)
+            Object.entries(response.data.errors).forEach((e) =>
+              setError(e[0], { type: 'custom', message: e[1][0] }),
+            );
         },
       });
     }

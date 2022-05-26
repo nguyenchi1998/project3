@@ -31,6 +31,7 @@ const ModalTracker = ({ handleClose, tracker, keyQuery, action }) => {
         },
       );
       handleClose();
+      reset({ ...defaultValues });
       toast.success('Tracker created successfully');
     },
     onError: ({ response: { data, status } }) => {
@@ -39,6 +40,10 @@ const ModalTracker = ({ handleClose, tracker, keyQuery, action }) => {
           const [name, message] = error;
           setError(name, { type: 'custom', message: message[0] });
         });
+      } else {
+        handleClose();
+        reset({ ...defaultValues });
+        toast.error(data.message);
       }
     },
   });
@@ -54,6 +59,7 @@ const ModalTracker = ({ handleClose, tracker, keyQuery, action }) => {
             ),
         );
         handleClose();
+        reset({ ...defaultValues });
         toast.success('Tracker updated successfully');
       },
       onError: ({ response: { data, status } }) => {
@@ -62,6 +68,10 @@ const ModalTracker = ({ handleClose, tracker, keyQuery, action }) => {
             const [name, message] = error;
             setError(name, { type: 'custom', message: message[0] });
           });
+        } else {
+          handleClose();
+          reset({ ...defaultValues });
+          toast.error(data.message);
         }
       },
     },

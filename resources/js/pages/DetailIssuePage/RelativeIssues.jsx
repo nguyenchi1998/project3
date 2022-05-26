@@ -45,28 +45,7 @@ const RelativeIssues = ({ relativeIssues, issueId }) => {
     defaultValues,
   });
   const [relativeIssueOpen, setRelativeIssueOpen] = useState(false);
-  const { mutate, isLoading: isLinkIssueLoading } = useMutation(
-    issueAPI.linkIssue,
-    {
-      onSuccess: (response) => {
-        reset(defaultValues);
-        setRelativeIssueOpen(false);
-        queryClient.setQueryData([KEY_QUERIES.FETCH_ISSUE, issueId], (old) => ({
-          ...old,
-          ...response,
-        }));
-      },
-      onError: ({ response }) => {
-        if (response.status == API_CODES.INVALID_DATA) {
-          Object.entries(response.data.errors).forEach((error) => {
-            const [name, message] = error;
-            setError(name, { type: 'custom', message: message[0] });
-          });
-        }
-        toast.error(response.data.message);
-      },
-    },
-  );
+
   const onSubmit = (data) => {
     mutate({ ...data, id: issueId, action: LINK_ISSUE_ACTION });
   };
@@ -77,6 +56,34 @@ const RelativeIssues = ({ relativeIssues, issueId }) => {
   const handleUnLinkIssue = useCallback((relative_issue_id) => {
     mutate({ relative_issue_id, id: issueId, action: UNLINK_ISSUE_ACTION });
   }, []);
+  const { mutate, isLoading: isLinkIssueLoading } = useMutation(
+    issueAPI.linkIssue,
+    {
+      onSuccess: (response) => {
+        queryClient.setQueryData([KEY_QUERIES.FETCH_ISSUE, issueId], (old) => ({
+          ...old,
+          ...response,
+        }));
+        handleToggleRelativeIssueOpen();
+        reset(defaultValues);
+        setRelativeIssueOpen(false);
+        toast.success('Add relative issue successfully');
+      },
+      onError: ({ response: { data, status } }) => {
+        if (status == API_CODES.INVALID_DATA) {
+          Object.entries(data.errors).forEach((error) => {
+            const [name, message] = error;
+            setError(name, { type: 'custom', message: message[0] });
+          });
+        } else {
+          handleToggleRelativeIssueOpen();
+          reset(defaultValues);
+          toast.error(data.message);
+        }
+      },
+    },
+  );
+
   return (
     <Box>
       <Divider />
@@ -89,9 +96,7 @@ const RelativeIssues = ({ relativeIssues, issueId }) => {
           <Typography component={Box} flexGrow={1} gutterBottom variant="body1">
             <strong>Relative Issue</strong>
           </Typography>
-          <Button size="small" onClick={handleToggleRelativeIssueOpen}>
-            Add
-          </Button>
+          <Button onClick={handleToggleRelativeIssueOpen}>Add</Button>
         </Box>
         {!!relativeIssues?.length && (
           <TableContainer>
@@ -99,7 +104,7 @@ const RelativeIssues = ({ relativeIssues, issueId }) => {
               <TableBody>
                 {relativeIssues.map((relativeIssue) => (
                   <TableRow key={relativeIssue.id}>
-                    <TableCell size="small" width={'64%'}>
+                    <TableCell width={'64%'}>
                       <Typography component={Box} variant="body2">
                         Relative to
                         <Typography display={'inline'} variant="body2">
@@ -120,16 +125,12 @@ const RelativeIssues = ({ relativeIssues, issueId }) => {
                         </Typography>
                       </Typography>
                     </TableCell>
-                    <TableCell size="small">
+                    <TableCell>
                       {ISSUE_STATUS[relativeIssue.issue.status]}
                     </TableCell>
-                    <TableCell size="small">
-                      {relativeIssue.issue.start_date}
-                    </TableCell>
-                    <TableCell size="small">
-                      {relativeIssue.issue.end_date}
-                    </TableCell>
-                    <TableCell size="small" align="center" width={50}>
+                    <TableCell>{relativeIssue.issue.start_date}</TableCell>
+                    <TableCell>{relativeIssue.issue.end_date}</TableCell>
+                    <TableCell align="center" width={50}>
                       <IconButton
                         onClick={() =>
                           handleUnLinkIssue(relativeIssue.issue.id)
@@ -151,13 +152,11 @@ const RelativeIssues = ({ relativeIssues, issueId }) => {
                 <FormTextField
                   control={control}
                   name="relative_issue_id"
-                  size="small"
                   label="Relative Issue ID"
                   errors={errors}
                 />
                 <Box ml={1}>
                   <Button
-                    size="small"
                     sx={{ height: 40 }}
                     variant="outlined"
                     disabled={isLinkIssueLoading}

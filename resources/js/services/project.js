@@ -2,8 +2,10 @@ import { request } from '../utils/request';
 
 const baseResourceUri = '/projects';
 
-const all = async () => {
-  const { data } = await request().get(`${baseResourceUri}`);
+const all = async ({ filter }) => {
+  const { data } = await request().get(`${baseResourceUri}`, {
+    params: { ...filter },
+  });
 
   return data;
 };
@@ -65,6 +67,17 @@ const trackerIssuesStatistic = async (id) => {
   return data;
 };
 
+const priorityIssuesStatistic = async ({ projectId, ...rest }) => {
+  const { data } = await request().get(
+    `${baseResourceUri}/${projectId}/priority-issues-statistic`,
+    {
+      params: { ...rest },
+    },
+  );
+
+  return data;
+};
+
 const getMembers = async ({ projectId, ...rest }) => {
   const { data } = await request().get(
     `${baseResourceUri}/${projectId}/members`,
@@ -115,6 +128,7 @@ export default {
   addMember,
   removeMember,
   trackerIssuesStatistic,
+  priorityIssuesStatistic,
   getMembers,
   updateMember,
   getIssues,

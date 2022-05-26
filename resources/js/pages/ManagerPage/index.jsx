@@ -30,13 +30,12 @@ const ManagerPage = () => {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <SvgIcon fontSize="small" color="action">
+                          <SvgIcon color="action">
                             <SearchIcon />
                           </SvgIcon>
                         </InputAdornment>
                       ),
                     }}
-                    size="small"
                     placeholder="Search Manager"
                     variant="outlined"
                     onChange={handleChangeKeyword}

@@ -77,17 +77,17 @@ const ListResult = ({ action, setAction }) => {
                 <TableBody>
                   {managerPaginate().map((manager) => (
                     <TableRow hover key={manager.uuid}>
-                      <TableCell size="small">
+                      <TableCell>
                         <Box display="flex" alignItems="center">
                           <Typography color="textPrimary" variant="body1">
                             {manager.name}
                           </Typography>
                         </Box>
                       </TableCell>
-                      <TableCell size="small">{manager.email}</TableCell>
-                      <TableCell size="small">{manager.birthday}</TableCell>
-                      <TableCell size="small">{manager.address}</TableCell>
-                      <TableCell size="small">
+                      <TableCell>{manager.email}</TableCell>
+                      <TableCell>{manager.birthday}</TableCell>
+                      <TableCell>{manager.address}</TableCell>
+                      <TableCell>
                         <Box
                           display="flex"
                           justifyContent="space-between"

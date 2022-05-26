@@ -2,12 +2,10 @@ import React, { useState } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import DashboardSidebar from './SideBar';
-import { PATH, PROJECT_PATH } from '../../routes/paths';
+import { PATH } from '../../routes/paths';
 import DashboardPage from '../../pages/DashboardPage';
 import ProjectPage from '../../pages/ProjectPage';
-import DetailProjectPage from '../../pages/DetailProjectPage';
 import DashboardNavbar from './Navbar';
-import IssuesProjectPage from '../../pages/IssuesProjectPage';
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.default,

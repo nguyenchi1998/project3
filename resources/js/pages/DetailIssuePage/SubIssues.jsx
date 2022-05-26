@@ -39,9 +39,7 @@ const SubIssues = ({ issue }) => {
           <Typography component={Box} flexGrow={1} gutterBottom variant="body1">
             <strong>Sub Issue</strong>
           </Typography>
-          <Button size="small" onClick={handleOpenSubIssue}>
-            Add
-          </Button>
+          <Button onClick={handleOpenSubIssue}>Add</Button>
         </Box>
         {!!issue?.sub_issues?.length && (
           <TableContainer>
@@ -49,7 +47,7 @@ const SubIssues = ({ issue }) => {
               <TableBody>
                 {issue?.sub_issues.map((issue) => (
                   <TableRow key={issue.id}>
-                    <TableCell size="small">
+                    <TableCell>
                       <Typography component={Box} variant="body2">
                         <Typography display={'inline'} variant="body2">
                           <Link
@@ -69,16 +67,12 @@ const SubIssues = ({ issue }) => {
                         </Typography>
                       </Typography>
                     </TableCell>
-                    <TableCell size="small" width={150}>
+                    <TableCell width={150}>
                       {ISSUE_STATUS[issue.status]}
                     </TableCell>
-                    <TableCell size="small" width={130}>
-                      {issue.start_date}
-                    </TableCell>
-                    <TableCell size="small" width={130}>
-                      {issue.end_date}
-                    </TableCell>
-                    <TableCell size="small" width={200}>
+                    <TableCell width={130}>{issue.start_date}</TableCell>
+                    <TableCell width={130}>{issue.end_date}</TableCell>
+                    <TableCell width={200}>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Box sx={{ width: '100%', mr: 1 }}>
                           <LinearProgress

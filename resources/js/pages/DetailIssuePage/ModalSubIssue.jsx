@@ -14,12 +14,13 @@ import {
   PROGRESS_PERCENT,
 } from '../../config/constants';
 import * as API_CODES from '../../config/API_CODES';
-import taskAPI from '../../services/issue';
+import issueAPI from '../../services/issue';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import projectAPI from '../../services/project';
 import trackerAPI from '../../services/tracker';
 import { format, isValid } from 'date-fns';
 import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 const defaultValues = {
   name: '',
@@ -37,7 +38,7 @@ const defaultValues = {
 const ModalSubIssue = ({ open, handleClose, issue }) => {
   const queryClient = useQueryClient();
   const { projectId } = useParams();
-  const { mutate, isLoading } = useMutation(taskAPI.store, {
+  const { mutate, isLoading } = useMutation(issueAPI.store, {
     onSuccess: (response) => {
       queryClient.setQueryData(
         [KEY_QUERIES.FETCH_PROJECT_ISSUE, projectId],
@@ -45,8 +46,9 @@ const ModalSubIssue = ({ open, handleClose, issue }) => {
           return [response, ...old];
         },
       );
-      reset({ ...defaultValues });
       handleClose();
+      reset({ ...defaultValues });
+      toast.success('Add sub issue successfully');
     },
     onError: ({ response: { data, status } }) => {
       if (status == API_CODES.INVALID_DATA) {
@@ -54,6 +56,10 @@ const ModalSubIssue = ({ open, handleClose, issue }) => {
           const [name, message] = error;
           setError(name, { type: 'custom', message: message[0] });
         });
+      } else {
+        handleClose();
+        reset({ ...defaultValues });
+        toast.error(data.message);
       }
     },
   });

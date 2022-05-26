@@ -30,6 +30,7 @@ Route::group(['prefix' => 'auth'], function () {
 Route::group(['middleware' => ['auth:sanctum', 'access:director']], function () {
     Route::resource('projects', ProjectController::class);
     Route::get('projects/{id}/tracker-issues-statistic', [ProjectController::class, 'trackerIssuesStatistic']);
+    Route::get('projects/{id}/priority-issues-statistic', [ProjectController::class, 'priorityIssuesStatistic']);
     Route::get('projects/{id}/members', [ProjectController::class, 'getMembers']);
     Route::post('projects/{id}/members', [ProjectController::class, 'addMember']);
     Route::put('projects/{id}/members/{memberId}', [ProjectController::class, 'updateMember']);

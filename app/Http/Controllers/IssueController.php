@@ -14,22 +14,12 @@ use Illuminate\Support\Facades\DB;
 
 class IssueController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index(Request $request)
     {
         return Issue::all();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(IssueStoreRequest $request)
     {
         $issue =  Issue::create(array_merge($request->all(), [
@@ -39,12 +29,6 @@ class IssueController extends Controller
         return $issue->load(['author', 'tracker', 'assignee']);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         return Issue::find($id)
@@ -60,13 +44,7 @@ class IssueController extends Controller
             ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id)
     {
         try {
@@ -168,12 +146,7 @@ class IssueController extends Controller
         return $detailHistories;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy($id)
     {
         //

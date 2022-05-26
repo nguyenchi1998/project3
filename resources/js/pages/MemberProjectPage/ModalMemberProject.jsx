@@ -17,6 +17,7 @@ const defaultValues = {
   effort: 100,
   employeeId: null,
 };
+
 const ModalMemberProject = ({
   projectId,
   handleClose,
@@ -26,24 +27,19 @@ const ModalMemberProject = ({
   members,
 }) => {
   const queryClient = useQueryClient();
-  const {
-    handleSubmit,
-    control,
-    reset,
-    setError,
-    formState: { errors },
-  } = useForm({
+  const { handleSubmit, control, reset, setError } = useForm({
     defaultValues,
   });
   const { mutate: storeMutate, isLoading: isStorePending } = useMutation(
     projectAPI.addMember,
     {
       onSuccess: (response) => {
-        handleClose();
         queryClient.setQueryData(
           [KEY_QUERIES.FETCH_PROJECT_MEMBER, projectId, { ...keyQuery }],
-          (old) => response,
+          () => response,
         );
+        handleClose();
+        reset(defaultValues);
         toast.success('Member updated successfully');
       },
       onError: ({ response: { data, status } }) => {
@@ -52,6 +48,10 @@ const ModalMemberProject = ({
             const [name, message] = error;
             setError(name, { type: 'custom', message: message[0] });
           });
+        } else {
+          handleClose();
+          reset(defaultValues);
+          toast.error(data.message);
         }
       },
     },
@@ -63,7 +63,7 @@ const ModalMemberProject = ({
         handleClose();
         queryClient.setQueryData(
           [KEY_QUERIES.FETCH_PROJECT_MEMBER, projectId, { ...keyQuery }],
-          (old) => response,
+          () => response,
         );
         toast.success('Member updated successfully');
       },
@@ -73,6 +73,9 @@ const ModalMemberProject = ({
             const [name, message] = error;
             setError(name, { type: 'custom', message: message[0] });
           });
+        } else {
+          handleClose();
+          toast.success(data.message);
         }
       },
     },

@@ -1,17 +1,19 @@
 import React, { useCallback, useState } from 'react';
 import Box from '@mui/material/Box';
 import { useParams } from 'react-router-dom';
-import { Button, Container, Typography } from '@mui/material';
+import { Button, Container, Divider, Typography } from '@mui/material';
 import ModalCreateIssue from './ModalCreateIssue';
-import Filter from './Filter';
 import useQueryParam from '../../hooks/useQueryParam';
 import useDebounce from '../../hooks/useDebounce';
 import ListIssues from './ListIssues';
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 
 const IssuesProjectPage = () => {
   const { projectId } = useParams();
   const params = useQueryParam();
   const [openIssue, setOpenIssue] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
   const [totalFilter, setTotalFilter] = useState({
     name: '',
     assigneeId: '',
@@ -24,7 +26,10 @@ const IssuesProjectPage = () => {
     endDate: null,
     ...params,
   });
-  const onChangeFilter = (filter) => {
+  const handleToggleFilter = () => {
+    setFilterOpen(!filterOpen);
+  };
+  const onChangeTotalFilter = (filter) => {
     const newFilter = { ...totalFilter, ...filter };
     setTotalFilter(newFilter);
   };
@@ -41,7 +46,6 @@ const IssuesProjectPage = () => {
       <Box py={2} display="flex" justifyContent="space-between">
         <Box flexGrow={1}>
           <Box
-            py={2}
             pb={0}
             display="flex"
             justifyContent="space-between"
@@ -50,17 +54,31 @@ const IssuesProjectPage = () => {
             <Typography flexGrow={1} variant="h5" component={Box}>
               Issues
             </Typography>
-            <Button variant="contained" onClick={handleOpenIssue}>
-              New Issue
-            </Button>
+            <Button onClick={handleOpenIssue}>New Issue</Button>
+            <Box ml={2}>
+              {filterOpen ? (
+                <Button onClick={handleToggleFilter} variant="contained">
+                  <Typography>Filter</Typography>
+                  <KeyboardDoubleArrowRightIcon />
+                </Button>
+              ) : (
+                <Button onClick={handleToggleFilter} variant="contained">
+                  <Typography>Filter</Typography>
+                  <KeyboardDoubleArrowLeftIcon />
+                </Button>
+              )}
+            </Box>
           </Box>
-          <ListIssues filter={debounceFilter} />
+          <Divider sx={{ marginY: 2 }} />
+          <ListIssues
+            debounceFilter={debounceFilter}
+            projectId={projectId}
+            totalFilter={totalFilter}
+            onChangeTotalFilter={onChangeTotalFilter}
+            filterOpen={filterOpen}
+            handleToggleFilter={handleToggleFilter}
+          />
         </Box>
-        <Filter
-          projectId={projectId}
-          filter={totalFilter}
-          onChangeFilter={onChangeFilter}
-        />
       </Box>
       {openIssue && (
         <ModalCreateIssue open={openIssue} handleClose={handleCloseIssue} />

@@ -17,6 +17,7 @@ class CreateTrackersTable extends Migration
             $table->id();
             $table->string('name');
             $table->unsignedInteger('project_id')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

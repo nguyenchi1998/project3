@@ -60,7 +60,6 @@ const TrackerPage = () => {
           [KEY_QUERIES.FETCH_TRACKER, { ...debounceFilter }],
           (old) => old.filter((tracker) => tracker.id != response),
         );
-
         toast.success('Tracker delete successfully');
       },
       onError: ({ response: { data, status } }) => {
@@ -69,6 +68,8 @@ const TrackerPage = () => {
             const [name, message] = error;
             setError(name, { type: 'custom', message: message[0] });
           });
+        } else {
+          toast.error(data.message);
         }
       },
     },
@@ -97,7 +98,6 @@ const TrackerPage = () => {
           </Box>
           <Box display={'flex'}>
             <Button
-              variant="contained"
               onClick={() => {
                 setAction('create');
                 setSelectedTracker(null);
@@ -108,11 +108,11 @@ const TrackerPage = () => {
             <Box ml={2}>
               <TextField
                 variant="outlined"
-                size="small"
                 placeholder="Search..."
                 onChange={handleChangeFilter}
                 value={filter.keyword}
                 name="keyword"
+                size="small"
               />
             </Box>
           </Box>
@@ -142,8 +142,8 @@ const TrackerPage = () => {
                 <TableBody>
                   {data.map((tracker) => (
                     <TableRow key={tracker.id}>
-                      <TableCell size="small">{tracker.name}</TableCell>
-                      <TableCell width={150} size="small">
+                      <TableCell>{tracker.name}</TableCell>
+                      <TableCell width={150}>
                         <Box display="flex">
                           <IconButton onClick={() => handleOpenEdit(tracker)}>
                             <EditIcon />
