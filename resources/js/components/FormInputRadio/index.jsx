@@ -6,7 +6,7 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { Controller } from 'react-hook-form';
 
-const FormInputRadio = ({ name, control, options, isRow = false }) => {
+const FormInputRadio = ({ name, control, options = [], isRow = false }) => {
   return (
     <Controller
       name={name}

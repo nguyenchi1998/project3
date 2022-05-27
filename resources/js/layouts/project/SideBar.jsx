@@ -45,6 +45,11 @@ const items = [
     icon: GroupIcon,
     title: 'Members',
   },
+  {
+    href: PROJECT_PATH.TARGET_VERSION,
+    icon: GroupIcon,
+    title: 'Target Version',
+  },
 ];
 const DashboardSidebar = ({ onMobileClose, openMobile, projectId }) => {
   const location = useLocation();

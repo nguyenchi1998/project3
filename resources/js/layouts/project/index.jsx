@@ -9,6 +9,7 @@ import DetailIssuePage from '../../pages/DetailIssuePage';
 import IssuesProjectPage from '../../pages/IssuesProjectPage';
 import TrackerPage from '../../pages/TrackerPage';
 import MemberProjectPage from '../../pages/MemberProjectPage';
+import TargetVerionPage from '../../pages/TargetVersionPage';
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -84,6 +85,12 @@ const ProjectLayout = () => {
                 exact
               >
                 <MemberProjectPage projectId={projectId} />
+              </Route>
+              <Route
+                path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.TARGET_VERSION}`}
+                exact
+              >
+                <TargetVerionPage projectId={projectId} />
               </Route>
             </Switch>
           </DashboardLayoutContent>

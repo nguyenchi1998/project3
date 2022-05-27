@@ -119,6 +119,17 @@ const deleteMember = async ({ projectId, memberId }) => {
   return data;
 };
 
+const getTargetVersions = async ({ projectId, ...filter }) => {
+  const { data } = await request().get(
+    `${baseResourceUri}/${projectId}/target-versions`,
+    {
+      params: { ...filter },
+    },
+  );
+
+  return data;
+};
+
 export default {
   all,
   find,
@@ -133,4 +144,5 @@ export default {
   updateMember,
   getIssues,
   deleteMember,
+  getTargetVersions,
 };

@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import managerAPI from 'services/manager';
 import { useMutation, useQueryClient } from 'react-query';
 import FormDialog from 'components/FormDialog';
-import FormInputRadio from 'components/FormInputRadio';
+import FormInputRadio from 'components/FormInputCheckbox';
 import FormInputDate from 'components/FormInputDate';
 import { useForm } from 'react-hook-form';
 import FormTextField from 'components/FormTextField';

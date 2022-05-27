@@ -24,7 +24,7 @@ class AuthController extends Controller
             ]);
         }
         return response()->json([
-            'message' => 'login failed wrong user credentials',
+            'message' => 'login failed credentials not found',
         ], ResponseAlias::HTTP_UNAUTHORIZED);
     }
 

@@ -41,4 +41,9 @@ class Project extends Model
     {
         return $this->hasMany(Issue::class);
     }
+
+    public function targetVersions()
+    {
+        return $this->hasMany(TargetVersion::class);
+    }
 }

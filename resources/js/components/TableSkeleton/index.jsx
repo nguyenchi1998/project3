@@ -1,15 +1,15 @@
 import {
   Paper,
+  Skeleton,
   Table,
+  TableBody,
   TableCell,
   TableContainer,
-  TableRow,
   TableHead,
-  TableBody,
-  Skeleton,
+  TableRow,
 } from '@mui/material';
 
-const TableSkeleton = ({ numberRow, headers }) => {
+const TableSkeleton = ({ numberRow = 5, headers }) => {
   return (
     <TableContainer component={Paper} variant="outlined">
       <Table stickyHeader>

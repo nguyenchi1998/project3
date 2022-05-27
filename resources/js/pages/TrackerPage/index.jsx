@@ -11,7 +11,6 @@ import Typography from '@mui/material/Typography';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import trackerAPI from '../../services/tracker';
 import ModalTracker from './ModalTracker';
-import ListSkeleton from './ListSkeleton';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -24,6 +23,9 @@ import useDebounce from '../../hooks/useDebounce';
 import useQueryParam from '../../hooks/useQueryParam';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import { toast } from 'react-toastify';
+import TableSkeleton from './../../components/TableSkeleton';
+
+const headers = ['name', 'Action'];
 
 const TrackerPage = () => {
   const queryClient = useQueryClient();
@@ -36,7 +38,6 @@ const TrackerPage = () => {
   const [selectedTracker, setSelectedTracker] = useState(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
   const handleChangePage = useCallback((_event, newPage) => {
     setPage(newPage);
   }, []);
@@ -58,19 +59,12 @@ const TrackerPage = () => {
       onSuccess: (response) => {
         queryClient.setQueryData(
           [KEY_QUERIES.FETCH_TRACKER, { ...debounceFilter }],
-          (old) => old.filter((tracker) => tracker.id != response),
+          (old) => old.filter((tracker) => tracker.id !== response),
         );
         toast.success('Tracker delete successfully');
       },
-      onError: ({ response: { data, status } }) => {
-        if (status == API_CODES.INVALID_DATA) {
-          Object.entries(data.errors).forEach((error) => {
-            const [name, message] = error;
-            setError(name, { type: 'custom', message: message[0] });
-          });
-        } else {
-          toast.error(data.message);
-        }
+      onError: ({ response: { data } }) => {
+        toast.error(data.message);
       },
     },
   );
@@ -129,14 +123,15 @@ const TrackerPage = () => {
           />
         )}
         <Box>
-          {isLoading && <ListSkeleton />}
+          {isLoading && <TableSkeleton headers={headers} />}
           {isSuccess && (
             <TableContainer component={Paper} variant="outlined">
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Action</TableCell>
+                    {headers.map((header) => (
+                      <TableCell key={header}>{header}</TableCell>
+                    ))}
                   </TableRow>
                 </TableHead>
                 <TableBody>

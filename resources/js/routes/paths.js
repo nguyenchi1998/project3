@@ -13,6 +13,7 @@ const OVERVIEW_PAGE = 'OVERVIEW';
 const ISSUE_PAGE = 'ISSUE';
 const TRACKER_PAGE = 'TRACKER';
 const MEMBER_PAGE = 'MEMBER';
+const TARGET_VERSION_PAGE = 'TARGET_VERSION';
 
 export const AUTH_PATH = {
   [SIGN_IN_PAGE]: '/login',
@@ -39,4 +40,5 @@ export const PROJECT_PATH = {
   [ISSUE_PAGE]: 'issues',
   [TRACKER_PAGE]: 'trackers',
   [MEMBER_PAGE]: 'members',
+  [TARGET_VERSION_PAGE]: 'targer-versions',
 };

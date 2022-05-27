@@ -26,6 +26,7 @@ class Issue extends Model
         'actual_time',
         'progress_percent',
         'status',
+        'target_version_id',
     ];
 
     public function author()
@@ -66,5 +67,16 @@ class Issue extends Model
     public function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function targetVersion()
+    {
+        return $this->hasmany(TargetVersion::class);
+    }
+
+    public function activeTargetVersion()
+    {
+        return $this->targetVersion()
+            ->where('active', 1)->first();
     }
 }

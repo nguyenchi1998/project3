@@ -13,6 +13,7 @@ import {
   Divider,
   Grid,
   LinearProgress,
+  Link,
   Paper,
   Typography,
 } from '@mui/material';
@@ -73,25 +74,29 @@ const ProjectItem = ({ project, handleOpenEdit }) => {
           >
             {project.name.charAt(0)}
           </Avatar>
-          <NavLink
+          <Link
+            component={NavLink}
             to={`${PATH.PROJECT_PAGE}/${project.id}/${PROJECT_PATH.OVERVIEW}`}
-            className={classes.textLink}
+            underline="hover"
           >
-            {project.name}
-          </NavLink>
+            <Typography variant="h6">{project.name}</Typography>
+          </Link>
         </Box>
         <Stack spacing={1.5} p={2}>
           <Box
-            mt={6}
+            mt={7}
             display="flex"
             width="100%"
             justifyContent={'space-between'}
           >
-            <NavLink
+            <Button
+              variant="outlined"
+              sx={{ p: 'unset', px: 1, py: 0.5 }}
+              component={NavLink}
               to={`${PATH.PROJECT_PAGE}/${project.id}/${PROJECT_PATH.ISSUE}`}
             >
               List Issue
-            </NavLink>
+            </Button>
             <Box display={'flex'}>
               <ButtonGroup variant="outlined" disableElevation>
                 <Button

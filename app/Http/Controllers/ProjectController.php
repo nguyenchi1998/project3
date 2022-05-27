@@ -6,6 +6,7 @@ use App\Http\Requests\Project\FilterIssueRequest;
 use App\Http\Requests\Project\ProjectStoreRequest;
 use App\Models\Issue;
 use App\Models\Project;
+use App\Models\TargetVersion;
 use App\Models\Tracker;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -21,12 +22,14 @@ class ProjectController extends Controller
             $query->where('type', $filters['type']);
         })->when(isset($filters['keyword']), function ($query) use ($filters) {
             $query->where('name', 'like', '%' . $filters['keyword'] . '%');
-        })->with(['members' => function ($query) {
-            $query->orderBy('role', 'DESC')
-                ->orderBy('created_at', 'DESC');
-        }, 'languages'])
-            ->latest()
-            ->get();
+        })->with([
+            'members' => function ($query) {
+                $query->orderBy('role', 'DESC')
+                    ->orderBy('created_at', 'DESC');
+            },
+            'languages',
+            'targetVersions',
+        ])->latest()->get();
     }
 
 
@@ -217,5 +220,10 @@ class ProjectController extends Controller
                 'author',
                 'assignee',
             ]);
+    }
+
+    public function getTargetVersions($projectId)
+    {
+        return TargetVersion::where('project_id', $projectId)->get();
     }
 }

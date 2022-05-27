@@ -56,5 +56,10 @@ return [
     'relative_issue_action' => [
         'link' => 1,
         'unlink' => 0
-    ]
+    ],
+    'target_version_status' => [
+        'closed' => 0,
+        'lock' => 1,
+        'open' => 2,
+    ],
 ];
