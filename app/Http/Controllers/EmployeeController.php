@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -9,10 +10,14 @@ class EmployeeController extends Controller
 {
     public function index(Request $request)
     {
-        $filters = $request->only(['ignoreIds']);
+        $filters = $request->only(['ignoreIds', 'ignoreProjectId']);
 
         return User::when(isset($filters['ignoreIds']), function ($query) use ($filters) {
             $query->whereNotIn('id', $filters['ignoreIds']);
+        })->when(isset($filters['ignoreProjectId']), function ($query) use ($filters) {
+            $project = Project::find($filters['ignoreProjectId'])->load('members');
+            $memberIds = $project->members->pluck('id')->toArray();
+            $query->whereNotIn('id', $memberIds);
         })->get();
     }
 

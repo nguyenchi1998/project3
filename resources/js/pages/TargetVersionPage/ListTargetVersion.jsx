@@ -4,7 +4,7 @@ import projectAPI from '../../services/project';
 import { useCallback, useState } from 'react';
 import targetVersionAPI from '../../services/targetVersion';
 import { toast } from 'react-toastify';
-import TableSkeleton from './../../components/TableSkeleton';
+import TableSkeleton from '../../components/TableSkeleton';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
@@ -18,8 +18,10 @@ import TableRow from '@mui/material/TableRow';
 import TableContainer from '@mui/material/TableContainer';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import NoData from '../../container/NoData';
+import { TARGET_VERSION_STATUS } from '../../config/constants';
 
-const headers = ['name', 'Action'];
+const headers = ['Name', 'Total Issues', 'Status', 'Action'];
 
 const ListTargetVersion = ({ debounceFilter, projectId, handleOpenEdit }) => {
   const queryClient = useQueryClient();
@@ -66,7 +68,7 @@ const ListTargetVersion = ({ debounceFilter, projectId, handleOpenEdit }) => {
       {!!data.length ? (
         <Box>
           <TablePagination
-            component={'div'}
+            component="div"
             count={data.length}
             page={page}
             onPageChange={handleChangePage}
@@ -85,8 +87,12 @@ const ListTargetVersion = ({ debounceFilter, projectId, handleOpenEdit }) => {
               <TableBody>
                 {data.map((targetVersion) => (
                   <TableRow key={targetVersion.id}>
-                    <TableCell>{targetVersion.name}</TableCell>
-                    <TableCell width={150}>
+                    <TableCell width={'50%'}>{targetVersion.name}</TableCell>
+                    <TableCell>{targetVersion.issues.length}</TableCell>
+                    <TableCell>
+                      {TARGET_VERSION_STATUS[targetVersion.status]}
+                    </TableCell>
+                    <TableCell width={100}>
                       <Box display="flex">
                         <IconButton
                           onClick={() => handleOpenEdit(targetVersion)}
@@ -108,7 +114,7 @@ const ListTargetVersion = ({ debounceFilter, projectId, handleOpenEdit }) => {
           </TableContainer>
         </Box>
       ) : (
-        <Typography>No data to display</Typography>
+        <NoData />
       )}
     </Box>
   );

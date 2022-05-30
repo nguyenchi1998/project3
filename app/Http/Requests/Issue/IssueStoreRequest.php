@@ -27,6 +27,12 @@ class IssueStoreRequest extends FormRequest
             'name' => 'required|string|unique:issues,name',
             'project_id' => 'integer',
             'type' => 'integer',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+            'estimate_time' => 'nullable|integer',
+            'tracker_id' => 'required|integer',
+            'target_version_id' => 'nullable|integer',
+            'issue_status_id' => 'required|integer'
         ];
     }
 }

@@ -38,14 +38,15 @@ const TargetVersionPage = ({ projectId }) => {
           <Box>
             <Typography variant="h5">Target Versions</Typography>
           </Box>
-          <Box display={'flex'}>
+          <Box display="flex">
             <Button
               onClick={() => {
                 setAction('create');
                 setSelectedTargetVersion(null);
               }}
+              variant="contained"
             >
-              Create Target Versions
+              Create
             </Button>
             <Box ml={2}>
               <TextField
@@ -59,7 +60,7 @@ const TargetVersionPage = ({ projectId }) => {
             </Box>
           </Box>
         </Box>
-        <Divider sx={{ marginY: 2 }} />
+        <Divider sx={{ mt: 2, mb: 1 }} />
         <ListTargetVersion
           debounceFilter={debounceFilter}
           projectId={projectId}
@@ -70,7 +71,7 @@ const TargetVersionPage = ({ projectId }) => {
             targetVersion={selectedTargetVersion}
             action={action}
             handleClose={handleTargetVersionClose}
-            keyQuery={debounceFilter}
+            debounceFilter={debounceFilter}
             projectId={projectId}
           />
         )}

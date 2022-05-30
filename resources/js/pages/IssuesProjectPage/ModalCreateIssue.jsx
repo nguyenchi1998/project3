@@ -1,4 +1,4 @@
-import { Stack, TextField } from '@mui/material';
+import { Box, Grid, Stack, TextField } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import FormDialog from '../../components/FormDialog';
@@ -24,17 +24,18 @@ const defaultValues = {
   priority: 0,
   end_date: null,
   status: 0,
+  target_version_id: '',
   assign_user_id: null,
-  estimate_time: 0,
+  estimate_time: '',
+  description: '',
 };
 
-const ModalCreateIssue = ({ open, handleClose }) => {
+const ModalCreateIssue = ({ open, handleClose, debounceFilter, projectId }) => {
   const queryClient = useQueryClient();
-  const { projectId } = useParams();
   const { mutate, isLoading } = useMutation(issueAPI.store, {
     onSuccess: (response) => {
       queryClient.setQueryData(
-        [KEY_QUERIES.FETCH_PROJECT_ISSUE, projectId],
+        [KEY_QUERIES.FETCH_PROJECT_ISSUE, projectId, { ...debounceFilter }],
         (old) => {
           return [response, ...old];
         },
@@ -76,7 +77,7 @@ const ModalCreateIssue = ({ open, handleClose }) => {
         data.end_date && isValid(data.end_date)
           ? format(new Date(data.end_date), 'yyyy/MM/dd')
           : null,
-      assign_user_id: data.assign_user_id.id,
+      assign_user_id: data?.assign_user_id?.id,
       project_id: projectId,
     });
   };
@@ -88,11 +89,17 @@ const ModalCreateIssue = ({ open, handleClose }) => {
     [KEY_QUERIES.FETCH_TRACKER, projectId],
     () => trackerAPI.all({ projectId }),
   );
+  const {
+    data: targetVersions,
+    isLoading: isTargetVersionsLoading,
+  } = useQuery([KEY_QUERIES.FETCH_TRACKER, projectId], () =>
+    projectAPI.getTargetVersions({ projectId }),
+  );
 
   return (
     <FormDialog
       open={open}
-      title={'New Issue'}
+      title="New Issue"
       onSubmit={handleSubmit(onSubmit)}
       onClose={handleClose}
       isPending={isLoading}
@@ -110,70 +117,124 @@ const ModalCreateIssue = ({ open, handleClose }) => {
         />
         <FormTextarea
           control={control}
-          name="note"
+          name="description"
           placeholder="Description..."
-          label={'Description'}
+          label="Description"
         />
-        <FormSelect
-          control={control}
-          name="tracker_id"
-          label="Tracker"
-          fullWidth
-          options={trackers?.map((tracker) => ({
-            key: tracker.name,
-            val: tracker.id,
-          }))}
-        />
-        <FormSelect
-          control={control}
-          name="priority"
-          label="Priority"
-          fullWidth
-          options={ISSUE_PRIORITIES.map((priority, index) => ({
-            key: priority,
-            val: index,
-          }))}
-        />
-        <FormSelect
-          control={control}
-          name="status"
-          label="Status"
-          fullWidth
-          options={ISSUE_STATUS.map((status, index) => ({
-            key: status,
-            val: index,
-          }))}
-        />
-        <FormInputDate
-          control={control}
-          name={'start_date'}
-          label="Start Date"
-          errors={errors}
-        />
-        <FormInputDate
-          control={control}
-          name={'end_date'}
-          label="End Date"
-          errors={errors}
-        />
-        <FormTextField
-          control={control}
-          name="estimate_time"
-          label="Estimate Time"
-          type="number"
-          errors={errors}
-          fullWidth
-        />
-        <FormAutocomplete
-          control={control}
-          name="assign_user_id"
-          sx={{ flexGrow: 1 }}
-          disableCloseOnSelect={false}
-          getOptionLabel={(option) => `${option.name}`}
-          options={data?.map(({ id, name }) => ({ id, name }))}
-          isOptionEqualToValue={(option, value) => option.id === value.id}
-          renderInput={(params) => <TextField {...params} label="Assignee" />}
-        />
+        <Grid container>
+          <Grid item xs={6}>
+            <Box pr={1}>
+              <FormAutocomplete
+                control={control}
+                name="assign_user_id"
+                sx={{ flexGrow: 1 }}
+                disableCloseOnSelect={false}
+                getOptionLabel={(option) => `${option.name}`}
+                options={data?.map(({ id, name }) => ({ id, name }))}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                renderInput={(params) => (
+                  <TextField {...params} label="Assignee" />
+                )}
+              />
+            </Box>
+          </Grid>
+          <Grid item xs={6}>
+            <Box pl={1}>
+              <FormSelect
+                control={control}
+                name="target_version_id"
+                label="Target Version"
+                fullWidth
+                options={targetVersions?.map((targetVersion) => ({
+                  key: targetVersion.name,
+                  val: targetVersion.id,
+                }))}
+              />
+            </Box>
+          </Grid>
+        </Grid>
+        <Grid container>
+          <Grid item xs={6}>
+            <Box pr={1}>
+              <FormSelect
+                control={control}
+                name="priority"
+                label="Priority"
+                fullWidth
+                options={ISSUE_PRIORITIES.map((priority, index) => ({
+                  key: priority,
+                  val: index,
+                }))}
+              />
+            </Box>
+          </Grid>
+          <Grid item xs={6}>
+            <Box pl={1}>
+              <FormSelect
+                control={control}
+                name="tracker_id"
+                label="Tracker"
+                fullWidth
+                options={trackers?.map((tracker) => ({
+                  key: tracker.name,
+                  val: tracker.id,
+                }))}
+              />
+            </Box>
+          </Grid>
+        </Grid>
+        <Grid container>
+          <Grid item xs={6}>
+            <Box pr={1}>
+              <FormSelect
+                control={control}
+                name="status"
+                label="Status"
+                fullWidth
+                options={ISSUE_STATUS.map((status, index) => ({
+                  key: status,
+                  val: index,
+                }))}
+              />
+            </Box>
+          </Grid>
+          <Grid item xs={6}>
+            <Box pl={1}>
+              <FormTextField
+                control={control}
+                name="estimate_time"
+                label="Estimate Time"
+                type="number"
+                errors={errors}
+                fullWidth
+              />
+            </Box>
+          </Grid>
+        </Grid>
+        <Grid container>
+          <Grid item xs={6}>
+            <Box pr={1}>
+              <FormInputDate
+                fullWidth
+                control={control}
+                name="start_date"
+                label="Start Date"
+                errors={errors}
+              />
+            </Box>
+          </Grid>
+          <Grid item xs={6}>
+            <Box pl={1}>
+              <FormInputDate
+                fullWidth
+                control={control}
+                name="end_date"
+                label="End Date"
+                errors={errors}
+              />
+            </Box>
+          </Grid>
+        </Grid>
       </Stack>
     </FormDialog>
   );

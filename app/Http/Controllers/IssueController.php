@@ -22,11 +22,35 @@ class IssueController extends Controller
 
     public function store(IssueStoreRequest $request)
     {
-        $issue =  Issue::create(array_merge($request->all(), [
+        $issue = Issue::create(array_merge($request->all(), [
             'created_user_id' => auth()->user()->id
         ]));
 
-        return $issue->load(['author', 'tracker', 'assignee']);
+        if ($request->get('parent_issue_id')) {
+            return Issue::find($request->get('parent_issue_id'))->load([
+                'author',
+                'assignee',
+                'tracker',
+                'histories.detailHistories',
+                'histories.updatedUser',
+                'parentIssue',
+                'relativeIssues.issue.tracker',
+                'subIssues.tracker',
+                'status',
+            ]);
+        }
+
+        return  $issue->load([
+            'author',
+            'assignee',
+            'tracker',
+            'histories.detailHistories',
+            'histories.updatedUser',
+            'parentIssue',
+            'relativeIssues.issue.tracker',
+            'subIssues.tracker',
+            'status',
+        ]);
     }
 
     public function show($id)
@@ -41,6 +65,8 @@ class IssueController extends Controller
                 'parentIssue',
                 'relativeIssues.issue.tracker',
                 'subIssues.tracker',
+                'targetVersion',
+                'status',
             ]);
     }
 
@@ -55,7 +81,8 @@ class IssueController extends Controller
                     'assignee',
                     'tracker',
                     'histories.detailHistories',
-                    'histories.updatedUser'
+                    'histories.updatedUser',
+                    'status',
                 ]);
 
             $detailHistories = $this->createDetailHistories($issue, $request->all());
@@ -93,7 +120,7 @@ class IssueController extends Controller
                 'estimate_time',
                 'actual_time',
                 'progress_percent',
-                'status',
+                'issue_status_id',
             ]));
             DB::commit();
 
@@ -105,7 +132,11 @@ class IssueController extends Controller
                 'histories.updatedUser',
                 'parentIssue',
                 'relativeIssues.issue.tracker',
+                'relativeIssues.issue.status',
                 'subIssues.tracker',
+                'subIssues.status',
+                'targetVersion',
+                'status'
             ]);
         } catch (Exception $e) {
             DB::rollBack();
@@ -152,7 +183,7 @@ class IssueController extends Controller
         //
     }
 
-    public function toggleLinkIssue($id, LinkIssueRequest $request)
+    public function toggleLinkRelativeIssue($id, LinkIssueRequest $request)
     {
         $action = $request->get('action');
         $relativeIssueId = $request->get('relative_issue_id');
@@ -186,7 +217,34 @@ class IssueController extends Controller
             'histories.updatedUser',
             'parentIssue',
             'relativeIssues.issue.tracker',
+            'relativeIssues.issue.status',
             'subIssues.tracker',
+            'subIssues.status',
+            'status',
         ]);
+    }
+
+    public function removeLinkSubIssue($id, Request $request)
+    {
+        $deletedStatus =  Issue::where('id', $request->get('subIssueId'))->where('parent_issue_id', $id)->delete();
+        if ($deletedStatus) {
+            return Issue::find($id)
+                ->load([
+                    'author',
+                    'assignee',
+                    'tracker',
+                    'histories.detailHistories',
+                    'histories.updatedUser',
+                    'parentIssue',
+                    'relativeIssues.issue.tracker',
+                    'subIssues.tracker',
+                    'targetVersion',
+                    'status'
+                ]);
+        }
+
+        return response()->json([
+            'message' => 'Error',
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

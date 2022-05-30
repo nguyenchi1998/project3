@@ -28,7 +28,7 @@ const defaultValues = {
   end_date: null,
   languages: [],
 };
-const ModalProject = ({ handleClose, project, keyQuery, action }) => {
+const ModalProject = ({ handleClose, keyQuery, open }) => {
   const queryClient = useQueryClient();
   const {
     handleSubmit,
@@ -64,35 +64,6 @@ const ModalProject = ({ handleClose, project, keyQuery, action }) => {
       }
     },
   });
-  const { mutate: updateMutate, isLoading: isUpdatePending } = useMutation(
-    projectAPI.update,
-    {
-      onSuccess: (response) => {
-        queryClient.setQueryData(
-          [KEY_QUERIES.FETCH_PROJECT, { ...keyQuery }],
-          (old) =>
-            old.map((oldProject) =>
-              oldProject.id === response.id ? response : oldProject,
-            ),
-        );
-        handleClose();
-        reset({ ...defaultValues });
-        toast.success('Project updated successfully');
-      },
-      onError: ({ response: { data, status } }) => {
-        if (status === API_CODES.INVALID_DATA) {
-          Object.entries(data.errors).forEach((error) => {
-            const [name, message] = error;
-            setError(name, { type: 'custom', message: message[0] });
-          });
-        } else {
-          handleClose();
-          reset({ ...defaultValues });
-          toast.error(data.message);
-        }
-      },
-    },
-  );
   const { data, isLoading } = useQuery([KEY_QUERIES.FETCH_GROUP], () =>
     groupAPI.all(),
   );
@@ -102,60 +73,29 @@ const ModalProject = ({ handleClose, project, keyQuery, action }) => {
   );
 
   const onSubmit = (data) => {
-    if (action === 'create') {
-      mutate({
-        ...data,
-        start_date: isValid(data.start_date)
-          ? format(data.start_date, 'yyyy-MM-dd')
-          : null,
-        end_date: isValid(data.end_date)
-          ? format(data.end_date, 'yyyy-MM-dd')
-          : null,
-        languages: data.languages.map(({ value }) => value),
-      });
-    } else {
-      updateMutate({
-        ...data,
-        start_date:
-          data.start_date && isValid(new Date(data.start_date))
-            ? format(new Date(data.start_date), 'yyyy-MM-dd')
-            : null,
-        end_date:
-          data.end_date && isValid(new Date(data.end_date))
-            ? format(new Date(data.end_date), 'yyyy-MM-dd')
-            : null,
-        languages: data.languages.map(({ value }) => value),
-      });
-    }
+    mutate({
+      ...data,
+      start_date: isValid(data.start_date)
+        ? format(data.start_date, 'yyyy-MM-dd')
+        : null,
+      end_date: isValid(data.end_date)
+        ? format(data.end_date, 'yyyy-MM-dd')
+        : null,
+      languages: data.languages.map(({ value }) => value),
+    });
   };
-  useEffect(() => {
-    if (action === 'edit') {
-      project &&
-        reset({
-          ...project,
-          group_id: project.group_id ?? '',
-          languages: project.languages.map(({ name, id }) => ({
-            label: name,
-            value: id,
-          })),
-        });
-    } else {
-      reset({ ...defaultValues });
-    }
-  }, [project, reset]);
-
   const handleCloseForm = useCallback(() => {
     reset({ ...defaultValues });
     handleClose();
   }, []);
   return (
     <FormDialog
-      title={action === 'edit' ? 'Edit Project' : 'Create Project'}
+      title="Create Project"
       onSubmit={handleSubmit(onSubmit)}
       onClose={handleCloseForm}
-      open={!!action}
+      open={open}
       isLoading={isLoading || isLanguageLoading}
-      isPending={isStorePending || isUpdatePending}
+      isPending={isStorePending}
       formId="form-project"
     >
       <Stack spacing={2}>
@@ -179,13 +119,13 @@ const ModalProject = ({ handleClose, project, keyQuery, action }) => {
         <FormInputDate
           control={control}
           minDate={new Date()}
-          name={'start_date'}
+          name="start_date"
           label="Start Date"
         />
         <FormInputDate
           control={control}
           minDate={new Date()}
-          name={'end_date'}
+          name="end_date"
           label="End Date"
         />
         <FormSelect
@@ -224,8 +164,8 @@ const ModalProject = ({ handleClose, project, keyQuery, action }) => {
           renderInput={(params) => (
             <TextField
               {...params}
-              label={'Language'}
-              placeholder={'Choose languages'}
+              label="Language"
+              placeholder="Choose languages"
               variant="outlined"
               fullWidth
               inputProps={{

@@ -24,7 +24,6 @@ const ModalMemberProject = ({
   member,
   keyQuery,
   action,
-  members,
 }) => {
   const queryClient = useQueryClient();
   const { handleSubmit, control, reset, setError } = useForm({
@@ -112,12 +111,14 @@ const ModalMemberProject = ({
     reset({ ...defaultValues });
     handleClose();
   }, []);
-  const ignoreIds = members.map(({ id }) => id);
   const { data: employees, isLoading } = useQuery(
-    [KEY_QUERIES.FETCH_EMPLOYEE, { ignoreIds }],
-    () => employeeAPI.all({ ignoreIds }),
+    [KEY_QUERIES.FETCH_EMPLOYEE, { ignoreProjectId: projectId }],
+    () =>
+      employeeAPI.all({
+        ignoreProjectId: projectId,
+      }),
     {
-      enabled: action == 'create',
+      enabled: action === 'create',
     },
   );
   return (
@@ -174,7 +175,7 @@ const ModalMemberProject = ({
           label="Effort"
           fullWidth
           options={EFFORTS.map((effort) => ({
-            key: effort,
+            key: `${effort}%`,
             val: effort,
           }))}
         />

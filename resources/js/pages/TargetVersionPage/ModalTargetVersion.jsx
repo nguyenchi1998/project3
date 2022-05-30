@@ -8,15 +8,20 @@ import { KEY_QUERIES } from '../../config/keyQueries';
 import FormTextField from '../../components/FormTextField';
 import FormInputCheckbox from '../../components/FormInputCheckbox';
 import targetVersionAPI from '../../services/targetVersion';
+import { TARGET_VERSION_STATUS } from '../../config/constants';
+import FormSelect from '../../components/FormSelect';
+import { Stack } from '@mui/material';
+
+const OPEN_STATUS = 2;
 
 const defaultValues = {
   name: '',
-  active: false,
+  status: OPEN_STATUS,
 };
 const ModalTargetVersion = ({
   handleClose,
   targetVersion,
-  keyQuery,
+  debounceFilter,
   action,
   projectId,
 }) => {
@@ -26,6 +31,7 @@ const ModalTargetVersion = ({
     control,
     reset,
     setError,
+    getValues,
     formState: { errors },
   } = useForm({
     defaultValues,
@@ -35,7 +41,7 @@ const ModalTargetVersion = ({
     {
       onSuccess: (response) => {
         queryClient.setQueryData(
-          [KEY_QUERIES.FETCH_TARGET_VERSION, projectId, { ...keyQuery }],
+          [KEY_QUERIES.FETCH_TARGET_VERSION, projectId, { ...debounceFilter }],
           (old) => {
             return [response, ...old];
           },
@@ -63,7 +69,7 @@ const ModalTargetVersion = ({
     {
       onSuccess: (response) => {
         queryClient.setQueryData(
-          [KEY_QUERIES.FETCH_TARGET_VERSION, projectId, { ...keyQuery }],
+          [KEY_QUERIES.FETCH_TARGET_VERSION, projectId, { ...debounceFilter }],
           (old) =>
             old.map((oldTargetVersion) =>
               oldTargetVersion.id === targetVersion.id
@@ -91,7 +97,10 @@ const ModalTargetVersion = ({
   );
   const onSubmit = (data) => {
     if (action === 'create') {
-      mutate(data);
+      mutate({
+        ...data,
+        project_id: projectId,
+      });
     } else {
       updateMutate(data);
     }
@@ -105,12 +114,12 @@ const ModalTargetVersion = ({
     } else {
       reset({ ...defaultValues });
     }
-  }, [targetVersion, reset]);
-
+  }, [targetVersion]);
   const handleCloseForm = useCallback(() => {
     reset({ ...defaultValues });
     handleClose();
   }, []);
+
   return (
     <FormDialog
       title={
@@ -122,14 +131,25 @@ const ModalTargetVersion = ({
       isPending={isStorePending || isUpdatePending}
       formId="form-target-version"
     >
-      <FormTextField
-        control={control}
-        name="name"
-        label="Name"
-        errors={errors}
-        fullWidth
-      />
-      <FormInputCheckbox control={control} name="active" label="Active" />
+      <Stack spacing={2}>
+        <FormTextField
+          control={control}
+          name="name"
+          label="Name"
+          errors={errors}
+          fullWidth
+        />
+        <FormSelect
+          control={control}
+          name="status"
+          label="Status"
+          fullWidth
+          options={TARGET_VERSION_STATUS.map((status, index) => ({
+            key: status,
+            val: index,
+          }))}
+        />
+      </Stack>
     </FormDialog>
   );
 };

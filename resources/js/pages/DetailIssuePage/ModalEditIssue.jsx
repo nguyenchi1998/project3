@@ -133,7 +133,7 @@ const ModalEditIssue = ({ issueId, handleClose }) => {
         parent_issue_id: parent_issue,
         progress_percent,
         estimate_time: estimate_time ?? 0,
-        description,
+        description: description ?? '',
       });
     }
   }, [isIssueSuccess, issue]);
@@ -141,7 +141,7 @@ const ModalEditIssue = ({ issueId, handleClose }) => {
   return (
     <FormDialog
       open={!!issueId}
-      title={'Edit Issue'}
+      title="Edit Issue"
       onSubmit={handleSubmit(onSubmit)}
       onClose={handleClose}
       isPending={isLoading}
@@ -242,7 +242,7 @@ const ModalEditIssue = ({ issueId, handleClose }) => {
               <FormInputDate
                 fullWidth
                 control={control}
-                name={'start_date'}
+                name="start_date"
                 label="Start Date"
                 errors={errors}
               />
@@ -253,7 +253,7 @@ const ModalEditIssue = ({ issueId, handleClose }) => {
               <FormInputDate
                 fullWidth
                 control={control}
-                name={'end_date'}
+                name="end_date"
                 label="End Date"
                 errors={errors}
               />

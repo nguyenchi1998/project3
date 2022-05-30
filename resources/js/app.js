@@ -25,7 +25,7 @@ import ManagerLayout from './layouts/main';
 import ProjectLayout from './layouts/project';
 
 const queryClient = new QueryClient({
-  defaultOptions: { refetchOnWindowFocus: false },
+  defaultOptions: { refetchOnWindowFocus: false, refetchOnMount: false },
 });
 ReactDOM.render(
   <QueryClientProvider client={queryClient}>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Project\AddProjectRequest;
 use App\Http\Requests\Project\FilterIssueRequest;
 use App\Http\Requests\Project\ProjectStoreRequest;
 use App\Models\Issue;
@@ -39,7 +40,7 @@ class ProjectController extends Controller
         $project->languages()->attach($request->get('languages'));
         $project->members()->attach([
             auth()->id() => [
-                'role' => config('constant.project_member_role.project_manager')
+                'role' => config('constant.project_member_role.pm')
             ]
         ]);
 
@@ -91,7 +92,7 @@ class ProjectController extends Controller
         ], ResponseAlias::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    public function addMember(Request $request, $id)
+    public function addMember(AddProjectRequest $request, $id)
     {
         $employeeData = $request->only(
             'role',
@@ -215,15 +216,20 @@ class ProjectController extends Controller
                     });
                 });
             })
-            ->orderBy('id', 'desc')->get()->load([
+            ->orderBy('id', 'desc')
+            ->get()
+            ->load([
                 'tracker',
                 'author',
                 'assignee',
+                'status'
             ]);
     }
 
     public function getTargetVersions($projectId)
     {
-        return TargetVersion::where('project_id', $projectId)->get();
+        return TargetVersion::where('project_id', $projectId)
+            ->get()
+            ->load('issues');
     }
 }

@@ -2,7 +2,7 @@ import { request } from '../utils/request';
 
 const baseResourceUri = '/projects';
 
-const all = async ({ filter }) => {
+const all = async (filter) => {
   const { data } = await request().get(`${baseResourceUri}`, {
     params: { ...filter },
   });

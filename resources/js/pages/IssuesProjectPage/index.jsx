@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react';
 import Box from '@mui/material/Box';
-import { useParams } from 'react-router-dom';
 import { Button, Container, Divider, Typography } from '@mui/material';
 import ModalCreateIssue from './ModalCreateIssue';
 import useQueryParam from '../../hooks/useQueryParam';
@@ -8,12 +7,12 @@ import useDebounce from '../../hooks/useDebounce';
 import ListIssues from './ListIssues';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
+import _isEmpty from 'lodash/isEmpty';
 
-const IssuesProjectPage = () => {
-  const { projectId } = useParams();
+const IssuesProjectPage = ({ projectId }) => {
   const params = useQueryParam();
   const [openIssue, setOpenIssue] = useState(false);
-  const [filterOpen, setFilterOpen] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(!_isEmpty(params));
   const [totalFilter, setTotalFilter] = useState({
     name: '',
     assigneeId: '',
@@ -54,22 +53,21 @@ const IssuesProjectPage = () => {
             <Typography flexGrow={1} variant="h5" component={Box}>
               Issues
             </Typography>
-            <Button onClick={handleOpenIssue}>New Issue</Button>
+            <Button onClick={handleOpenIssue} variant="contained">
+              New Issue
+            </Button>
             <Box ml={2}>
-              {filterOpen ? (
-                <Button onClick={handleToggleFilter} variant="contained">
-                  <Typography>Filter</Typography>
+              <Button onClick={handleToggleFilter} variant="contained">
+                <Typography>Filter</Typography>
+                {filterOpen ? (
                   <KeyboardDoubleArrowRightIcon />
-                </Button>
-              ) : (
-                <Button onClick={handleToggleFilter} variant="contained">
-                  <Typography>Filter</Typography>
+                ) : (
                   <KeyboardDoubleArrowLeftIcon />
-                </Button>
-              )}
+                )}
+              </Button>
             </Box>
           </Box>
-          <Divider sx={{ marginY: 2 }} />
+          <Divider sx={{ mt: 2, mb: 1 }} />
           <ListIssues
             debounceFilter={debounceFilter}
             projectId={projectId}
@@ -81,7 +79,12 @@ const IssuesProjectPage = () => {
         </Box>
       </Box>
       {openIssue && (
-        <ModalCreateIssue open={openIssue} handleClose={handleCloseIssue} />
+        <ModalCreateIssue
+          open={openIssue}
+          handleClose={handleCloseIssue}
+          debounceFilter={debounceFilter}
+          projectId={projectId}
+        />
       )}
     </Container>
   );

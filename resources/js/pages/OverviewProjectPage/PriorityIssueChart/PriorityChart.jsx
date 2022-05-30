@@ -11,10 +11,10 @@ import {
   ISSUE_PRIORITIES,
 } from '../../../config/constants';
 import { Pie } from 'react-chartjs-2';
+import useParamInt from '../../../hooks/useParamInt';
 
-const PriorityChart = ({ trackerId }) => {
+const PriorityChart = ({ trackerId, projectId }) => {
   const theme = useTheme();
-  const { projectId } = useParams();
   const doughnutOption = {
     animation: false,
     cutoutPercentage: 80,

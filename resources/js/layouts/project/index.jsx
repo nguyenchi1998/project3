@@ -9,7 +9,9 @@ import DetailIssuePage from '../../pages/DetailIssuePage';
 import IssuesProjectPage from '../../pages/IssuesProjectPage';
 import TrackerPage from '../../pages/TrackerPage';
 import MemberProjectPage from '../../pages/MemberProjectPage';
-import TargetVerionPage from '../../pages/TargetVersionPage';
+import TargetVersionPage from '../../pages/TargetVersionPage';
+import SettingProjectPage from '../../pages/SettingProjectPage';
+import useParamInt from '../../hooks/useParamInt';
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -42,7 +44,7 @@ const DashboardLayoutContent = styled('div')({
 });
 
 const ProjectLayout = () => {
-  const { projectId } = useParams();
+  const projectId = useParamInt('projectId');
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
@@ -60,13 +62,13 @@ const ProjectLayout = () => {
               <Route
                 path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.ISSUE}/:issueId`}
               >
-                <DetailIssuePage />
+                <DetailIssuePage projectId={projectId} />
               </Route>
               <Route
                 path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.ISSUE}`}
                 exact
               >
-                <IssuesProjectPage />
+                <IssuesProjectPage projectId={projectId} />
               </Route>
               <Route
                 path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.OVERVIEW}`}
@@ -78,7 +80,7 @@ const ProjectLayout = () => {
                 path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.TRACKER}`}
                 exact
               >
-                <TrackerPage />
+                <TrackerPage projectId={projectId} />
               </Route>
               <Route
                 path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.MEMBER}`}
@@ -90,7 +92,13 @@ const ProjectLayout = () => {
                 path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.TARGET_VERSION}`}
                 exact
               >
-                <TargetVerionPage projectId={projectId} />
+                <TargetVersionPage projectId={projectId} />
+              </Route>
+              <Route
+                path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.SETTING_PAGE}`}
+                exact
+              >
+                <SettingProjectPage projectId={projectId} />
               </Route>
             </Switch>
           </DashboardLayoutContent>

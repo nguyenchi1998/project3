@@ -3,6 +3,7 @@ import {
   Button,
   Container,
   Divider,
+  LinearProgress,
   Link,
   Paper,
   Stack,
@@ -10,7 +11,6 @@ import {
 } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useQuery } from 'react-query';
-import { useParams } from 'react-router-dom';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import issueAPI from '../../services/issue';
 import { ISSUE_PRIORITIES, ISSUE_STATUS } from '../../config/constants';
@@ -21,7 +21,7 @@ import IssueHistories from './IssueHistories';
 import RelativeIssues from './RelativeIssues';
 import SubIssues from './SubIssues';
 import LoadingIndicator from './../../components/LoadingIndicator';
-import ModalSubIssue from './ModalSubIssue';
+import useParamsInt from '../../hooks/useParamInt';
 
 const InfoItem = ({ label, value }) => {
   return (
@@ -34,10 +34,10 @@ const InfoItem = ({ label, value }) => {
   );
 };
 
-const DetailIssuePage = () => {
+const DetailIssuePage = ({ projectId }) => {
   const theme = useTheme();
   const [editIssueId, setIssueId] = useState(null);
-  const { issueId } = useParams();
+  const issueId = useParamsInt('issueId');
   const handleCloseIssue = useCallback(() => {
     setIssueId(null);
   }, []);
@@ -77,51 +77,40 @@ const DetailIssuePage = () => {
             <Paper variant="outlined">
               <Box p={2} py={1}>
                 <Box
-                  display={'flex'}
+                  display="flex"
                   justifyContent="space-between"
                   alignItems={'center'}
                 >
                   <Box flexGrow={1}>
-                    <Typography variant="h6">{`${data.name}`}</Typography>
+                    <Typography variant="h5">{`${data.name}`}</Typography>
                   </Box>
                   <Button variant="outlined" onClick={handleOpenIssue}>
                     Edit
                   </Button>
                 </Box>
-                <Box
-                  display={'flex'}
-                  justifyContent="flex-start"
-                  alignItems={'center'}
-                  fontSize={14}
-                >
-                  Add By <Box ml={0.5}>{data?.author?.name}</Box>
-                </Box>
                 <Stack spacing={1}>
                   <Box mt={1} display="flex">
                     <Box flexGrow={1}>
                       <Stack spacing={0.5}>
-                        <InfoItem
-                          label="status"
-                          value={ISSUE_STATUS[data.status]}
-                        />
+                        <InfoItem label="status" value={data.status.name} />
                         <InfoItem
                           label="priority"
                           value={ISSUE_PRIORITIES[data.priority]}
                         />
                         <InfoItem
-                          label="assignee"
+                          label="author"
                           value={
-                            <Link href="#" underline="hover">
-                              <Box color={theme.palette.text.primary}>
-                                {data?.assignee?.name}
-                              </Box>
+                            <Link underline="hover" href="#">
+                              {data?.author?.name}
                             </Link>
                           }
                         />
                         <InfoItem
-                          label="target version"
+                          label="assignee"
                           value={
-                            <Link href="#">{data?.targetVersion?.name}</Link>
+                            <Link href="#" underline="hover">
+                              {data?.assignee?.name}
+                            </Link>
                           }
                         />
                       </Stack>
@@ -132,7 +121,33 @@ const DetailIssuePage = () => {
                         <InfoItem label="end date" value={data.end_date} />
                         <InfoItem
                           label="% Done"
-                          value={`${data.progress_percent} %`}
+                          value={
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                              <Box sx={{ width: 100, mr: 1 }}>
+                                <LinearProgress
+                                  variant="determinate"
+                                  value={data.progress_percent}
+                                  sx={{ height: 20 }}
+                                />
+                              </Box>
+                              <Box sx={{ minWidth: 35 }}>
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                >
+                                  {`${Math.round(data.progress_percent)}%`}
+                                </Typography>
+                              </Box>
+                            </Box>
+                          }
+                        />
+                        <InfoItem
+                          label="Target Version"
+                          value={
+                            <Link underline="hover" href="#">
+                              {data?.target_version?.name}
+                            </Link>
+                          }
                         />
                       </Stack>
                     </Box>
@@ -146,10 +161,11 @@ const DetailIssuePage = () => {
                       <Box>{data.description}</Box>
                     </Box>
                   </Box>
-                  <SubIssues issue={data} />
+                  <SubIssues parentIssue={data} projectId={projectId} />
                   <RelativeIssues
                     relativeIssues={data?.relative_issues}
                     issueId={issueId}
+                    projectId={projectId}
                   />
                 </Stack>
               </Box>

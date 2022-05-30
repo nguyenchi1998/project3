@@ -17,7 +17,6 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
 import { deepOrange } from '@mui/material/colors';
 import { PATH, PROJECT_PATH } from '../../routes/paths';
 import { NavLink } from 'react-router-dom';
@@ -25,20 +24,8 @@ import projectAPI from './../../services/project';
 import { useMutation, useQueryClient } from 'react-query';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import { toast } from 'react-toastify';
-import { makeStyles } from '@mui/styles';
 
-const useStyles = makeStyles((theme) => ({
-  textLink: {
-    color: theme.palette.text.primary,
-    '&:hover': {
-      color: theme.palette.text.primary,
-      textDecoration: 'underline !important',
-    },
-  },
-}));
-
-const ProjectItem = ({ project, handleOpenEdit }) => {
-  const classes = useStyles();
+const ProjectItem = ({ project }) => {
   const queryClient = useQueryClient();
   const { mutate } = useMutation(projectAPI.destroy, {
     onSuccess: () => {
@@ -56,15 +43,15 @@ const ProjectItem = ({ project, handleOpenEdit }) => {
   };
   return (
     <Paper variant="outlined">
-      <Box position={'relative'}>
+      <Box position="relative">
         <Box
           top={-16}
-          position={'absolute'}
-          width={'100%'}
+          position="absolute"
+          width="100%"
           display="flex"
-          flexDirection={'column'}
+          flexDirection="column"
           justifyContent="center"
-          alignItems={'center'}
+          alignItems="center"
         >
           <Avatar
             component={NavLink}
@@ -87,7 +74,7 @@ const ProjectItem = ({ project, handleOpenEdit }) => {
             mt={7}
             display="flex"
             width="100%"
-            justifyContent={'space-between'}
+            justifyContent="space-between"
           >
             <Button
               variant="outlined"
@@ -97,14 +84,8 @@ const ProjectItem = ({ project, handleOpenEdit }) => {
             >
               List Issue
             </Button>
-            <Box display={'flex'}>
+            <Box display="flex">
               <ButtonGroup variant="outlined" disableElevation>
-                <Button
-                  sx={{ padding: 'unset' }}
-                  onClick={() => handleOpenEdit(project)}
-                >
-                  <EditIcon color="success" />
-                </Button>
                 <Button sx={{ padding: 'unset' }} onClick={handleDelete}>
                   <DeleteIcon color="error" />
                 </Button>
@@ -117,7 +98,7 @@ const ProjectItem = ({ project, handleOpenEdit }) => {
                 item
                 xs={12}
                 display="flex"
-                justifyContent={'flex-start'}
+                justifyContent="flex-start"
                 alignItems="center"
               >
                 <SiJavascript />
@@ -131,9 +112,9 @@ const ProjectItem = ({ project, handleOpenEdit }) => {
                 item
                 xs={6}
                 flexGrow={1}
-                textAlign={'left'}
+                textAlign="left"
                 display="flex"
-                justifyContent={'flex-start'}
+                justifyContent="flex-start"
                 alignItems="center"
               >
                 <MdOutlineCalendarToday />
@@ -143,9 +124,9 @@ const ProjectItem = ({ project, handleOpenEdit }) => {
                 item
                 xs={6}
                 flexGrow={1}
-                textAlign={'left'}
+                textAlign="left"
                 display="flex"
-                justifyContent={'flex-start'}
+                justifyContent="flex-start"
                 alignItems="center"
               >
                 <BsCalendarCheck />
@@ -155,9 +136,9 @@ const ProjectItem = ({ project, handleOpenEdit }) => {
                 item
                 xs={6}
                 flexGrow={1}
-                textAlign={'left'}
+                textAlign="left"
                 display="flex"
-                justifyContent={'flex-start'}
+                justifyContent="flex-start"
                 alignItems="center"
               >
                 <BsPeopleFill />
@@ -167,9 +148,9 @@ const ProjectItem = ({ project, handleOpenEdit }) => {
                 item
                 xs={6}
                 flexGrow={1}
-                textAlign={'left'}
+                textAlign="left"
                 display="flex"
-                justifyContent={'flex-start'}
+                justifyContent="flex-start"
                 alignItems="center"
               >
                 <BsHddStack />
@@ -179,8 +160,8 @@ const ProjectItem = ({ project, handleOpenEdit }) => {
           </Box>
           <Divider />
           <Box>
-            <Box display={'flex'} justifyContent="space-between">
-              <Box fontSize={14} fontWeight={'bold'}>
+            <Box display="flex" justifyContent="space-between">
+              <Box fontSize={14} fontWeight="bold">
                 Progress
               </Box>
               <Box
@@ -190,7 +171,7 @@ const ProjectItem = ({ project, handleOpenEdit }) => {
                 borderRadius={2}
                 fontSize={14}
                 display="flex"
-                alignItems={'center'}
+                alignItems="center"
               >
                 <AccessTimeIcon fontSize="small" />2 month left
               </Box>

@@ -1,12 +1,15 @@
 import {
   Box,
   Button,
+  colors,
   Divider,
   IconButton,
+  Link,
   Table,
   TableBody,
   TableCell,
   TableContainer,
+  TableHead,
   TableRow,
   Typography,
 } from '@mui/material';
@@ -25,13 +28,14 @@ import FormTextField from '../../components/FormTextField';
 import * as API_CODES from '../../config/API_CODES';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
+import { NavLink } from 'react-router-dom';
+import { PATH, PROJECT_PATH } from '../../routes/paths';
 
 const defaultValues = {
   relative_issue_id: '',
 };
-const RelativeIssues = ({ relativeIssues, issueId }) => {
+const RelativeIssues = ({ relativeIssues, issueId, projectId }) => {
   const theme = useTheme();
   const queryClient = useQueryClient();
   const {
@@ -53,11 +57,11 @@ const RelativeIssues = ({ relativeIssues, issueId }) => {
     setRelativeIssueOpen(!relativeIssueOpen);
     clearErrors();
   }, [relativeIssueOpen]);
-  const handleUnLinkIssue = useCallback((relative_issue_id) => {
+  const handleUnLinkRelativeIssue = useCallback((relative_issue_id) => {
     mutate({ relative_issue_id, id: issueId, action: UNLINK_ISSUE_ACTION });
   }, []);
   const { mutate, isLoading: isLinkIssueLoading } = useMutation(
-    issueAPI.linkIssue,
+    issueAPI.toggleLinkRelativeIssue,
     {
       onSuccess: (response) => {
         queryClient.setQueryData([KEY_QUERIES.FETCH_ISSUE, issueId], (old) => ({
@@ -67,7 +71,7 @@ const RelativeIssues = ({ relativeIssues, issueId }) => {
         handleToggleRelativeIssueOpen();
         reset(defaultValues);
         setRelativeIssueOpen(false);
-        toast.success('Add relative issue successfully');
+        toast.success('Toggle relative issue successfully');
       },
       onError: ({ response: { data, status } }) => {
         if (status == API_CODES.INVALID_DATA) {
@@ -88,11 +92,7 @@ const RelativeIssues = ({ relativeIssues, issueId }) => {
     <Box>
       <Divider />
       <Box py={2}>
-        <Box
-          display="flex"
-          alignItems={'center'}
-          justifyContent="space-between"
-        >
+        <Box display="flex" alignItems="center" justifyContent="space-between">
           <Typography component={Box} flexGrow={1} gutterBottom variant="body1">
             <strong>Relative Issue</strong>
           </Typography>
@@ -101,39 +101,69 @@ const RelativeIssues = ({ relativeIssues, issueId }) => {
         {!!relativeIssues?.length && (
           <TableContainer>
             <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell size="small">Subject</TableCell>
+                  <TableCell size="small">Status</TableCell>
+                  <TableCell size="small">Start Date</TableCell>
+                  <TableCell size="small">End Date</TableCell>
+                  <TableCell size="small" />
+                </TableRow>
+              </TableHead>
               <TableBody>
                 {relativeIssues.map((relativeIssue) => (
                   <TableRow key={relativeIssue.id}>
-                    <TableCell width={'64%'}>
+                    <TableCell size="small" width="64%">
                       <Typography component={Box} variant="body2">
-                        Relative to
-                        <Typography display={'inline'} variant="body2">
+                        Related to -
+                        <Typography display="inline" variant="body2">
                           <Link
-                            to="#"
-                            style={
-                              relativeIssue.issue.status == ISSUE_STATUS_CLOSED
-                                ? {
-                                    textDecoration: 'line-through',
-                                    color: theme.palette.text.secondary,
-                                  }
-                                : { color: theme.palette.text.primary }
+                            color={
+                              ISSUE_STATUS_CLOSED.includes(
+                                relativeIssue.issue.id,
+                              )
+                                ? 'gray'
+                                : 'black'
                             }
-                          >{` ${relativeIssue.issue.tracker.name} #${relativeIssue.issue.id}`}</Link>
+                            underline={
+                              ISSUE_STATUS_CLOSED.includes(
+                                relativeIssue.issue.status,
+                              )
+                                ? 'none'
+                                : 'hover'
+                            }
+                            component={NavLink}
+                            to={`${PATH.PROJECT_PAGE}/${projectId}/${PROJECT_PATH.ISSUE}/${relativeIssue.issue.id}`}
+                            sx={{
+                              color: colors.grey,
+                              textDecoration: ISSUE_STATUS_CLOSED.includes(
+                                relativeIssue.issue.status,
+                              )
+                                ? 'line-through'
+                                : 'none',
+                            }}
+                          >
+                            {` ${relativeIssue.issue.tracker.name} #${relativeIssue.issue.id}`}
+                          </Link>
                         </Typography>
-                        <Typography display={'inline'} variant="body2">
+                        <Typography display="inline" variant="body2">
                           {`: ${relativeIssue.issue.name}`}
                         </Typography>
                       </Typography>
                     </TableCell>
-                    <TableCell>
+                    <TableCell size="small">
                       {ISSUE_STATUS[relativeIssue.issue.status]}
                     </TableCell>
-                    <TableCell>{relativeIssue.issue.start_date}</TableCell>
-                    <TableCell>{relativeIssue.issue.end_date}</TableCell>
-                    <TableCell align="center" width={50}>
+                    <TableCell size="small">
+                      {relativeIssue.issue.start_date}
+                    </TableCell>
+                    <TableCell size="small">
+                      {relativeIssue.issue.end_date}
+                    </TableCell>
+                    <TableCell size="small" align="center" width={50}>
                       <IconButton
                         onClick={() =>
-                          handleUnLinkIssue(relativeIssue.issue.id)
+                          handleUnLinkRelativeIssue(relativeIssue.issue.id)
                         }
                       >
                         <LinkOffIcon fontSize="small" />
@@ -154,6 +184,7 @@ const RelativeIssues = ({ relativeIssues, issueId }) => {
                   name="relative_issue_id"
                   label="Relative Issue ID"
                   errors={errors}
+                  size="small"
                 />
                 <Box ml={1}>
                   <Button
@@ -174,4 +205,4 @@ const RelativeIssues = ({ relativeIssues, issueId }) => {
   );
 };
 
-export default memo(RelativeIssues);
+export default RelativeIssues;

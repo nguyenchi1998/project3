@@ -6,6 +6,8 @@ import Box from '@mui/material/Box';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import LoadingIndicator from './../LoadingIndicator';
+import { IconButton, Typography } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 const FormDialog = ({
   children,
@@ -28,7 +30,14 @@ const FormDialog = ({
       disableEscapeKeyDown
       disableEnforceFocus
     >
-      <DialogTitle>{title}</DialogTitle>
+      <DialogTitle>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Typography variant="h6">{title}</Typography>
+          <IconButton size="small" onClick={onClose}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
+      </DialogTitle>
       <DialogContent dividers>
         <form onSubmit={onSubmit} id={formId}>
           {isLoading ? (

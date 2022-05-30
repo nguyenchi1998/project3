@@ -22,7 +22,6 @@ class TargetVersionController extends Controller
             'start_date',
             'end_date',
             'project_id',
-            'active',
         ]);
 
         return TargetVersion::create(
@@ -44,8 +43,10 @@ class TargetVersionController extends Controller
             'status',
             'start_date',
             'end_date',
-            'active',
+            'issues',
         ));
+
+        return $targetVersion;
     }
 
     public function destroy($id)

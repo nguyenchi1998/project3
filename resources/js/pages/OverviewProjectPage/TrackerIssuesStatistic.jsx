@@ -10,11 +10,11 @@ import { useQuery } from 'react-query';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import projectAPI from './../../services/project';
 import TableSkeleton from '../../components/TableSkeleton';
+import useParamInt from '../../hooks/useParamInt';
 
 const headers = ['', 'Open', 'Closed', 'Total'];
 
-const TrackerIssuesStatistic = () => {
-  const { projectId } = useParams();
+const TrackerIssuesStatistic = ({ projectId }) => {
   const { data, isLoading, isError, error } = useQuery(
     [KEY_QUERIES.FETCH_TRACKER_ISSUE_STATISTIC, projectId],
     () => projectAPI.trackerIssuesStatistic(projectId),
@@ -26,7 +26,7 @@ const TrackerIssuesStatistic = () => {
     return <TableSkeleton numberRow={5} headers={headers} />;
   }
   return (
-    <TableContainer component={Paper} variant={'outlined'}>
+    <TableContainer component={Paper} variant="outlined">
       <Table stickyHeader>
         <TableHead>
           <TableRow>

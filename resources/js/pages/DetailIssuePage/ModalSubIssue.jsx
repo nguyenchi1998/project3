@@ -21,6 +21,7 @@ import trackerAPI from '../../services/tracker';
 import { format, isValid } from 'date-fns';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import useParamInt from '../../hooks/useParamInt';
 
 const defaultValues = {
   name: '',
@@ -35,16 +36,16 @@ const defaultValues = {
   progress_percent: 0,
 };
 
-const ModalSubIssue = ({ open, handleClose, issue }) => {
+const ModalSubIssue = ({ open, handleClose, parentIssue, projectId }) => {
   const queryClient = useQueryClient();
-  const { projectId } = useParams();
   const { mutate, isLoading } = useMutation(issueAPI.store, {
     onSuccess: (response) => {
       queryClient.setQueryData(
-        [KEY_QUERIES.FETCH_PROJECT_ISSUE, projectId],
-        (old) => {
-          return [response, ...old];
-        },
+        [KEY_QUERIES.FETCH_ISSUE, parentIssue.id],
+        (old) => ({
+          ...old,
+          ...response,
+        }),
       );
       handleClose();
       reset({ ...defaultValues });
@@ -64,8 +65,8 @@ const ModalSubIssue = ({ open, handleClose, issue }) => {
     },
   });
   useEffect(() => {
-    reset({ ...defaultValues, parent_issue_id: issue });
-  }, [issue]);
+    reset({ ...defaultValues, parent_issue_id: parentIssue });
+  }, [parentIssue]);
   const {
     handleSubmit,
     control,
@@ -86,7 +87,8 @@ const ModalSubIssue = ({ open, handleClose, issue }) => {
         data.end_date && isValid(data.end_date)
           ? format(new Date(data.end_date), 'yyyy/MM/dd')
           : null,
-      assign_user_id: data.assign_user_id.id,
+      assign_user_id: data?.assign_user_id?.id,
+      parent_issue_id: data?.parent_issue_id?.id,
       project_id: projectId,
     });
   };
@@ -105,7 +107,7 @@ const ModalSubIssue = ({ open, handleClose, issue }) => {
   return (
     <FormDialog
       open={open}
-      title={'New Issue'}
+      title="New Issue"
       onSubmit={handleSubmit(onSubmit)}
       onClose={handleClose}
       isPending={isLoading}
@@ -125,7 +127,7 @@ const ModalSubIssue = ({ open, handleClose, issue }) => {
           control={control}
           name="note"
           placeholder="Description..."
-          label={'Description'}
+          label="Description"
         />
         <FormAutocomplete
           control={control}
@@ -201,7 +203,7 @@ const ModalSubIssue = ({ open, handleClose, issue }) => {
               <FormInputDate
                 fullWidth
                 control={control}
-                name={'start_date'}
+                name="start_date"
                 label="Start Date"
                 errors={errors}
               />
@@ -212,7 +214,7 @@ const ModalSubIssue = ({ open, handleClose, issue }) => {
               <FormInputDate
                 fullWidth
                 control={control}
-                name={'end_date'}
+                name="end_date"
                 label="End Date"
                 errors={errors}
               />
@@ -237,6 +239,7 @@ const ModalSubIssue = ({ open, handleClose, issue }) => {
           <Grid item xs={6}>
             <Box pl={1}>
               <FormAutocomplete
+                disabled
                 control={control}
                 name="parent_issue_id"
                 disableCloseOnSelect={false}

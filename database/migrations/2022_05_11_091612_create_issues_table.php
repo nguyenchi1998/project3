@@ -28,8 +28,8 @@ class CreateIssuesTable extends Migration
             $table->unsignedFloat('estimate_time')->nullable();
             $table->unsignedFloat('actual_time')->nullable();
             $table->unsignedFloat('progress_percent')->default(0);
-            $table->tinyInteger('status')->default(config('constant.issue_status.new'));
             $table->unsignedInteger('target_version_id')->nullable();
+            $table->unsignedInteger('issue_status_id');
             $table->softDeletes();
             $table->timestamps();
         });

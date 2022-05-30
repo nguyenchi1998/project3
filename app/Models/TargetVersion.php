@@ -15,7 +15,6 @@ class TargetVersion extends Model
         'end_date',
         'status',
         'project_id',
-        'active',
     ];
 
     public function project()

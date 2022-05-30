@@ -1,4 +1,5 @@
 import { colors } from '@mui/material';
+
 export const ACCESS_TOKEN = 'access_token';
 
 export const REFRESH_TOKEN = 'refresh_token';
@@ -15,7 +16,7 @@ export const PROJECT_PRIORITIES = ['Low', 'Normal', 'High'];
 
 export const PROJECT_STATUS = ['New', 'Progress', 'Done', 'Pending'];
 
-export const PROJECT_MEMBER_ROLES = ['Member', 'Team Leader', 'Manager'];
+export const PROJECT_MEMBER_ROLES = ['Viewer', 'Developer', 'QA', 'BRSE', 'PM'];
 
 export const POSITIONS = ['Employee', 'Manager', 'Director'];
 
@@ -25,10 +26,15 @@ export const ISSUE_STATUS = [
   'To Be Confirm',
   'Suspended',
   'Done',
+  'Feedback',
+  'Confirmed',
   'Closed',
+  'Reject',
 ];
 
-export const ISSUE_STATUS_CLOSED = 4;
+export const ISSUE_STATUS_TYPE = ['Open', 'Closed'];
+
+export const ISSUE_STATUS_CLOSED = [4, 5];
 
 export const ISSUE_PRIORITIES = ['Low', 'Normal', 'High', 'Immediate'];
 

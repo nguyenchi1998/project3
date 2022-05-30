@@ -11,9 +11,11 @@ return [
         'business' => 0,
     ],
     'project_member_role' => [
-        'member' => 0,
-        'team_leader' => 1,
-        'project_manager' => 2,
+        'viewer' => 0,
+        'developer' => 1,
+        'qa' => 2,
+        'brse' => 3,
+        'pm' => 4,
     ],
     'position' => [
         'employee' => 0,
@@ -40,12 +42,21 @@ return [
         'proficient' => 2
     ],
     'issue_status' => [
+        //open
         'new' => 0,
         'assigned' => 1,
         'to_be_confirm' => 2,
         'suspended' => 3,
-        'done',
-        'closed' => 4
+        'done' => 4,
+        'feedback' => 5,
+        //closed
+        'confirmed' => 6,
+        'closed' => 7,
+        'reject' => 8,
+    ],
+    'issue_status_type' => [
+        'open' => 1,
+        'closed' => 0,
     ],
     'issue_priority' => [
         'low' => 0,

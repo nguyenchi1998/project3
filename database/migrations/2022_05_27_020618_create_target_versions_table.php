@@ -20,7 +20,6 @@ class CreateTargetVersionsTable extends Migration
             $table->date('end_date')->nullable();
             $table->tinyInteger('status');
             $table->unsignedInteger('project_id');
-            $table->tinyInteger('active')->default(0);
             $table->timestamps();
         });
     }

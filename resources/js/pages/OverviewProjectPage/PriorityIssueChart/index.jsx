@@ -12,7 +12,7 @@ const PriorityIssueChart = () => {
 
   return (
     <Box>
-      <Box py={1} display="flex" justifyContent={'space-between'}>
+      <Box py={1} display="flex" justifyContent="space-between">
         <Typography component={Box} flexGrow={1} variant="h5">
           Issue Priority
         </Typography>

@@ -35,12 +35,23 @@ const destroy = async (id) => {
   return data;
 };
 
-const linkIssue = async ({ id, relative_issue_id, action }) => {
+const toggleLinkRelativeIssue = async ({ id, relative_issue_id, action }) => {
   const { data } = await request().post(
-    `${baseResourceUri}/${id}/toggle-link-issue`,
+    `${baseResourceUri}/${id}/toggle-link-relative-issue`,
     {
       relative_issue_id,
       action,
+    },
+  );
+
+  return data;
+};
+
+const removeLinkSubIssue = async ({ id, subIssueId }) => {
+  const { data } = await request().post(
+    `${baseResourceUri}/${id}/remove-link-sub-issue`,
+    {
+      subIssueId,
     },
   );
 
@@ -53,5 +64,6 @@ export default {
   store,
   update,
   destroy,
-  linkIssue,
+  toggleLinkRelativeIssue,
+  removeLinkSubIssue,
 };

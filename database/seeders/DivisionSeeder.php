@@ -20,7 +20,7 @@ class DivisionSeeder extends Seeder
         ];
 
         foreach ($divisions as $division) {
-            $division =  Division::create([
+            $division = Division::create([
                 'name' => $division,
             ]);
 

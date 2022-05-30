@@ -16,6 +16,7 @@ import { KEY_QUERIES } from '../../config/keyQueries';
 import { useQuery } from 'react-query';
 import projectAPI from '../../services/project';
 import { POSITIONS } from '../../config/constants';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { Skeleton } from '@mui/material';
 
 const user = {
@@ -48,7 +49,12 @@ const items = [
   {
     href: PROJECT_PATH.TARGET_VERSION,
     icon: GroupIcon,
-    title: 'Target Version',
+    title: 'Target Versions',
+  },
+  {
+    href: PROJECT_PATH.SETTING_PAGE,
+    icon: SettingsIcon,
+    title: 'Setting',
   },
 ];
 const DashboardSidebar = ({ onMobileClose, openMobile, projectId }) => {
@@ -82,8 +88,8 @@ const DashboardSidebar = ({ onMobileClose, openMobile, projectId }) => {
       >
         {isLoading && (
           <Box width="100%">
-            <Skeleton width={'100%'} height={32} />
-            <Skeleton width={'80%'} height={32} />
+            <Skeleton width="100%" height={32} />
+            <Skeleton width="80%" height={32} />
           </Box>
         )}
         {data && (

@@ -25,11 +25,10 @@ class TargetVersionStoreRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'status' => 'required|in:0,1',
+            'status' => 'required',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date',
-            'project_id' => 'integer',
-            'active' => 'nullable|integer',
+            'project_id' => 'required|integer',
         ];
     }
 }

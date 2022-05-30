@@ -23,17 +23,17 @@ const HeaderDetailIssuePage = ({ issue }) => {
         <Paper variant="outlined" sx={{ height: '100%' }}>
           <Box
             p={1}
-            height={'100%'}
+            height="100%"
             px={2}
-            display={'flex'}
+            display="flex"
             justifyContent="flex-start"
-            alignItems={'center'}
+            alignItems="center"
           >
             <Box
               mr={2}
               sx={{ backgroundColor: colors.yellow[300] }}
               display="flex"
-              justifyContent={'center'}
+              justifyContent="center"
               alignItems="center"
               p={1}
             >
@@ -41,7 +41,9 @@ const HeaderDetailIssuePage = ({ issue }) => {
             </Box>
             <Box>
               <Typography>Status</Typography>
-              <Typography>{ISSUE_STATUS[issue.status]}</Typography>
+              <Typography sx={{ textTransform: 'capitalize' }}>
+                {issue.status.name}
+              </Typography>
             </Box>
           </Box>
         </Paper>
@@ -49,18 +51,18 @@ const HeaderDetailIssuePage = ({ issue }) => {
       <Grid item xs={6} sm={6} md={3}>
         <Paper variant="outlined" sx={{ height: '100%' }}>
           <Box
-            height={'100%'}
+            height="100%"
             p={1}
             px={2}
-            display={'flex'}
+            display="flex"
             justifyContent="flex-start"
-            alignItems={'center'}
+            alignItems="center"
           >
             <Box
               mr={2}
               sx={{ backgroundColor: colors.blue[300] }}
               display="flex"
-              justifyContent={'center'}
+              justifyContent="center"
               alignItems="center"
               p={1}
             >
@@ -78,18 +80,18 @@ const HeaderDetailIssuePage = ({ issue }) => {
       <Grid item xs={6} sm={6} md={3}>
         <Paper variant="outlined" sx={{ height: '100%' }}>
           <Box
-            height={'100%'}
+            height="100%"
             p={1}
             px={2}
-            display={'flex'}
+            display="flex"
             justifyContent="flex-start"
-            alignItems={'center'}
+            alignItems="center"
           >
             <Box
               mr={2}
               sx={{ backgroundColor: colors.blue[300] }}
               display="flex"
-              justifyContent={'center'}
+              justifyContent="center"
               alignItems="center"
               p={1}
             >
@@ -107,18 +109,18 @@ const HeaderDetailIssuePage = ({ issue }) => {
       <Grid item xs={6} sm={6} md={3}>
         <Paper variant="outlined" sx={{ height: '100%' }}>
           <Box
-            height={'100%'}
+            height="100%"
             p={1}
             px={2}
-            display={'flex'}
+            display="flex"
             justifyContent="flex-start"
-            alignItems={'center'}
+            alignItems="center"
           >
             <Box
               mr={2}
               sx={{ backgroundColor: colors.lightGreen[300] }}
               display="flex"
-              justifyContent={'center'}
+              justifyContent="center"
               alignItems="center"
               p={1}
             >

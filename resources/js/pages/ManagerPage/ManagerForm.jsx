@@ -96,7 +96,7 @@ const ManagerForm = ({ action, manager, handleCloseForm }) => {
       onClose={handleClose}
       onSubmit={handleSubmit(onSubmit)}
       methods={methods}
-      title={action === EDIT_ACTION ? 'Edit Manager' : 'Create Manager'}
+      title={action === EDIT_ACTION ? 'Edit Manager' : 'Create Manager"
     >
       <Stack spacing={2}>
         <Box display="flex">

@@ -7,7 +7,7 @@ const IssueHistories = ({ histories }) => {
 
   return (
     <Box>
-      <Box py={1} position="sticky" top={0} zIndex={99} bgcolor={'white'}>
+      <Box py={1} position="sticky" top={0} zIndex={99} bgcolor="white">
         <Typography variant="h6">History</Typography>
       </Box>
       {!!histories?.length && <Divider />}
@@ -16,9 +16,9 @@ const IssueHistories = ({ histories }) => {
           {histories?.map((history) => (
             <Box key={history.id}>
               <Box
-                display={'flex'}
+                display="flex"
                 alignItems="flex-start"
-                justifyContent={'flex-start'}
+                justifyContent="flex-start"
               >
                 <Avatar sx={{ width: 28, height: 28, mr: 1 }} />
                 <Box>
@@ -30,13 +30,13 @@ const IssueHistories = ({ histories }) => {
                   >
                     <Typography
                       variant="subtitle2"
-                      display={'inline'}
+                      display="inline"
                       fontWeight="bold"
                       mr={0.5}
                     >
                       Updated by
                     </Typography>
-                    <Typography display={'inline'} variant="subtitle2">
+                    <Typography display="inline" variant="subtitle2">
                       <Link
                         href="#"
                         underline="hover"
@@ -45,7 +45,7 @@ const IssueHistories = ({ histories }) => {
                         {`${history?.updated_user?.name} about `}
                       </Link>
                     </Typography>
-                    <Typography display={'inline'} variant="subtitle2">
+                    <Typography display="inline" variant="subtitle2">
                       <Link
                         href="#"
                         underline="hover"
@@ -69,9 +69,9 @@ const IssueHistories = ({ histories }) => {
                         <li key={detail.id}>
                           <Typography component={Box}>
                             <Typography
-                              fontWeight={'bold'}
+                              fontWeight="bold"
                               textTransform="capitalize"
-                              display={'inline'}
+                              display="inline"
                               variant="body2"
                               color={theme.palette.text.secondary}
                             >
@@ -80,7 +80,7 @@ const IssueHistories = ({ histories }) => {
                             {detail.old_value !== null ? (
                               <>
                                 <Typography
-                                  display={'inline'}
+                                  display="inline"
                                   variant="body2"
                                   marginLeft={0.5}
                                   color={theme.palette.text.secondary}
@@ -88,8 +88,8 @@ const IssueHistories = ({ histories }) => {
                                   changed from
                                 </Typography>
                                 <Typography
-                                  fontStyle={'italic'}
-                                  display={'inline'}
+                                  fontStyle="italic"
+                                  display="inline"
                                   variant="body2"
                                   marginLeft={0.5}
                                   color={theme.palette.text.secondary}
@@ -97,7 +97,7 @@ const IssueHistories = ({ histories }) => {
                                   {detail.old_value}
                                 </Typography>
                                 <Typography
-                                  display={'inline'}
+                                  display="inline"
                                   variant="body2"
                                   marginLeft={0.5}
                                   color={theme.palette.text.secondary}
@@ -107,7 +107,7 @@ const IssueHistories = ({ histories }) => {
                               </>
                             ) : (
                               <Typography
-                                display={'inline'}
+                                display="inline"
                                 variant="body2"
                                 marginLeft={0.5}
                                 color={theme.palette.text.secondary}
@@ -117,8 +117,8 @@ const IssueHistories = ({ histories }) => {
                             )}
 
                             <Typography
-                              fontStyle={'italic'}
-                              display={'inline'}
+                              fontStyle="italic"
+                              display="inline"
                               variant="body2"
                               color={theme.palette.text.secondary}
                               marginLeft={0.5}

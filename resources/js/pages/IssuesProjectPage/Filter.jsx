@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Box from '@mui/material/Box';
 import { useQuery } from 'react-query';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import projectAPI from '../../services/project';
 import {
+  colors,
   FormControl,
   InputLabel,
+  ListSubheader,
   MenuItem,
   Select,
   Stack,
@@ -13,12 +15,13 @@ import {
 } from '@mui/material';
 import {
   ISSUE_PRIORITIES,
-  ISSUE_STATUS,
   PROGRESS_PERCENT,
+  ISSUE_STATUS_TYPE,
 } from '../../config/constants';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 import trackerAPI from './../../services/tracker';
+import issueStatusAPI from './../../services/issueStatus';
 import { DesktopDatePicker } from '@mui/lab';
 import { isValid } from 'date-fns';
 import { format } from 'date-fns/esm';
@@ -26,9 +29,8 @@ import { format } from 'date-fns/esm';
 const Filter = ({
   projectId,
   totalFilter,
-  onChangeFilter,
+  onChangeTotalFilter,
   filterOpen,
-  handleToggleFilter,
 }) => {
   const { data: members, isLoading: isMembersLoading } = useQuery(
     [KEY_QUERIES.FETCH_PROJECT_MEMBER, projectId],
@@ -38,18 +40,21 @@ const Filter = ({
     [KEY_QUERIES.FETCH_TRACKER],
     () => trackerAPI.all(),
   );
-  const handleChange = ({ target: { name, value } }) => {
-    onChangeFilter({ [name]: value });
-  };
-  const handleChangeAutocomplete = (_, value, name) => {
-    onChangeFilter({ [name]: value?.id });
-  };
-
-  const onChangeDate = (value, name) => {
-    onChangeFilter({
+  const { data: states } = useQuery([KEY_QUERIES.FETCH_ISSUE_STATUS], () =>
+    issueStatusAPI.all(),
+  );
+  const handleChange = useCallback(({ target: { name, value } }) => {
+    onChangeTotalFilter({ [name]: value });
+  }, []);
+  const handleChangeAutocomplete = useCallback((_, value, name) => {
+    onChangeTotalFilter({ [name]: value?.id });
+  }, []);
+  const onChangeDate = useCallback((value, name) => {
+    onChangeTotalFilter({
       [name]: isValid(value) ? format(new Date(value), 'yyyy-MM-dd') : null,
     });
-  };
+  }, []);
+
   return (
     <Box>
       {filterOpen && (
@@ -72,9 +77,9 @@ const Filter = ({
                 name="status"
               >
                 <MenuItem value="all">All</MenuItem>
-                {ISSUE_STATUS.map((status, index) => (
-                  <MenuItem value={index} key={status}>
-                    {status}
+                {states?.map((status) => (
+                  <MenuItem key={status.id} value={status.id}>
+                    {status?.name}
                   </MenuItem>
                 ))}
               </Select>

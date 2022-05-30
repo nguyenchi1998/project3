@@ -25,7 +25,7 @@ class Issue extends Model
         'estimate_time',
         'actual_time',
         'progress_percent',
-        'status',
+        'issue_status_id',
         'target_version_id',
     ];
 
@@ -71,12 +71,11 @@ class Issue extends Model
 
     public function targetVersion()
     {
-        return $this->hasmany(TargetVersion::class);
+        return $this->belongsTo(TargetVersion::class);
     }
 
-    public function activeTargetVersion()
+    public function status()
     {
-        return $this->targetVersion()
-            ->where('active', 1)->first();
+        return $this->belongsTo(IssuesStatus::class, 'issue_status_id');
     }
 }

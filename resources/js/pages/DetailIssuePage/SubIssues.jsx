@@ -4,10 +4,12 @@ import {
   Divider,
   IconButton,
   LinearProgress,
+  Link,
   Table,
   TableBody,
   TableCell,
   TableContainer,
+  TableHead,
   TableRow,
   Typography,
 } from '@mui/material';
@@ -15,10 +17,16 @@ import { memo, useCallback, useState } from 'react';
 import { ISSUE_STATUS, ISSUE_STATUS_CLOSED } from '../../config/constants';
 import LinkOffIcon from '@mui/icons-material/LinkOff';
 import { useTheme } from '@emotion/react';
-import { Link } from 'react-router-dom';
 import ModalSubIssue from './ModalSubIssue';
+import { useMutation, useQueryClient } from 'react-query';
+import issueAPI from './../../services/issue';
+import { KEY_QUERIES } from '../../config/keyQueries';
+import { toast } from 'react-toastify';
+import { PATH, PROJECT_PATH } from '../../routes/paths';
+import { NavLink } from 'react-router-dom';
 
-const SubIssues = ({ issue }) => {
+const SubIssues = ({ parentIssue, projectId }) => {
+  const queryClient = useQueryClient();
   const theme = useTheme();
   const [subIssueOpen, setSubIssueOpen] = useState(false);
   const handleCloseSubIssue = useCallback(() => {
@@ -27,52 +35,95 @@ const SubIssues = ({ issue }) => {
   const handleOpenSubIssue = useCallback(() => {
     setSubIssueOpen(true);
   }, []);
+  const handleUnLinkSubIssue = useCallback((subIssueId) => {
+    mutate({ subIssueId, id: parentIssue.id });
+  }, []);
+  const { mutate, isLoading } = useMutation(issueAPI.removeLinkSubIssue, {
+    onSuccess: (response) => {
+      console.log([KEY_QUERIES.FETCH_ISSUE, parentIssue.id]);
+      queryClient.setQueryData(
+        [KEY_QUERIES.FETCH_ISSUE, parentIssue.id],
+        (old) => ({
+          ...old,
+          ...response,
+        }),
+      );
+      toast.success('Remove sub issue successfully');
+    },
+    onError: ({ response: { data, status } }) => {
+      if (status == API_CODES.INVALID_DATA) {
+        Object.entries(data.errors).forEach((error) => {
+          const [name, message] = error;
+          setError(name, { type: 'custom', message: message[0] });
+        });
+      } else {
+        toast.error(data.message);
+      }
+    },
+  });
   return (
     <Box>
       <Divider />
-      <Box py={2}>
-        <Box
-          display="flex"
-          alignItems={'center'}
-          justifyContent="space-between"
-        >
+      <Box py={2} pb={1}>
+        <Box display="flex" alignItems="center" justifyContent="space-between">
           <Typography component={Box} flexGrow={1} gutterBottom variant="body1">
             <strong>Sub Issue</strong>
           </Typography>
           <Button onClick={handleOpenSubIssue}>Add</Button>
         </Box>
-        {!!issue?.sub_issues?.length && (
+        {!!parentIssue?.sub_issues?.length && (
           <TableContainer>
             <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell size="small">Subject</TableCell>
+                  <TableCell size="small">Status</TableCell>
+                  <TableCell size="small">Assignee</TableCell>
+                  <TableCell size="small">Percent Done</TableCell>
+                </TableRow>
+              </TableHead>
               <TableBody>
-                {issue?.sub_issues.map((issue) => (
+                {parentIssue?.sub_issues.map((issue) => (
                   <TableRow key={issue.id}>
-                    <TableCell>
+                    <TableCell size="small" width={'64%'}>
                       <Typography component={Box} variant="body2">
-                        <Typography display={'inline'} variant="body2">
+                        <Typography display="inline" variant="body2">
                           <Link
-                            to="#"
-                            style={
-                              issue.status == ISSUE_STATUS_CLOSED
-                                ? {
-                                    textDecoration: 'line-through',
-                                    color: theme.palette.text.secondary,
-                                  }
-                                : { color: theme.palette.text.primary }
+                            color={
+                              ISSUE_STATUS_CLOSED.includes(issue.status)
+                                ? 'gray'
+                                : 'black'
                             }
-                          >{` ${issue.tracker.name} #${issue.id}`}</Link>
+                            underline={
+                              ISSUE_STATUS_CLOSED.includes(issue.status)
+                                ? 'none'
+                                : 'hover'
+                            }
+                            component={NavLink}
+                            to={`${PATH.PROJECT_PAGE}/${projectId}/${PROJECT_PATH.ISSUE}/${issue.id}`}
+                            sx={{
+                              textDecoration: ISSUE_STATUS_CLOSED.includes(
+                                issue.status,
+                              )
+                                ? 'line-through'
+                                : 'none',
+                            }}
+                          >
+                            {` ${issue.tracker.name} #${issue.id}`}
+                          </Link>
                         </Typography>
-                        <Typography display={'inline'} variant="body2">
+                        <Typography display="inline" variant="body2">
                           {`: ${issue.name}`}
                         </Typography>
                       </Typography>
                     </TableCell>
-                    <TableCell width={150}>
+                    <TableCell size="small" width={150}>
                       {ISSUE_STATUS[issue.status]}
                     </TableCell>
-                    <TableCell width={130}>{issue.start_date}</TableCell>
-                    <TableCell width={130}>{issue.end_date}</TableCell>
-                    <TableCell width={200}>
+                    <TableCell size="small" width={130}>
+                      {issue?.assignee?.name}
+                    </TableCell>
+                    <TableCell size="small" width={150}>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Box sx={{ width: '100%', mr: 1 }}>
                           <LinearProgress
@@ -82,12 +133,9 @@ const SubIssues = ({ issue }) => {
                           />
                         </Box>
                         <Box sx={{ minWidth: 35 }}>
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                          >{`${Math.round(
-                            issue.progress_percent,
-                          )}%`}</Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            {`${Math.round(issue.progress_percent)}%`}
+                          </Typography>
                         </Box>
                       </Box>
                     </TableCell>
@@ -102,11 +150,12 @@ const SubIssues = ({ issue }) => {
         <ModalSubIssue
           open={subIssueOpen}
           handleClose={handleCloseSubIssue}
-          issue={issue}
+          parentIssue={parentIssue}
+          projectId={projectId}
         />
       )}
     </Box>
   );
 };
 
-export default memo(SubIssues);
+export default SubIssues;
