@@ -36,7 +36,6 @@ class IssueController extends Controller
                 'parentIssue',
                 'relativeIssues.issue.tracker',
                 'subIssues.tracker',
-                'status',
             ]);
         }
 
@@ -49,7 +48,6 @@ class IssueController extends Controller
             'parentIssue',
             'relativeIssues.issue.tracker',
             'subIssues.tracker',
-            'status',
         ]);
     }
 
@@ -66,7 +64,6 @@ class IssueController extends Controller
                 'relativeIssues.issue.tracker',
                 'subIssues.tracker',
                 'targetVersion',
-                'status',
             ]);
     }
 
@@ -82,7 +79,6 @@ class IssueController extends Controller
                     'tracker',
                     'histories.detailHistories',
                     'histories.updatedUser',
-                    'status',
                 ]);
 
             $detailHistories = $this->createDetailHistories($issue, $request->all());
@@ -116,11 +112,11 @@ class IssueController extends Controller
                 'assign_user_id',
                 'parent_issue_id',
                 'start_date',
-                'end_date',
+                'due_date',
                 'estimate_time',
                 'actual_time',
                 'progress_percent',
-                'issue_status_id',
+                'status',
             ]));
             DB::commit();
 
@@ -132,11 +128,8 @@ class IssueController extends Controller
                 'histories.updatedUser',
                 'parentIssue',
                 'relativeIssues.issue.tracker',
-                'relativeIssues.issue.status',
                 'subIssues.tracker',
-                'subIssues.status',
                 'targetVersion',
-                'status'
             ]);
         } catch (Exception $e) {
             DB::rollBack();
@@ -149,7 +142,7 @@ class IssueController extends Controller
     {
         $detailHistoriesKey = [
             'description' => 'Description',
-            'end_date' => 'End date',
+            'due_date' => 'Due date',
             'estimate_time' => 'Estimate time',
             'name' => 'Name',
             'priority' => 'Priority',
@@ -217,16 +210,13 @@ class IssueController extends Controller
             'histories.updatedUser',
             'parentIssue',
             'relativeIssues.issue.tracker',
-            'relativeIssues.issue.status',
             'subIssues.tracker',
-            'subIssues.status',
-            'status',
         ]);
     }
 
     public function removeLinkSubIssue($id, Request $request)
     {
-        $deletedStatus =  Issue::where('id', $request->get('subIssueId'))->where('parent_issue_id', $id)->delete();
+        $deletedStatus = Issue::where('id', $request->get('subIssueId'))->where('parent_issue_id', $id)->delete();
         if ($deletedStatus) {
             return Issue::find($id)
                 ->load([
@@ -239,7 +229,6 @@ class IssueController extends Controller
                     'relativeIssues.issue.tracker',
                     'subIssues.tracker',
                     'targetVersion',
-                    'status'
                 ]);
         }
 

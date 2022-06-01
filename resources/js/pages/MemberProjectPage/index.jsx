@@ -10,7 +10,7 @@ import useQueryParam from '../../hooks/useQueryParam';
 import ModalMemberProject from './ModalMemberProject';
 import ListMember from './ListMember';
 
-const MemberProjectPage = ({ projectId }) => {
+const MemberProjectPage = () => {
   const params = useQueryParam();
   const [filter, setFilter] = useState({
     keyword: '',
@@ -64,7 +64,6 @@ const MemberProjectPage = ({ projectId }) => {
         <Divider sx={{ mt: 2, mb: 1 }} />
         <ListMember
           debounceFilter={debounceFilter}
-          projectId={projectId}
           handleOpenEdit={handleOpenEdit}
         />
         {!!action && (
@@ -72,7 +71,6 @@ const MemberProjectPage = ({ projectId }) => {
             member={selectedMember}
             handleClose={handleMemberClose}
             keyQuery={debounceFilter}
-            projectId={projectId}
             action={action}
           />
         )}

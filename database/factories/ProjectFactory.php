@@ -16,7 +16,7 @@ class ProjectFactory extends Factory
         return [
             'name' => $this->faker->sentence(2),
             'start_date' => null,
-            'end_date' => null,
+            'due_date' => null,
             'status' => config('constant.project_status.new'),
             'source_control' => '',
         ];

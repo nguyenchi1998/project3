@@ -122,7 +122,6 @@ class ProjectController extends Controller
         $trackers = Tracker::with(['issues' => function ($query) use ($id) {
             $query->where('project_id', $id);
         }])->get()->toArray();
-
         return array_map(function ($tracker) {
             $issues = array_reduce($tracker['issues'], function ($totalIssue, $issue) {
                 if ($issue['status'] === config('constant.issue_status.closed')) {
@@ -159,7 +158,11 @@ class ProjectController extends Controller
                     $query->where('name', 'like', '%' . $filters['keyword'] . '%');
                 })->orderBy('role', 'desc')->orderBy('id', 'desc');
             }]);
-        return $project->members;
+        if ($request->groupByRole) {
+            return $project->members->groupBy('pivot.role');
+        }
+
+        return $project->members;;
     }
 
     public function updateMember($id, $memberId, Request $request)
@@ -189,7 +192,7 @@ class ProjectController extends Controller
             'status',
             'priority',
             'startDate',
-            'endDate',
+            'dueDate',
         ]);
         return Issue::where('project_id', $id)
             ->when(isset($ignoreIds), function ($query) use ($ignoreIds) {
@@ -211,8 +214,8 @@ class ProjectController extends Controller
                         $query->where('priority', $filters['priority']);
                     })->when(isset($filters['startDate']), function ($query) use ($filters) {
                         $query->whereDate('start_date', '>=', $filters['startDate']);
-                    })->when(isset($filters['endDate']), function ($query) use ($filters) {
-                        $query->whereDate('end_date', '<=', $filters['endDate']);
+                    })->when(isset($filters['dueDate']), function ($query) use ($filters) {
+                        $query->whereDate('due_date', '<=', $filters['dueDate']);
                     });
                 });
             })
@@ -222,14 +225,13 @@ class ProjectController extends Controller
                 'tracker',
                 'author',
                 'assignee',
-                'status'
+                'lastHistory',
             ]);
     }
 
     public function getTargetVersions($projectId)
     {
         return TargetVersion::where('project_id', $projectId)
-            ->get()
-            ->load('issues');
+            ->get();
     }
 }

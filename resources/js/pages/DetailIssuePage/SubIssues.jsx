@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Divider,
-  IconButton,
   LinearProgress,
   Link,
   Table,
@@ -13,9 +12,8 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { memo, useCallback, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { ISSUE_STATUS, ISSUE_STATUS_CLOSED } from '../../config/constants';
-import LinkOffIcon from '@mui/icons-material/LinkOff';
 import { useTheme } from '@emotion/react';
 import ModalSubIssue from './ModalSubIssue';
 import { useMutation, useQueryClient } from 'react-query';
@@ -24,10 +22,12 @@ import { KEY_QUERIES } from '../../config/keyQueries';
 import { toast } from 'react-toastify';
 import { PATH, PROJECT_PATH } from '../../routes/paths';
 import { NavLink } from 'react-router-dom';
+import { ProjectContext } from '../../layouts/project';
 
-const SubIssues = ({ parentIssue, projectId }) => {
-  const queryClient = useQueryClient();
+const SubIssues = ({ parentIssue }) => {
   const theme = useTheme();
+  const projectId = useContext(ProjectContext);
+  const queryClient = useQueryClient();
   const [subIssueOpen, setSubIssueOpen] = useState(false);
   const handleCloseSubIssue = useCallback(() => {
     setSubIssueOpen(false);
@@ -40,7 +40,6 @@ const SubIssues = ({ parentIssue, projectId }) => {
   }, []);
   const { mutate, isLoading } = useMutation(issueAPI.removeLinkSubIssue, {
     onSuccess: (response) => {
-      console.log([KEY_QUERIES.FETCH_ISSUE, parentIssue.id]);
       queryClient.setQueryData(
         [KEY_QUERIES.FETCH_ISSUE, parentIssue.id],
         (old) => ({
@@ -51,7 +50,7 @@ const SubIssues = ({ parentIssue, projectId }) => {
       toast.success('Remove sub issue successfully');
     },
     onError: ({ response: { data, status } }) => {
-      if (status == API_CODES.INVALID_DATA) {
+      if (status === API_CODES.INVALID_DATA) {
         Object.entries(data.errors).forEach((error) => {
           const [name, message] = error;
           setError(name, { type: 'custom', message: message[0] });
@@ -151,7 +150,6 @@ const SubIssues = ({ parentIssue, projectId }) => {
           open={subIssueOpen}
           handleClose={handleCloseSubIssue}
           parentIssue={parentIssue}
-          projectId={projectId}
         />
       )}
     </Box>

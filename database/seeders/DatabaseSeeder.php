@@ -13,11 +13,11 @@ class DatabaseSeeder extends Seeder
      * Seed the application's database.
      *
      * @return void
+     * @throws Exception
      */
     public function run()
     {
         $this->resetDatabase();
-        $this->call(IssuesStatusSeeder::class);
         $this->call(TrackerSeeder::class);
         $this->call(RoleSeeder::class);
         $this->call(PositionSeeder::class);

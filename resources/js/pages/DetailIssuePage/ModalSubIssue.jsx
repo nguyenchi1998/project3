@@ -1,13 +1,13 @@
-import { Stack, TextField, Grid, Box } from '@mui/material';
+import { Box, Grid, Stack, TextField } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import FormDialog from '../../components/FormDialog';
 import FormInputDate from '../../components/FormInputDate';
-import { useParams } from 'react-router-dom';
 import FormTextField from '../../components/FormTextField';
 import FormSelect from '../../components/FormSelect';
 import FormAutocomplete from '../../components/FormAutocomplete';
 import FormTextarea from '../../components/FormTextarea';
+import { useContext, useEffect } from 'react';
 import {
   ISSUE_PRIORITIES,
   ISSUE_STATUS,
@@ -19,16 +19,15 @@ import { KEY_QUERIES } from '../../config/keyQueries';
 import projectAPI from '../../services/project';
 import trackerAPI from '../../services/tracker';
 import { format, isValid } from 'date-fns';
-import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import useParamInt from '../../hooks/useParamInt';
+import { ProjectContext } from '../../layouts/project';
 
 const defaultValues = {
   name: '',
   start_date: null,
   tracker_id: 2,
   priority: 0,
-  end_date: null,
+  due_date: null,
   status: 0,
   assign_user_id: null,
   estimate_time: 0,
@@ -36,7 +35,8 @@ const defaultValues = {
   progress_percent: 0,
 };
 
-const ModalSubIssue = ({ open, handleClose, parentIssue, projectId }) => {
+const ModalSubIssue = ({ open, handleClose, parentIssue }) => {
+  const projectId = useContext(ProjectContext);
   const queryClient = useQueryClient();
   const { mutate, isLoading } = useMutation(issueAPI.store, {
     onSuccess: (response) => {
@@ -52,7 +52,7 @@ const ModalSubIssue = ({ open, handleClose, parentIssue, projectId }) => {
       toast.success('Add sub issue successfully');
     },
     onError: ({ response: { data, status } }) => {
-      if (status == API_CODES.INVALID_DATA) {
+      if (status === API_CODES.INVALID_DATA) {
         Object.entries(data.errors).forEach((error) => {
           const [name, message] = error;
           setError(name, { type: 'custom', message: message[0] });
@@ -83,9 +83,9 @@ const ModalSubIssue = ({ open, handleClose, parentIssue, projectId }) => {
         data.start_date && isValid(data.start_date)
           ? format(new Date(data.start_date), 'yyyy/MM/dd')
           : null,
-      end_date:
-        data.end_date && isValid(data.end_date)
-          ? format(new Date(data.end_date), 'yyyy/MM/dd')
+      due_date:
+        data.due_date && isValid(data.due_date)
+          ? format(new Date(data.due_date), 'yyyy/MM/dd')
           : null,
       assign_user_id: data?.assign_user_id?.id,
       parent_issue_id: data?.parent_issue_id?.id,
@@ -214,8 +214,8 @@ const ModalSubIssue = ({ open, handleClose, parentIssue, projectId }) => {
               <FormInputDate
                 fullWidth
                 control={control}
-                name="end_date"
-                label="End Date"
+                name="due_date"
+                label="Due Date"
                 errors={errors}
               />
             </Box>

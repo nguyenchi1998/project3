@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { KEY_QUERIES } from '../../config/keyQueries';
-import { useCallback, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import trackerAPI from '../../services/tracker';
 import { toast } from 'react-toastify';
 import TableSkeleton from './../../components/TableSkeleton';
@@ -17,10 +17,12 @@ import TableRow from '@mui/material/TableRow';
 import TableContainer from '@mui/material/TableContainer';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { ProjectContext } from '../../layouts/project';
 
 const headers = ['Name', 'Action'];
 
-const ListTracker = ({ debounceFilter, projectId, handleOpenEdit }) => {
+const ListTracker = ({ debounceFilter, handleOpenEdit }) => {
+  const projectId = useContext(ProjectContext);
   const queryClient = useQueryClient();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -50,7 +52,7 @@ const ListTracker = ({ debounceFilter, projectId, handleOpenEdit }) => {
     mutate(id);
   };
   const { data, isLoading, error, isError } = useQuery(
-    [KEY_QUERIES.FETCH_TARGET_VERSION, projectId, { ...debounceFilter }],
+    [KEY_QUERIES.FETCH_TRACKER, projectId, { ...debounceFilter }],
     () => trackerAPI.all({ projectId, ...debounceFilter }),
   );
   if (isLoading) {

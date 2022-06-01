@@ -14,7 +14,7 @@ class Project extends Model
         'name',
         'priority',
         'start_date',
-        'end_date',
+        'due_date',
         'status',
         'source_control',
         'type'

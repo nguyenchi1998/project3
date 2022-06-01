@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import projectAPI from '../../services/project';
-import { useCallback, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { toast } from 'react-toastify';
 import TableSkeleton from './../../components/TableSkeleton';
 import Box from '@mui/material/Box';
@@ -20,10 +20,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { format } from 'date-fns';
 import { PROJECT_MEMBER_ROLES } from '../../config/constants';
 import ConfirmDialog from '../../components/ConfirmDialog';
+import { ProjectContext } from '../../layouts/project';
 
 const headers = ['Name', 'Role', 'Email', 'Effort', 'Join Date', 'Action'];
 
-const ListMember = ({ debounceFilter, projectId, handleOpenEdit }) => {
+const ListMember = ({ debounceFilter, handleOpenEdit }) => {
+  const projectId = useContext(ProjectContext);
   const queryClient = useQueryClient();
   const [deleteId, setDeleteId] = useState(null);
   const [page, setPage] = useState(0);
@@ -62,7 +64,7 @@ const ListMember = ({ debounceFilter, projectId, handleOpenEdit }) => {
   const handleRemoveMember = () => {
     deleteMutate({ projectId, memberId: deleteId });
   };
-  const { data, isLoading, isSuccess, isError, error } = useQuery(
+  const { data, isLoading, isError, error } = useQuery(
     [KEY_QUERIES.FETCH_PROJECT_MEMBER, projectId, { ...debounceFilter }],
     () => projectAPI.getMembers({ projectId, ...debounceFilter }),
   );

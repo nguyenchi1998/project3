@@ -28,7 +28,7 @@ class IssueStoreRequest extends FormRequest
             'project_id' => 'integer',
             'type' => 'integer',
             'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date',
+            'due_date' => 'nullable|date',
             'estimate_time' => 'nullable|integer',
             'tracker_id' => 'required|integer',
             'target_version_id' => 'nullable|integer',

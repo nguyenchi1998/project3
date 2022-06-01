@@ -9,7 +9,7 @@ import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrow
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import _isEmpty from 'lodash/isEmpty';
 
-const IssuesProjectPage = ({ projectId }) => {
+const IssuesProjectPage = () => {
   const params = useQueryParam();
   const [openIssue, setOpenIssue] = useState(false);
   const [filterOpen, setFilterOpen] = useState(!_isEmpty(params));
@@ -22,7 +22,7 @@ const IssuesProjectPage = ({ projectId }) => {
     priority: '',
     percent: '',
     startDate: null,
-    endDate: null,
+    dueDate: null,
     ...params,
   });
   const handleToggleFilter = () => {
@@ -70,7 +70,6 @@ const IssuesProjectPage = ({ projectId }) => {
           <Divider sx={{ mt: 2, mb: 1 }} />
           <ListIssues
             debounceFilter={debounceFilter}
-            projectId={projectId}
             totalFilter={totalFilter}
             onChangeTotalFilter={onChangeTotalFilter}
             filterOpen={filterOpen}
@@ -83,7 +82,6 @@ const IssuesProjectPage = ({ projectId }) => {
           open={openIssue}
           handleClose={handleCloseIssue}
           debounceFilter={debounceFilter}
-          projectId={projectId}
         />
       )}
     </Container>

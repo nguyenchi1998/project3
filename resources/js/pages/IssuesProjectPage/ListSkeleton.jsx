@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Box,
   Paper,
   Skeleton,
   Table,
@@ -7,7 +8,6 @@ import {
   TableCell,
   TableContainer,
   TableRow,
-  Box,
 } from '@mui/material';
 import ListHead from './ListHead';
 

@@ -10,7 +10,7 @@ import useDebounce from '../../hooks/useDebounce';
 import useQueryParam from '../../hooks/useQueryParam';
 import ListTracker from './ListTracker';
 
-const TrackerPage = ({ projectId }) => {
+const TrackerPage = () => {
   const params = useQueryParam();
   const [filter, setFilter] = useState({
     keyword: '',
@@ -62,16 +62,14 @@ const TrackerPage = ({ projectId }) => {
         <Divider sx={{ mt: 2, mb: 1 }} />
         <ListTracker
           debounceFilter={debounceFilter}
-          projectId={projectId}
           handleOpenEdit={handleOpenEdit}
         />
         {action && (
           <ModalTracker
-            projectId={projectId}
             tracker={selectedTracker}
             action={action}
             handleClose={handleTrackerClose}
-            keyQuery={debounceFilter}
+            debounceFilter={debounceFilter}
           />
         )}
       </Box>

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
-import Avatar from '@mui/material/Avatar';
+import { useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
@@ -15,7 +15,6 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import { useQuery } from 'react-query';
 import projectAPI from '../../services/project';
-import { POSITIONS } from '../../config/constants';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Skeleton } from '@mui/material';
 
@@ -58,8 +57,9 @@ const items = [
   },
 ];
 const DashboardSidebar = ({ onMobileClose, openMobile, projectId }) => {
+  const dispatch = useDispatch();
   const location = useLocation();
-  const { data, isLoading, isError } = useQuery(
+  const { data, isLoading, isError, isSuccess } = useQuery(
     [KEY_QUERIES.FETCH_PROJECT, projectId],
     () => projectAPI.find(projectId),
   );

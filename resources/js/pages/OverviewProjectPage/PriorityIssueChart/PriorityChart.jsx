@@ -1,76 +1,50 @@
-import { colors, useTheme } from '@mui/material';
-import { useParams } from 'react-router-dom';
-import { useState } from 'react';
-import Skeleton from '@mui/material/Skeleton';
-import Typography from '@mui/material/Typography';
 import { useQuery } from 'react-query';
 import { KEY_QUERIES } from '../../../config/keyQueries';
 import projectAPI from '../../../services/project';
+import { useContext } from 'react';
+import { ProjectContext } from '../../../layouts/project';
+import { VictoryPie, VictoryTheme } from 'victory';
 import {
   CHART_ISSUE_PRIORITY_COLORS,
   ISSUE_PRIORITIES,
 } from '../../../config/constants';
-import { Pie } from 'react-chartjs-2';
-import useParamInt from '../../../hooks/useParamInt';
+import { Box, Skeleton, Typography } from '@mui/material';
 
-const PriorityChart = ({ trackerId, projectId }) => {
-  const theme = useTheme();
-  const doughnutOption = {
-    animation: false,
-    cutoutPercentage: 80,
-    layout: { padding: 0 },
-    legend: {
-      display: false,
-    },
-    maintainAspectRatio: false,
-    responsive: true,
-    tooltips: {
-      backgroundColor: theme.palette.background.paper,
-      bodyFontColor: theme.palette.text.secondary,
-      borderColor: theme.palette.divider,
-      borderWidth: 1,
-      enabled: true,
-      footerFontColor: theme.palette.text.secondary,
-      intersect: false,
-      mode: 'index',
-      titleFontColor: theme.palette.text.primary,
-    },
-  };
+const PriorityChart = ({ trackerId }) => {
+  const projectId = useContext(ProjectContext);
+
   const { data, isLoading, isError, error } = useQuery(
-    [KEY_QUERIES.FETCH_PRIORITY_ISSUE_STATISTIC, projectId, trackerId],
+    [KEY_QUERIES.FETCH_PRIORITY_ISSUE_STATISTIC, projectId, { trackerId }],
     () => projectAPI.priorityIssuesStatistic({ projectId, trackerId }),
   );
   if (isLoading) {
-    return <Skeleton variant="rectangular" height={300} />;
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center">
+        <Skeleton variant="circular" height={300} width={300} />
+      </Box>
+    );
   }
   if (isError) {
     return <Typography>{error.message}</Typography>;
   }
-  const dataValues = Object.entries(data).map((priority) => priority[1].length);
-  const dataKeys = Object.entries(data).map((priority) =>
-    parseInt(priority[0], 10),
-  );
 
-  return Object.entries(data).length ? (
-    <Pie
-      data={{
-        datasets: [
-          {
-            data: dataValues,
-            backgroundColor: CHART_ISSUE_PRIORITY_COLORS.filter((_, key) =>
-              dataKeys.includes(key),
-            ),
-            borderWidth: 8,
-            borderColor: colors.common.white,
-            hoverBorderColor: colors.common.white,
-          },
-        ],
-        labels: ISSUE_PRIORITIES.filter((_, key) => dataKeys.includes(key)),
+  return (
+    <VictoryPie
+      colorScale={CHART_ISSUE_PRIORITY_COLORS}
+      data={ISSUE_PRIORITIES.map((priority, index) => ({
+        x: data[index].length,
+        y: data[index].length,
+        label: `${priority}: ${data[index].length}`,
+      }))}
+      labelPosition={() => 'centroid'}
+      height={300}
+      style={{
+        labels: {
+          fontWeight: 400,
+        },
       }}
-      options={doughnutOption}
+      theme={VictoryTheme.material}
     />
-  ) : (
-    <Typography>No data to display</Typography>
   );
 };
 

@@ -1,13 +1,4 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  colors,
-  Grid,
-  Paper,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Box, colors, Grid, Paper, Typography } from '@mui/material';
 import AssignmentLateIcon from '@mui/icons-material/AssignmentLate';
 import {
   ISSUE_PRIORITIES,
@@ -42,7 +33,7 @@ const HeaderDetailIssuePage = ({ issue }) => {
             <Box>
               <Typography>Status</Typography>
               <Typography sx={{ textTransform: 'capitalize' }}>
-                {issue.status.name}
+                {ISSUE_STATUS[issue.status]}
               </Typography>
             </Box>
           </Box>

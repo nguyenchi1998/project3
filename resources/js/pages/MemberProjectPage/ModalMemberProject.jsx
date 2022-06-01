@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
@@ -7,10 +7,11 @@ import * as API_CODES from '../../config/API_CODES';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import projectAPI from '../../services/project';
 import { CircularProgress, Stack, TextField } from '@mui/material';
-import { PROJECT_MEMBER_ROLES, EFFORTS } from '../../config/constants';
+import { EFFORTS, PROJECT_MEMBER_ROLES } from '../../config/constants';
 import FormSelect from '../../components/FormSelect';
 import FormAutocomplete from '../../components/FormAutocomplete';
 import employeeAPI from './../../services/employee';
+import { ProjectContext } from '../../layouts/project';
 
 const defaultValues = {
   role: 0,
@@ -18,13 +19,8 @@ const defaultValues = {
   employeeId: null,
 };
 
-const ModalMemberProject = ({
-  projectId,
-  handleClose,
-  member,
-  keyQuery,
-  action,
-}) => {
+const ModalMemberProject = ({ handleClose, member, keyQuery, action }) => {
+  const projectId = useContext(ProjectContext);
   const queryClient = useQueryClient();
   const { handleSubmit, control, reset, setError } = useForm({
     defaultValues,
@@ -42,7 +38,7 @@ const ModalMemberProject = ({
         toast.success('Member updated successfully');
       },
       onError: ({ response: { data, status } }) => {
-        if (status == API_CODES.INVALID_DATA) {
+        if (status === API_CODES.INVALID_DATA) {
           Object.entries(data.errors).forEach((error) => {
             const [name, message] = error;
             setError(name, { type: 'custom', message: message[0] });
@@ -67,7 +63,7 @@ const ModalMemberProject = ({
         toast.success('Member updated successfully');
       },
       onError: ({ response: { data, status } }) => {
-        if (status == API_CODES.INVALID_DATA) {
+        if (status === API_CODES.INVALID_DATA) {
           Object.entries(data.errors).forEach((error) => {
             const [name, message] = error;
             setError(name, { type: 'custom', message: message[0] });
@@ -81,7 +77,7 @@ const ModalMemberProject = ({
   );
   const onSubmit = (data) => {
     const { role, effort } = data;
-    if (action == 'edit') {
+    if (action === 'edit') {
       updateMutate({
         projectId,
         memberId: member.id,
@@ -98,7 +94,7 @@ const ModalMemberProject = ({
     }
   };
   useEffect(() => {
-    if (action == 'edit') {
+    if (action === 'edit') {
       reset({
         role: member?.pivot?.role,
         effort: member?.pivot?.effort,
@@ -123,7 +119,7 @@ const ModalMemberProject = ({
   );
   return (
     <FormDialog
-      title={action == 'edit' ? 'Edit Member' : 'Add Member'}
+      title={action === 'edit' ? 'Edit Member' : 'Add Member'}
       onSubmit={handleSubmit(onSubmit)}
       onClose={handleCloseForm}
       open={!!action}
@@ -131,14 +127,14 @@ const ModalMemberProject = ({
       formId="form-member"
     >
       <Stack spacing={2}>
-        {action == 'create' && (
+        {action === 'create' && (
           <FormAutocomplete
             control={control}
             name="employeeId"
             options={employees ?? []}
             loading={isLoading}
             disableCloseOnSelect={false}
-            isOptionEqualToValue={(option, value) => option.id == value.id}
+            isOptionEqualToValue={(option, value) => option.id === value.id}
             getOptionLabel={(option) => option?.name ?? ''}
             renderInput={(params) => (
               <TextField

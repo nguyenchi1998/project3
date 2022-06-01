@@ -6,6 +6,7 @@ use App\Models\Language;
 use App\Models\Project;
 use App\Models\TargetVersion;
 use App\Models\User;
+use Exception;
 use Illuminate\Database\Seeder;
 
 class ProjectSeeder extends Seeder
@@ -14,6 +15,7 @@ class ProjectSeeder extends Seeder
      * Run the database seeds.
      *
      * @return void
+     * @throws Exception
      */
     public function run()
     {

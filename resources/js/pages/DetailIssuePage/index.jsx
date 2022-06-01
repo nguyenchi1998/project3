@@ -16,7 +16,6 @@ import issueAPI from '../../services/issue';
 import { ISSUE_PRIORITIES, ISSUE_STATUS } from '../../config/constants';
 import HeaderDetailIssuePage from './HeaderDetailIssuePage';
 import ModalEditIssue from './ModalEditIssue';
-import { useTheme } from '@emotion/react';
 import IssueHistories from './IssueHistories';
 import RelativeIssues from './RelativeIssues';
 import SubIssues from './SubIssues';
@@ -34,8 +33,7 @@ const InfoItem = ({ label, value }) => {
   );
 };
 
-const DetailIssuePage = ({ projectId }) => {
-  const theme = useTheme();
+const DetailIssuePage = () => {
   const [editIssueId, setIssueId] = useState(null);
   const issueId = useParamsInt('issueId');
   const handleCloseIssue = useCallback(() => {
@@ -92,7 +90,10 @@ const DetailIssuePage = ({ projectId }) => {
                   <Box mt={1} display="flex">
                     <Box flexGrow={1}>
                       <Stack spacing={0.5}>
-                        <InfoItem label="status" value={data.status.name} />
+                        <InfoItem
+                          label="status"
+                          value={ISSUE_STATUS[data.status]}
+                        />
                         <InfoItem
                           label="priority"
                           value={ISSUE_PRIORITIES[data.priority]}
@@ -118,7 +119,7 @@ const DetailIssuePage = ({ projectId }) => {
                     <Box flexGrow={1}>
                       <Stack spacing={0.5}>
                         <InfoItem label="start date" value={data.start_date} />
-                        <InfoItem label="end date" value={data.end_date} />
+                        <InfoItem label="due date" value={data.due_date} />
                         <InfoItem
                           label="% Done"
                           value={
@@ -161,11 +162,10 @@ const DetailIssuePage = ({ projectId }) => {
                       <Box>{data.description}</Box>
                     </Box>
                   </Box>
-                  <SubIssues parentIssue={data} projectId={projectId} />
+                  <SubIssues parentIssue={data} />
                   <RelativeIssues
                     relativeIssues={data?.relative_issues}
                     issueId={issueId}
-                    projectId={projectId}
                   />
                 </Stack>
               </Box>

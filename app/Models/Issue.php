@@ -21,11 +21,11 @@ class Issue extends Model
         'created_user_id',
         'parent_issue_id',
         'start_date',
-        'end_date',
+        'due_date',
         'estimate_time',
         'actual_time',
         'progress_percent',
-        'issue_status_id',
+        'status',
         'target_version_id',
     ];
 
@@ -74,8 +74,9 @@ class Issue extends Model
         return $this->belongsTo(TargetVersion::class);
     }
 
-    public function status()
+    public function lastHistory()
     {
-        return $this->belongsTo(IssuesStatus::class, 'issue_status_id');
+        return $this->hasOne(IssueHistory::class)
+            ->latestOfMany();
     }
 }

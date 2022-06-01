@@ -21,14 +21,15 @@ const FormDialog = ({
   fullWidth = true,
   formId,
   actionButtonShow = true,
+  disableEscapeKeyDown = true,
 }) => {
   return (
     <Dialog
       open={open}
       fullWidth={fullWidth}
       maxWidth={maxWidth}
-      disableEscapeKeyDown
-      disableEnforceFocus
+      onClose={onClose}
+      disableEscapeKeyDown={disableEscapeKeyDown}
     >
       <DialogTitle>
         <Box display="flex" justifyContent="space-between" alignItems="center">

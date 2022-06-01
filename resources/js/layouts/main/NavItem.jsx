@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  matchPath,
-  NavLink as RouterLink,
-  useLocation,
-} from 'react-router-dom';
+import { NavLink as RouterLink, useLocation } from 'react-router-dom';
 import { Box, Button, ListItem } from '@mui/material';
 
 const NavItem = ({ href, icon: Icon, title, ...rest }) => {

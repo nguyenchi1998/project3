@@ -1,6 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import Box from '@mui/material/Box';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import projectAPI from '../../services/project';
@@ -11,16 +11,19 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { ISSUE_PRIORITIES, ISSUE_STATUS } from '../../config/constants';
+import {
+  ISSUE_PRIORITIES,
+  ISSUE_PRIORITY_COLORS,
+} from '../../config/constants';
 import { format } from 'date-fns';
 import { PATH, PROJECT_PATH } from '../../routes/paths';
-import { ISSUE_PRIORITY_COLORS } from '../../config/constants';
 import { useTheme } from '@emotion/react';
 import ListSkeleton from './ListSkeleton';
 import ListHead from './ListHead';
 import Filter from './Filter';
 import { makeStyles } from '@mui/styles';
 import { Typography } from '@mui/material';
+import { ProjectContext } from '../../layouts/project';
 
 const useStyles = makeStyles((theme) => ({
   textLink: {
@@ -34,12 +37,12 @@ const useStyles = makeStyles((theme) => ({
 
 const ListIssues = ({
   debounceFilter,
-  projectId,
   totalFilter,
   onChangeTotalFilter,
   filterOpen,
   handleToggleFilter,
 }) => {
+  const projectId = useContext(ProjectContext);
   const classes = useStyles();
   const theme = useTheme();
   const [page, setPage] = useState(0);
@@ -137,7 +140,6 @@ const ListIssues = ({
       <Filter
         filterOpen={filterOpen}
         handleToggleFilter={handleToggleFilter}
-        projectId={projectId}
         totalFilter={totalFilter}
         onChangeTotalFilter={onChangeTotalFilter}
       />

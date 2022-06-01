@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Route, Switch, useParams } from 'react-router-dom';
+import React, { createContext, useState } from 'react';
+import { Route, Switch } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import ProjectSidebar from './SideBar';
 import { PATH, PROJECT_PATH } from '../../routes/paths';
@@ -43,6 +43,8 @@ const DashboardLayoutContent = styled('div')({
   overflow: 'auto',
 });
 
+const ProjectContext = createContext(null);
+
 const ProjectLayout = () => {
   const projectId = useParamInt('projectId');
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
@@ -58,54 +60,58 @@ const ProjectLayout = () => {
       <DashboardLayoutWrapper>
         <DashboardLayoutContainer>
           <DashboardLayoutContent>
-            <Switch>
-              <Route
-                path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.ISSUE}/:issueId`}
-              >
-                <DetailIssuePage projectId={projectId} />
-              </Route>
-              <Route
-                path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.ISSUE}`}
-                exact
-              >
-                <IssuesProjectPage projectId={projectId} />
-              </Route>
-              <Route
-                path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.OVERVIEW}`}
-                exact
-              >
-                <OverviewProjectPage />
-              </Route>
-              <Route
-                path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.TRACKER}`}
-                exact
-              >
-                <TrackerPage projectId={projectId} />
-              </Route>
-              <Route
-                path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.MEMBER}`}
-                exact
-              >
-                <MemberProjectPage projectId={projectId} />
-              </Route>
-              <Route
-                path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.TARGET_VERSION}`}
-                exact
-              >
-                <TargetVersionPage projectId={projectId} />
-              </Route>
-              <Route
-                path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.SETTING_PAGE}`}
-                exact
-              >
-                <SettingProjectPage projectId={projectId} />
-              </Route>
-            </Switch>
+            <ProjectContext.Provider value={projectId}>
+              <Switch>
+                <Route
+                  path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.ISSUE}/:issueId`}
+                >
+                  <DetailIssuePage />
+                </Route>
+                <Route
+                  path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.ISSUE}`}
+                  exact
+                >
+                  <IssuesProjectPage />
+                </Route>
+                <Route
+                  path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.OVERVIEW}`}
+                  exact
+                >
+                  <OverviewProjectPage />
+                </Route>
+                <Route
+                  path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.TRACKER}`}
+                  exact
+                >
+                  <TrackerPage />
+                </Route>
+                <Route
+                  path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.MEMBER}`}
+                  exact
+                >
+                  <MemberProjectPage />
+                </Route>
+                <Route
+                  path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.TARGET_VERSION}`}
+                  exact
+                >
+                  <TargetVersionPage />
+                </Route>
+                <Route
+                  path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.SETTING_PAGE}`}
+                  exact
+                >
+                  <SettingProjectPage />
+                </Route>
+              </Switch>
+            </ProjectContext.Provider>
           </DashboardLayoutContent>
         </DashboardLayoutContainer>
       </DashboardLayoutWrapper>
     </DashboardLayoutRoot>
   );
 };
+
+export { ProjectContext };
 
 export default ProjectLayout;

@@ -31,7 +31,7 @@ class FilterIssueRequest extends FormRequest
             'status' => 'nullable',
             'priority' => 'nullable',
             'startDate' => 'nullable|date',
-            'endDate' => 'nullable|date',
+            'dueDate' => 'nullable|date',
         ];
     }
 }

@@ -13,7 +13,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { memo, useCallback, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import issueAPI from '../../services/issue';
 import {
@@ -28,15 +28,15 @@ import FormTextField from '../../components/FormTextField';
 import * as API_CODES from '../../config/API_CODES';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import { toast } from 'react-toastify';
-import { useTheme } from '@emotion/react';
 import { NavLink } from 'react-router-dom';
 import { PATH, PROJECT_PATH } from '../../routes/paths';
+import { ProjectContext } from '../../layouts/project';
 
 const defaultValues = {
   relative_issue_id: '',
 };
-const RelativeIssues = ({ relativeIssues, issueId, projectId }) => {
-  const theme = useTheme();
+const RelativeIssues = ({ relativeIssues, issueId }) => {
+  const projectId = useContext(ProjectContext);
   const queryClient = useQueryClient();
   const {
     handleSubmit,
@@ -106,7 +106,7 @@ const RelativeIssues = ({ relativeIssues, issueId, projectId }) => {
                   <TableCell size="small">Subject</TableCell>
                   <TableCell size="small">Status</TableCell>
                   <TableCell size="small">Start Date</TableCell>
-                  <TableCell size="small">End Date</TableCell>
+                  <TableCell size="small">Due Date</TableCell>
                   <TableCell size="small" />
                 </TableRow>
               </TableHead>
@@ -158,7 +158,7 @@ const RelativeIssues = ({ relativeIssues, issueId, projectId }) => {
                       {relativeIssue.issue.start_date}
                     </TableCell>
                     <TableCell size="small">
-                      {relativeIssue.issue.end_date}
+                      {relativeIssue.issue.due_date}
                     </TableCell>
                     <TableCell size="small" align="center" width={50}>
                       <IconButton

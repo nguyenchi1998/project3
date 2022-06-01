@@ -52,6 +52,7 @@ const ProjectItem = ({ project }) => {
           flexDirection="column"
           justifyContent="center"
           alignItems="center"
+          px={1}
         >
           <Avatar
             component={NavLink}
@@ -65,8 +66,11 @@ const ProjectItem = ({ project }) => {
             component={NavLink}
             to={`${PATH.PROJECT_PAGE}/${project.id}/${PROJECT_PATH.OVERVIEW}`}
             underline="hover"
+            sx={{ width: '100%' }}
           >
-            <Typography variant="h6">{project.name}</Typography>
+            <Typography variant="h6" noWrap={true} textAlign="center">
+              {project.name}
+            </Typography>
           </Link>
         </Box>
         <Stack spacing={1.5} p={2}>
@@ -130,7 +134,7 @@ const ProjectItem = ({ project }) => {
                 alignItems="center"
               >
                 <BsCalendarCheck />
-                <Box ml={1}>{project.end_date ?? 'N/A'}</Box>
+                <Box ml={1}>{project.due_date ?? 'N/A'}</Box>
               </Grid>
               <Grid
                 item

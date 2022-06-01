@@ -32,8 +32,6 @@ export const ISSUE_STATUS = [
   'Reject',
 ];
 
-export const ISSUE_STATUS_TYPE = ['Open', 'Closed'];
-
 export const ISSUE_STATUS_CLOSED = [4, 5];
 
 export const ISSUE_PRIORITIES = ['Low', 'Normal', 'High', 'Immediate'];

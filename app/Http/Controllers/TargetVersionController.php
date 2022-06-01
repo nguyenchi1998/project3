@@ -20,7 +20,7 @@ class TargetVersionController extends Controller
             'name',
             'status',
             'start_date',
-            'end_date',
+            'due_date',
             'project_id',
         ]);
 
@@ -42,8 +42,7 @@ class TargetVersionController extends Controller
             'name',
             'status',
             'start_date',
-            'end_date',
-            'issues',
+            'due_date',
         ));
 
         return $targetVersion;

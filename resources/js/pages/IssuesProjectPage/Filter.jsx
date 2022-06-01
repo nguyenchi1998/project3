@@ -1,13 +1,11 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import Box from '@mui/material/Box';
 import { useQuery } from 'react-query';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import projectAPI from '../../services/project';
 import {
-  colors,
   FormControl,
   InputLabel,
-  ListSubheader,
   MenuItem,
   Select,
   Stack,
@@ -15,23 +13,19 @@ import {
 } from '@mui/material';
 import {
   ISSUE_PRIORITIES,
+  ISSUE_STATUS,
   PROGRESS_PERCENT,
-  ISSUE_STATUS_TYPE,
 } from '../../config/constants';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 import trackerAPI from './../../services/tracker';
-import issueStatusAPI from './../../services/issueStatus';
 import { DesktopDatePicker } from '@mui/lab';
 import { isValid } from 'date-fns';
 import { format } from 'date-fns/esm';
+import { ProjectContext } from '../../layouts/project';
 
-const Filter = ({
-  projectId,
-  totalFilter,
-  onChangeTotalFilter,
-  filterOpen,
-}) => {
+const Filter = ({ totalFilter, onChangeTotalFilter, filterOpen }) => {
+  const projectId = useContext(ProjectContext);
   const { data: members, isLoading: isMembersLoading } = useQuery(
     [KEY_QUERIES.FETCH_PROJECT_MEMBER, projectId],
     () => projectAPI.getMembers({ projectId }),
@@ -39,9 +33,6 @@ const Filter = ({
   const { data: trackers, isLoading: isTrackersLoading } = useQuery(
     [KEY_QUERIES.FETCH_TRACKER],
     () => trackerAPI.all(),
-  );
-  const { data: states } = useQuery([KEY_QUERIES.FETCH_ISSUE_STATUS], () =>
-    issueStatusAPI.all(),
   );
   const handleChange = useCallback(({ target: { name, value } }) => {
     onChangeTotalFilter({ [name]: value });
@@ -77,9 +68,9 @@ const Filter = ({
                 name="status"
               >
                 <MenuItem value="all">All</MenuItem>
-                {states?.map((status) => (
-                  <MenuItem key={status.id} value={status.id}>
-                    {status?.name}
+                {ISSUE_STATUS.map((status, key) => (
+                  <MenuItem key={status} value={key}>
+                    {status}
                   </MenuItem>
                 ))}
               </Select>
@@ -128,9 +119,9 @@ const Filter = ({
             <FormControl>
               <DesktopDatePicker
                 clearable
-                onChange={(e) => onChangeDate(e, 'endDate')}
-                label="End Date"
-                value={totalFilter.endDate}
+                onChange={(e) => onChangeDate(e, 'dueDate')}
+                label="Due Date"
+                value={totalFilter.dueDate}
                 renderInput={(params) => <TextField {...params} />}
               />
             </FormControl>
@@ -139,12 +130,13 @@ const Filter = ({
                 handleChangeAutocomplete(e, value, 'authorId')
               }
               value={
-                members?.find((member) => member.id == totalFilter?.authorId) ??
-                null
+                members?.find(
+                  (member) => member.id === totalFilter?.authorId,
+                ) ?? null
               }
               options={members ?? []}
               loading={isMembersLoading}
-              isOptionEqualToValue={(option, value) => option.id == value.id}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
               getOptionLabel={(option) => option?.name ?? ''}
               renderInput={(params) => (
                 <TextField
@@ -170,12 +162,12 @@ const Filter = ({
               }
               value={
                 members?.find(
-                  (member) => member.id == totalFilter?.assigneeId,
+                  (member) => member.id === totalFilter?.assigneeId,
                 ) ?? null
               }
               options={members ?? []}
               loading={isMembersLoading}
-              isOptionEqualToValue={(option, value) => option.id == value.id}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
               getOptionLabel={(option) => option?.name ?? ''}
               renderInput={(params) => (
                 <TextField
@@ -201,12 +193,12 @@ const Filter = ({
               }
               value={
                 trackers?.find(
-                  (tracker) => tracker.id == totalFilter?.trackerId,
+                  (tracker) => tracker.id === totalFilter?.trackerId,
                 ) ?? null
               }
               options={trackers ?? []}
               loading={isTrackersLoading}
-              isOptionEqualToValue={(option, value) => option.id == value.id}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
               getOptionLabel={(option) => option?.name ?? ''}
               renderInput={(params) => (
                 <TextField

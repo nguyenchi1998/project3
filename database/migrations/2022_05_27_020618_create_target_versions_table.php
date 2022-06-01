@@ -17,7 +17,7 @@ class CreateTargetVersionsTable extends Migration
             $table->id();
             $table->string('name');
             $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
+            $table->date('due_date')->nullable();
             $table->tinyInteger('status');
             $table->unsignedInteger('project_id');
             $table->timestamps();

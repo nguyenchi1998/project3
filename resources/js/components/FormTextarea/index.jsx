@@ -1,6 +1,6 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
-import { FormLabel, TextareaAutosize, Box } from '@mui/material';
+import { Box, FormLabel, TextareaAutosize } from '@mui/material';
 
 const FormTextarea = ({ name, control, placeholder, label }) => {
   return (

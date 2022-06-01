@@ -22,7 +22,7 @@ class CreateAssignsTable extends Migration
             $table->unsignedFloat('assign_hour');
             $table->unsignedInteger('language_id');
             $table->date('start_date');
-            $table->date('end_date');
+            $table->date('due_date');
             $table->tinyInteger('status')->default(config('constant.assign_status.active'));
             $table->timestamps();
         });

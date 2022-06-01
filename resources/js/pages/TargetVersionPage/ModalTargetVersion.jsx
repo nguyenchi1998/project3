@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
@@ -6,11 +6,11 @@ import FormDialog from '../../components/FormDialog';
 import * as API_CODES from '../../config/API_CODES';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import FormTextField from '../../components/FormTextField';
-import FormInputCheckbox from '../../components/FormInputCheckbox';
 import targetVersionAPI from '../../services/targetVersion';
 import { TARGET_VERSION_STATUS } from '../../config/constants';
 import FormSelect from '../../components/FormSelect';
 import { Stack } from '@mui/material';
+import { ProjectContext } from '../../layouts/project';
 
 const OPEN_STATUS = 2;
 
@@ -23,8 +23,8 @@ const ModalTargetVersion = ({
   targetVersion,
   debounceFilter,
   action,
-  projectId,
 }) => {
+  const projectId = useContext(ProjectContext);
   const queryClient = useQueryClient();
   const {
     handleSubmit,
@@ -106,11 +106,13 @@ const ModalTargetVersion = ({
     }
   };
   useEffect(() => {
-    if (action === 'edit') {
-      targetVersion &&
-        reset({
-          ...targetVersion,
-        });
+    if (action === 'edit' && targetVersion) {
+      const { name, status, id } = targetVersion;
+      reset({
+        name,
+        status,
+        id,
+      });
     } else {
       reset({ ...defaultValues });
     }
@@ -130,6 +132,7 @@ const ModalTargetVersion = ({
       open={!!action}
       isPending={isStorePending || isUpdatePending}
       formId="form-target-version"
+      disableEscapeKeyDown={false}
     >
       <Stack spacing={2}>
         <FormTextField

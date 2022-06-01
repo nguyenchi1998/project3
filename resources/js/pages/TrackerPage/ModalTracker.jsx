@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
@@ -7,11 +7,13 @@ import * as API_CODES from '../../config/API_CODES';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import FormTextField from '../../components/FormTextField';
 import trackerAPI from '../../services/tracker';
+import { ProjectContext } from '../../layouts/project';
 
 const defaultValues = {
   name: '',
 };
-const ModalTracker = ({ handleClose, tracker, keyQuery, action }) => {
+const ModalTracker = ({ handleClose, tracker, debounceFilter, action }) => {
+  const projectId = useContext(ProjectContext);
   const queryClient = useQueryClient();
   const {
     handleSubmit,
@@ -25,7 +27,7 @@ const ModalTracker = ({ handleClose, tracker, keyQuery, action }) => {
   const { mutate, isLoading: isStorePending } = useMutation(trackerAPI.store, {
     onSuccess: (response) => {
       queryClient.setQueryData(
-        [KEY_QUERIES.FETCH_TRACKER, { ...keyQuery }],
+        [KEY_QUERIES.FETCH_TRACKER, projectId, { ...debounceFilter }],
         (old) => {
           return [response, ...old];
         },
@@ -35,7 +37,7 @@ const ModalTracker = ({ handleClose, tracker, keyQuery, action }) => {
       toast.success('Tracker created successfully');
     },
     onError: ({ response: { data, status } }) => {
-      if (status == API_CODES.INVALID_DATA) {
+      if (status === API_CODES.INVALID_DATA) {
         Object.entries(data.errors).forEach((error) => {
           const [name, message] = error;
           setError(name, { type: 'custom', message: message[0] });
@@ -52,7 +54,7 @@ const ModalTracker = ({ handleClose, tracker, keyQuery, action }) => {
     {
       onSuccess: (response) => {
         queryClient.setQueryData(
-          [KEY_QUERIES.FETCH_TRACKER, { ...keyQuery }],
+          [KEY_QUERIES.FETCH_TRACKER, projectId, { ...debounceFilter }],
           (old) =>
             old.map((oldTracker) =>
               oldTracker.id === tracker.id ? response : oldTracker,
@@ -63,7 +65,7 @@ const ModalTracker = ({ handleClose, tracker, keyQuery, action }) => {
         toast.success('Tracker updated successfully');
       },
       onError: ({ response: { data, status } }) => {
-        if (status == API_CODES.INVALID_DATA) {
+        if (status === API_CODES.INVALID_DATA) {
           Object.entries(data.errors).forEach((error) => {
             const [name, message] = error;
             setError(name, { type: 'custom', message: message[0] });

@@ -1,6 +1,6 @@
 import { Checkbox, Stack, TextField } from '@mui/material';
 import { format, isValid } from 'date-fns';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
@@ -25,7 +25,7 @@ const defaultValues = {
   priority: 1,
   group_id: '',
   start_date: null,
-  end_date: null,
+  due_date: null,
   languages: [],
 };
 const ModalProject = ({ handleClose, keyQuery, open }) => {
@@ -78,8 +78,8 @@ const ModalProject = ({ handleClose, keyQuery, open }) => {
       start_date: isValid(data.start_date)
         ? format(data.start_date, 'yyyy-MM-dd')
         : null,
-      end_date: isValid(data.end_date)
-        ? format(data.end_date, 'yyyy-MM-dd')
+      due_date: isValid(data.due_date)
+        ? format(data.due_date, 'yyyy-MM-dd')
         : null,
       languages: data.languages.map(({ value }) => value),
     });
@@ -125,8 +125,8 @@ const ModalProject = ({ handleClose, keyQuery, open }) => {
         <FormInputDate
           control={control}
           minDate={new Date()}
-          name="end_date"
-          label="End Date"
+          name="due_date"
+          label="Due Date"
         />
         <FormSelect
           control={control}
@@ -142,7 +142,7 @@ const ModalProject = ({ handleClose, keyQuery, open }) => {
           control={control}
           name="languages"
           multiple
-          isOptionEqualToValue={(option, value) => option.value == value.value}
+          isOptionEqualToValue={(option, value) => option.value === value.value}
           getOptionLabel={(option) => option.label}
           options={
             languages?.map(({ name, id }) => ({

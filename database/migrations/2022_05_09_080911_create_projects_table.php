@@ -20,7 +20,7 @@ class CreateProjectsTable extends Migration
             $table->tinyInteger('priority')->default(config('constant.project_priority.normal'));
             $table->unsignedSmallInteger('group_id')->nullable();
             $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
+            $table->date('due_date')->nullable();
             $table->smallInteger('status')->nullable();
             $table->string('source_control', 256)->nullable();
             $table->tinyInteger('type')->default(config('constant.project_type.business'));

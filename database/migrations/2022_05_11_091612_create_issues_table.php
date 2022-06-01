@@ -24,12 +24,12 @@ class CreateIssuesTable extends Migration
             $table->unsignedInteger('created_user_id');
             $table->unsignedInteger('parent_issue_id')->nullable();
             $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
+            $table->date('due_date')->nullable();
             $table->unsignedFloat('estimate_time')->nullable();
             $table->unsignedFloat('actual_time')->nullable();
             $table->unsignedFloat('progress_percent')->default(0);
             $table->unsignedInteger('target_version_id')->nullable();
-            $table->unsignedInteger('issue_status_id');
+            $table->unsignedInteger('status');
             $table->softDeletes();
             $table->timestamps();
         });

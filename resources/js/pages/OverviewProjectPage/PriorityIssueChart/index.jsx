@@ -21,13 +21,7 @@ const PriorityIssueChart = () => {
           handleChangeTracker={handleChangeTracker}
         />
       </Box>
-      <Box
-        py={2}
-        sx={{
-          height: 300,
-          position: 'relative',
-        }}
-      >
+      <Box py={2}>
         <PriorityChart trackerId={trackerId} />
       </Box>
     </Box>

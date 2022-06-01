@@ -10,7 +10,6 @@ import { useMutation, useQuery } from 'react-query';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import projectAPI from '../../services/project';
 import FormAutocomplete from '../../components/FormAutocomplete';
-import FormDialog from '../../components/FormDialog';
 import FormInputDate from '../../components/FormInputDate';
 import FormSelect from '../../components/FormSelect';
 import FormTextarea from '../../components/FormTextarea';
@@ -22,6 +21,10 @@ import { PROJECT_PRIORITIES, PROJECT_TYPES } from '../../config/constants';
 import { toast } from 'react-toastify';
 import * as API_CODES from '../../config/API_CODES';
 import { format, isValid } from 'date-fns';
+import groupAPI from './../../services/group';
+import languageAPI from './../../services/language';
+import { useContext } from 'react';
+import { ProjectContext } from '../../layouts/project';
 
 const defaultValues = {
   name: '',
@@ -29,10 +32,11 @@ const defaultValues = {
   priority: 1,
   group_id: '',
   start_date: null,
-  end_date: null,
+  due_date: null,
   languages: [],
 };
-const SettingProjectPage = ({ projectId }) => {
+const SettingProjectPage = () => {
+  const projectId = useContext(ProjectContext);
   const {
     handleSubmit,
     control,
@@ -76,9 +80,9 @@ const SettingProjectPage = ({ projectId }) => {
         data.start_date && isValid(new Date(data.start_date))
           ? format(new Date(data.start_date), 'yyyy-MM-dd')
           : null,
-      end_date:
-        data.end_date && isValid(new Date(data.end_date))
-          ? format(new Date(data.end_date), 'yyyy-MM-dd')
+      due_date:
+        data.due_date && isValid(new Date(data.due_date))
+          ? format(new Date(data.due_date), 'yyyy-MM-dd')
           : null,
       languages: data.languages.map(({ value }) => value),
     });
@@ -141,8 +145,8 @@ const SettingProjectPage = ({ projectId }) => {
             <FormInputDate
               control={control}
               minDate={new Date()}
-              name="end_date"
-              label="End Date"
+              name="due_date"
+              label="Due Date"
             />
             <FormSelect
               control={control}
@@ -160,7 +164,7 @@ const SettingProjectPage = ({ projectId }) => {
               name="languages"
               multiple
               isOptionEqualToValue={(option, value) =>
-                option.value == value.value
+                option.value === value.value
               }
               getOptionLabel={(option) => option.label}
               options={

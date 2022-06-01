@@ -54,10 +54,6 @@ return [
         'closed' => 7,
         'reject' => 8,
     ],
-    'issue_status_type' => [
-        'open' => 1,
-        'closed' => 0,
-    ],
     'issue_priority' => [
         'low' => 0,
         'normal' => 1,

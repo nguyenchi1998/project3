@@ -10,7 +10,7 @@ import useDebounce from '../../hooks/useDebounce';
 import useQueryParam from '../../hooks/useQueryParam';
 import ListTargetVersion from './ListTargetVersion';
 
-const TargetVersionPage = ({ projectId }) => {
+const TargetVersionPage = () => {
   const params = useQueryParam();
   const [filter, setFilter] = useState({
     keyword: '',
@@ -63,7 +63,6 @@ const TargetVersionPage = ({ projectId }) => {
         <Divider sx={{ mt: 2, mb: 1 }} />
         <ListTargetVersion
           debounceFilter={debounceFilter}
-          projectId={projectId}
           handleOpenEdit={handleOpenEdit}
         />
         {!!action && (
@@ -72,7 +71,6 @@ const TargetVersionPage = ({ projectId }) => {
             action={action}
             handleClose={handleTargetVersionClose}
             debounceFilter={debounceFilter}
-            projectId={projectId}
           />
         )}
       </Box>

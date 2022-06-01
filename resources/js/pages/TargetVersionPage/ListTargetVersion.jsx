@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import projectAPI from '../../services/project';
-import { useCallback, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import targetVersionAPI from '../../services/targetVersion';
 import { toast } from 'react-toastify';
 import TableSkeleton from '../../components/TableSkeleton';
@@ -20,10 +20,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import NoData from '../../container/NoData';
 import { TARGET_VERSION_STATUS } from '../../config/constants';
+import { ProjectContext } from '../../layouts/project';
 
-const headers = ['Name', 'Total Issues', 'Status', 'Action'];
+const headers = ['Name', 'Status', 'Action'];
 
-const ListTargetVersion = ({ debounceFilter, projectId, handleOpenEdit }) => {
+const ListTargetVersion = ({ debounceFilter, handleOpenEdit }) => {
+  const projectId = useContext(ProjectContext);
   const queryClient = useQueryClient();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -87,8 +89,7 @@ const ListTargetVersion = ({ debounceFilter, projectId, handleOpenEdit }) => {
               <TableBody>
                 {data.map((targetVersion) => (
                   <TableRow key={targetVersion.id}>
-                    <TableCell width={'50%'}>{targetVersion.name}</TableCell>
-                    <TableCell>{targetVersion.issues.length}</TableCell>
+                    <TableCell width={'80%'}>{targetVersion.name}</TableCell>
                     <TableCell>
                       {TARGET_VERSION_STATUS[targetVersion.status]}
                     </TableCell>

@@ -5,16 +5,21 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
+import { useContext } from 'react';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import projectAPI from './../../services/project';
 import TableSkeleton from '../../components/TableSkeleton';
-import useParamInt from '../../hooks/useParamInt';
+import { Link } from '@mui/material';
+import { PATH, PROJECT_PATH } from '../../routes/paths';
+import queryString from 'query-string';
+import { NavLink } from 'react-router-dom';
+import { ProjectContext } from '../../layouts/project';
 
 const headers = ['', 'Open', 'Closed', 'Total'];
 
-const TrackerIssuesStatistic = ({ projectId }) => {
+const TrackerIssuesStatistic = () => {
+  const projectId = useContext(ProjectContext);
   const { data, isLoading, isError, error } = useQuery(
     [KEY_QUERIES.FETCH_TRACKER_ISSUE_STATISTIC, projectId],
     () => projectAPI.trackerIssuesStatistic(projectId),
@@ -27,7 +32,7 @@ const TrackerIssuesStatistic = ({ projectId }) => {
   }
   return (
     <TableContainer component={Paper} variant="outlined">
-      <Table stickyHeader>
+      <Table>
         <TableHead>
           <TableRow>
             {headers.map((header) => (
@@ -39,7 +44,19 @@ const TrackerIssuesStatistic = ({ projectId }) => {
           {data.map((tracker) => (
             <TableRow key={tracker.id}>
               <TableCell>{tracker.name}</TableCell>
-              <TableCell>{tracker.issues.open}</TableCell>
+              <TableCell>
+                <Link
+                  component={NavLink}
+                  to={`${PATH.PROJECT_PAGE}/${projectId}/${
+                    PROJECT_PATH.ISSUE
+                  }?${queryString.stringify({
+                    trackerId: tracker.id,
+                  })}`}
+                  underline="hover"
+                >
+                  {tracker.issues.open}
+                </Link>
+              </TableCell>
               <TableCell>{tracker.issues.closed}</TableCell>
               <TableCell>{tracker.issues.total}</TableCell>
             </TableRow>

@@ -1,16 +1,10 @@
 import React, { useEffect } from 'react';
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import managerAPI from 'services/manager';
 import { useMutation, useQueryClient } from 'react-query';
 import FormDialog from 'components/FormDialog';
-import FormInputRadio from 'components/FormInputCheckbox';
-import FormInputDate from 'components/FormInputDate';
 import { useForm } from 'react-hook-form';
-import FormTextField from 'components/FormTextField';
 import { KEY_QUERIES } from 'config/keyQueries';
-import { now } from 'moment';
-import Avatar from '@mui/material/Avatar';
 import { styled } from '@mui/material/styles';
 import { toast } from 'react-toastify';
 import * as API_CODE from 'config/API_CODES';
@@ -96,7 +90,7 @@ const ManagerForm = ({ action, manager, handleCloseForm }) => {
       onClose={handleClose}
       onSubmit={handleSubmit(onSubmit)}
       methods={methods}
-      title={action === EDIT_ACTION ? 'Edit Manager' : 'Create Manager"
+      title={action === EDIT_ACTION ? 'Edit Manager' : 'Create Manager'}
     >
       <Stack spacing={2}>
         <Box display="flex">
