@@ -3,6 +3,7 @@ import Typography from '@mui/material/Typography';
 import { useCallback, useState } from 'react';
 import TrackerSelect from './TrackerSelect';
 import PriorityChart from './PriorityChart';
+import { Paper } from '@mui/material';
 
 const PriorityIssueChart = () => {
   const [trackerId, setTrackerId] = useState(2);
@@ -21,9 +22,11 @@ const PriorityIssueChart = () => {
           handleChangeTracker={handleChangeTracker}
         />
       </Box>
-      <Box py={2}>
-        <PriorityChart trackerId={trackerId} />
-      </Box>
+      <Paper variant={'outlined'}>
+        <Box py={2}>
+          <PriorityChart trackerId={trackerId} />
+        </Box>
+      </Paper>
     </Box>
   );
 };

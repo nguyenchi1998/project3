@@ -9,6 +9,7 @@ import {
   ISSUE_PRIORITIES,
 } from '../../../config/constants';
 import { Box, Skeleton, Typography } from '@mui/material';
+import NoData from '../../../container/NoData';
 
 const PriorityChart = ({ trackerId }) => {
   const projectId = useContext(ProjectContext);
@@ -26,6 +27,9 @@ const PriorityChart = ({ trackerId }) => {
   }
   if (isError) {
     return <Typography>{error.message}</Typography>;
+  }
+  if (!Object.entries(data).length) {
+    return <NoData />;
   }
 
   return (

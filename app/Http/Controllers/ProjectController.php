@@ -142,11 +142,12 @@ class ProjectController extends Controller
     public function priorityIssuesStatistic($id, Request $request)
     {
         $filters = $request->only(['trackerId']);
-
         return Issue::where('project_id', $id)
             ->when(isset($filters['trackerId']), function ($query) use ($filters) {
                 $query->where('tracker_id', $filters['trackerId']);
-            })->get()->groupBy('priority');
+            })
+            ->get()
+            ->groupBy('priority');
     }
 
     public function getMembers($id, Request $request)
@@ -162,7 +163,7 @@ class ProjectController extends Controller
             return $project->members->groupBy('pivot.role');
         }
 
-        return $project->members;;
+        return $project->members;
     }
 
     public function updateMember($id, $memberId, Request $request)

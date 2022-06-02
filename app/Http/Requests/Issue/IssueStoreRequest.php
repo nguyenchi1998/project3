@@ -32,7 +32,7 @@ class IssueStoreRequest extends FormRequest
             'estimate_time' => 'nullable|integer',
             'tracker_id' => 'required|integer',
             'target_version_id' => 'nullable|integer',
-            'issue_status_id' => 'required|integer'
+            'status' => 'required|integer'
         ];
     }
 }
