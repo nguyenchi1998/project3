@@ -12,7 +12,8 @@ class IssueHistory extends Model
     protected $fillable = [
         'note',
         'issue_id',
-        'updated_user_id'
+        'updated_user_id',
+        'updated_date',
     ];
 
 
@@ -24,5 +25,10 @@ class IssueHistory extends Model
     public function updatedUser()
     {
         return $this->belongsTo(User::class, 'updated_user_id');
+    }
+
+    public function issue()
+    {
+        return $this->belongsTo(Issue::class);
     }
 }

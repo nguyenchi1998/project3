@@ -89,6 +89,14 @@ const getMembers = async ({ projectId, ...rest }) => {
   return data;
 };
 
+const findMember = async ({ projectId, memberId }) => {
+  const { data } = await request().get(
+    `${baseResourceUri}/${projectId}/members/${memberId}`,
+  );
+
+  return data;
+};
+
 const updateMember = async ({ projectId, memberId, ...rest }) => {
   const { data } = await request().put(
     `${baseResourceUri}/${projectId}/members/${memberId}`,
@@ -130,6 +138,14 @@ const getTargetVersions = async ({ projectId, ...filter }) => {
   return data;
 };
 
+const getMemberActivities = async ({ projectId, memberId }) => {
+  const { data } = await request().get(
+    `${baseResourceUri}/${projectId}/members/${memberId}/activities`,
+  );
+
+  return data;
+};
+
 export default {
   all,
   find,
@@ -145,4 +161,6 @@ export default {
   getIssues,
   deleteMember,
   getTargetVersions,
+  getMemberActivities,
+  findMember,
 };

@@ -35,34 +35,42 @@ const MembersStatistic = () => {
   }
 
   return (
-    <Paper variant="outlined" p={2}>
-      <Stack>
-        {memberRoles.map((role, key) => (
-          <Box
-            key={role}
-            px={2}
-            py={1}
-            display="flex"
-            justifyContent="flex-start"
-            justifyItems="center"
-          >
-            <Box mr={0.5}>{`${role}:`}</Box>
-            {data[key] && (
-              <Box display="inline-block">
-                {data[key].map(({ name }, index) => (
-                  <Box display="inline-flex" key={name}>
-                    <Link component={NavLink} underline="hover" to="#">
-                      {name}
-                    </Link>
-                    {index < data[key].length - 1 && <Box mr={0.5}>{`,`}</Box>}
+    <>
+      <Box py={1}>
+        <Typography variant="h5">Members</Typography>
+      </Box>
+      <Paper variant="outlined">
+        <Box px={2}>
+          <Stack>
+            {memberRoles.map((role, key) => (
+              <Box
+                key={role}
+                display="flex"
+                justifyContent="flex-start"
+                justifyItems="center"
+                py={1}
+              >
+                <Box mr={0.5}>{`${role}:`}</Box>
+                {data[key] && (
+                  <Box display="inline-block">
+                    {data[key].map(({ name }, index) => (
+                      <Box display="inline-flex" key={name}>
+                        <Link component={NavLink} underline="hover" to="#">
+                          {name}
+                        </Link>
+                        {index < data[key].length - 1 && (
+                          <Box mr={0.5}>{`,`}</Box>
+                        )}
+                      </Box>
+                    ))}
                   </Box>
-                ))}
+                )}
               </Box>
-            )}
-          </Box>
-        ))}
-      </Stack>
-    </Paper>
+            ))}
+          </Stack>
+        </Box>
+      </Paper>
+    </>
   );
 };
 

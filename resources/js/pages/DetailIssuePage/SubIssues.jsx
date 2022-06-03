@@ -63,7 +63,7 @@ const SubIssues = ({ parentIssue }) => {
   return (
     <Box>
       <Divider />
-      <Box py={2} pb={1}>
+      <Box pt={2}>
         <Box display="flex" alignItems="center" justifyContent="space-between">
           <Typography component={Box} flexGrow={1} gutterBottom variant="body1">
             <strong>Sub Issue</strong>

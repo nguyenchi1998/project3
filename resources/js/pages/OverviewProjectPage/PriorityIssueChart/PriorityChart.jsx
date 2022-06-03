@@ -1,9 +1,10 @@
 import { useQuery } from 'react-query';
 import { KEY_QUERIES } from '../../../config/keyQueries';
 import projectAPI from '../../../services/project';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { ProjectContext } from '../../../layouts/project';
-import { VictoryPie, VictoryTheme } from 'victory';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Doughnut } from 'react-chartjs-2';
 import {
   CHART_ISSUE_PRIORITY_COLORS,
   ISSUE_PRIORITIES,
@@ -12,6 +13,8 @@ import { Box, Skeleton, Typography } from '@mui/material';
 import NoData from '../../../container/NoData';
 
 const PriorityChart = ({ trackerId }) => {
+  useEffect(() => ChartJS.register(ArcElement, Tooltip, Legend), []);
+
   const projectId = useContext(ProjectContext);
 
   const { data, isLoading, isError, error } = useQuery(
@@ -21,7 +24,7 @@ const PriorityChart = ({ trackerId }) => {
   if (isLoading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center">
-        <Skeleton variant="circular" height={300} width={300} />
+        <Skeleton variant="circular" height={200} width={200} />
       </Box>
     );
   }
@@ -33,21 +36,20 @@ const PriorityChart = ({ trackerId }) => {
   }
 
   return (
-    <VictoryPie
-      colorScale={CHART_ISSUE_PRIORITY_COLORS}
-      data={ISSUE_PRIORITIES.map((priority, index) => ({
-        x: data[index].length,
-        y: data[index].length,
-        label: `${priority}: ${data[index].length}`,
-      }))}
-      labelPosition={() => 'centroid'}
-      height={300}
-      style={{
-        labels: {
-          fontWeight: 400,
-        },
+    <Doughnut
+      height={200}
+      width={200}
+      data={{
+        labels: ISSUE_PRIORITIES,
+        datasets: [
+          {
+            backgroundColor: CHART_ISSUE_PRIORITY_COLORS,
+            data: Object.entries(data).map(
+              (priorityIssue) => priorityIssue[1].length,
+            ),
+          },
+        ],
       }}
-      theme={VictoryTheme.material}
     />
   );
 };

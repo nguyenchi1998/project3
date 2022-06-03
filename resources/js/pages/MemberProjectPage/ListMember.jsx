@@ -21,6 +21,9 @@ import { format } from 'date-fns';
 import { PROJECT_MEMBER_ROLES } from '../../config/constants';
 import ConfirmDialog from '../../components/ConfirmDialog';
 import { ProjectContext } from '../../layouts/project';
+import { Link } from '@mui/material';
+import { NavLink } from 'react-router-dom';
+import { PATH, PROJECT_PATH } from '../../routes/paths';
 
 const headers = ['Name', 'Role', 'Email', 'Effort', 'Join Date', 'Action'];
 
@@ -99,7 +102,15 @@ const ListMember = ({ debounceFilter, handleOpenEdit }) => {
               <TableBody>
                 {data.map((member) => (
                   <TableRow key={member.id}>
-                    <TableCell>{member.name}</TableCell>
+                    <TableCell>
+                      <Link
+                        component={NavLink}
+                        to={`${PATH.PROJECT_PAGE}/${projectId}/${PROJECT_PATH.MEMBER}/${member.id}`}
+                        underline="hover"
+                      >
+                        {member.name}
+                      </Link>
+                    </TableCell>
                     <TableCell>
                       {PROJECT_MEMBER_ROLES[member?.pivot?.role]}
                     </TableCell>

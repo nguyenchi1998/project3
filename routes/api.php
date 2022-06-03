@@ -35,8 +35,10 @@ Route::group(['middleware' => ['auth:sanctum', 'access:director']], function () 
     Route::get('projects/{id}/priority-issues-statistic', [ProjectController::class, 'priorityIssuesStatistic']);
     Route::get('projects/{id}/members', [ProjectController::class, 'getMembers']);
     Route::post('projects/{id}/members', [ProjectController::class, 'addMember']);
+    Route::get('projects/{id}/members/{memberId}', [ProjectController::class, 'findMember']);
     Route::put('projects/{id}/members/{memberId}', [ProjectController::class, 'updateMember']);
     Route::delete('projects/{id}/members/{memberId}', [ProjectController::class, 'removeMember']);
+    Route::get('projects/{id}/members/{memberId}/activities', [ProjectController::class, 'getMemberActivities']);
     Route::get('projects/{id}/issues', [ProjectController::class, 'getIssues']);
     Route::get('projects/{id}/target-versions', [ProjectController::class, 'getTargetVersions']);
     Route::resource('groups', GroupController::class);

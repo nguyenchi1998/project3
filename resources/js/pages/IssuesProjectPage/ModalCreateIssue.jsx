@@ -73,11 +73,11 @@ const ModalCreateIssue = ({ open, handleClose, debounceFilter }) => {
       ...data,
       start_date:
         data.start_date && isValid(data.start_date)
-          ? format(new Date(data.start_date), 'yyyy/MM/dd')
+          ? format(new Date(data.start_date), 'yyyy-MM-dd')
           : null,
       due_date:
         data.due_date && isValid(data.due_date)
-          ? format(new Date(data.due_date), 'yyyy/MM/dd')
+          ? format(new Date(data.due_date), 'yyyy-MM-dd')
           : null,
       assign_user_id: data?.assign_user_id?.id,
       project_id: projectId,

@@ -12,6 +12,7 @@ import MemberProjectPage from '../../pages/MemberProjectPage';
 import TargetVersionPage from '../../pages/TargetVersionPage';
 import SettingProjectPage from '../../pages/SettingProjectPage';
 import useParamInt from '../../hooks/useParamInt';
+import MemberDetailPage from '../../pages/MemberDetailPage';
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -90,6 +91,12 @@ const ProjectLayout = () => {
                   exact
                 >
                   <MemberProjectPage />
+                </Route>
+                <Route
+                  path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.MEMBER}/:memberId`}
+                  exact
+                >
+                  <MemberDetailPage />
                 </Route>
                 <Route
                   path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.TARGET_VERSION}`}

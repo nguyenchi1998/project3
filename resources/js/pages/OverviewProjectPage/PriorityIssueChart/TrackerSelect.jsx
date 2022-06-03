@@ -11,7 +11,7 @@ const TrackerSelect = ({ trackerId, handleChangeTracker }) => {
     () => trackerAPI.all(),
   );
   if (isLoading) {
-    return <Skeleton height="45px" width="50px" />;
+    return <Skeleton height="45px" width="80px" />;
   }
   if (isError) {
     return <Typography>{error.message}</Typography>;

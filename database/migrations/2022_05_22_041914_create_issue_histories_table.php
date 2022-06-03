@@ -18,6 +18,7 @@ class CreateIssueHistoriesTable extends Migration
             $table->unsignedInteger('updated_user_id');
             $table->text('note')->nullable();
             $table->unsignedInteger('issue_id');
+            $table->date('updated_date');
             $table->timestamps();
         });
     }

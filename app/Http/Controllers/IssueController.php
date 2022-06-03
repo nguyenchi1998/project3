@@ -7,6 +7,7 @@ use App\Http\Requests\Issue\LinkIssueRequest;
 use App\Models\Issue;
 use App\Models\IssueHistory;
 use App\Models\IssueHistoryDetail;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -87,7 +88,8 @@ class IssueController extends Controller
                 $issueHistory = IssueHistory::create([
                     'note' => $request->get('note'),
                     'issue_id' => $issue->id,
-                    'updated_user_id' => auth()->id()
+                    'updated_user_id' => auth()->id(),
+                    'updated_date'=> Carbon::now()->format('y/m/d'),
                 ]);
                 foreach ($detailHistories as $detailHistory) {
                     IssueHistoryDetail::create(array_merge($detailHistory, [
@@ -117,6 +119,7 @@ class IssueController extends Controller
                 'actual_time',
                 'progress_percent',
                 'status',
+                'target_version_id',
             ]));
             DB::commit();
 
@@ -152,6 +155,7 @@ class IssueController extends Controller
             'tracker_id' => 'Tracker',
             'parent_issue_id' => 'Parent issue',
             'assign_user_id' => 'Assignee',
+            'target_version_id' => 'Target version',
         ];
         unset($newData['note']);
         $detailHistories = [];

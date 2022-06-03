@@ -26,6 +26,7 @@ const defaultValues = {
   name: '',
   start_date: null,
   tracker_id: 2,
+  target_version_id: '',
   priority: 0,
   due_date: null,
   status: 0,
@@ -72,22 +73,23 @@ const ModalEditIssue = ({ issueId, handleClose }) => {
     defaultValues,
   });
   const onSubmit = (data) => {
+    console.log(data);
     mutate({
       ...data,
       start_date:
-        data.start_date && isValid(data.start_date)
-          ? format(new Date(data.start_date), 'yyyy/MM/dd')
+        data.start_date && isValid(new Date(data.start_date))
+          ? format(new Date(data.start_date), 'yyyy-MM-dd')
           : null,
       due_date:
-        data.due_date && isValid(data.due_date)
-          ? format(new Date(data.due_date), 'yyyy/MM/dd')
+        data.due_date && isValid(new Date(data.due_date))
+          ? format(new Date(data.due_date), 'yyyy-MM-dd')
           : null,
       id: issueId,
       assign_user_id: data?.assign_user_id?.id,
       parent_issue_id: data?.parent_issue_id?.id,
     });
   };
-  const { data, isLoading: isMembersLoading } = useQuery(
+  const { data: assignee, isLoading: isMembersLoading } = useQuery(
     [KEY_QUERIES.FETCH_PROJECT_MEMBER, projectId],
     () => projectAPI.getMembers({ projectId }),
   );
@@ -98,6 +100,12 @@ const ModalEditIssue = ({ issueId, handleClose }) => {
   const { data: issues, isLoading: isIssuesLoading } = useQuery(
     [KEY_QUERIES.FETCH_PARENT_ISSUE, projectId, issueId],
     () => projectAPI.getIssues({ projectId, ignoreIds: [issueId] }),
+  );
+  const {
+    data: targetVersions,
+    isLoading: isTargetVersionsLoading,
+  } = useQuery([KEY_QUERIES.FETCH_TARGET_VERSION, projectId], () =>
+    projectAPI.getTargetVersions({ projectId }),
   );
   const {
     data: issue,
@@ -121,6 +129,7 @@ const ModalEditIssue = ({ issueId, handleClose }) => {
         progress_percent,
         estimate_time,
         description,
+        target_version,
       } = issue;
       reset({
         name,
@@ -134,6 +143,7 @@ const ModalEditIssue = ({ issueId, handleClose }) => {
         progress_percent,
         estimate_time: estimate_time ?? 0,
         description: description ?? '',
+        target_version_id: target_version?.id ?? '',
       });
     }
   }, [isIssueSuccess, issue]);
@@ -151,7 +161,8 @@ const ModalEditIssue = ({ issueId, handleClose }) => {
         isMembersLoading ||
         isTrackersLoading ||
         isIssueLoading ||
-        isIssuesLoading
+        isIssuesLoading ||
+        isTargetVersionsLoading
       }
     >
       <Stack spacing={2}>
@@ -168,16 +179,38 @@ const ModalEditIssue = ({ issueId, handleClose }) => {
           placeholder="Description..."
           label="Description"
         />
-        <FormAutocomplete
-          control={control}
-          name="assign_user_id"
-          sx={{ flexGrow: 1 }}
-          disableCloseOnSelect={false}
-          getOptionLabel={(option) => `${option.name}`}
-          options={data?.map(({ id, name }) => ({ id, name }))}
-          isOptionEqualToValue={(option, value) => option.id === value.id}
-          renderInput={(params) => <TextField {...params} label="Assignee" />}
-        />
+        <Grid container>
+          <Grid item xs={6}>
+            <Box pr={1}>
+              <FormAutocomplete
+                control={control}
+                name="assign_user_id"
+                sx={{ flexGrow: 1 }}
+                disableCloseOnSelect={false}
+                getOptionLabel={(option) => `${option.name}`}
+                options={assignee?.map(({ id, name }) => ({ id, name }))}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                renderInput={(params) => (
+                  <TextField {...params} label="Assignee" />
+                )}
+              />
+            </Box>
+          </Grid>
+          <Grid item xs={6}>
+            <Box pl={1}>
+              <FormSelect
+                fullWidth
+                control={control}
+                name="target_version_id"
+                label="Target Version"
+                options={targetVersions?.map((targetVersion) => ({
+                  key: targetVersion?.name,
+                  val: targetVersion?.id,
+                }))}
+              />
+            </Box>
+          </Grid>
+        </Grid>
         <Grid container>
           <Grid item xs={6}>
             <Box pr={1}>

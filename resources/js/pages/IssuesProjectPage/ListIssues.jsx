@@ -22,14 +22,13 @@ import ListSkeleton from './ListSkeleton';
 import ListHead from './ListHead';
 import Filter from './Filter';
 import { makeStyles } from '@mui/styles';
-import { Typography } from '@mui/material';
+import { colors, Typography } from '@mui/material';
 import { ProjectContext } from '../../layouts/project';
 
 const useStyles = makeStyles((theme) => ({
   textLink: {
-    color: theme.palette.text.primary,
+    color: colors.blue[500],
     '&:hover': {
-      color: theme.palette.text.primary,
       textDecoration: 'underline !important',
     },
   },
@@ -122,7 +121,7 @@ const ListIssues = ({
                         <TableCell>
                           {format(
                             new Date(issue.updated_at),
-                            'yyyy/MM/dd HH:mm',
+                            'yyyy-MM-dd HH:mm',
                           )}
                         </TableCell>
                       </TableRow>

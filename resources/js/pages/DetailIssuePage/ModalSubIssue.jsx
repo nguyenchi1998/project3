@@ -33,6 +33,7 @@ const defaultValues = {
   estimate_time: 0,
   parent_issue_id: null,
   progress_percent: 0,
+  target_version_id: '',
 };
 
 const ModalSubIssue = ({ open, handleClose, parentIssue }) => {
@@ -81,11 +82,11 @@ const ModalSubIssue = ({ open, handleClose, parentIssue }) => {
       ...data,
       start_date:
         data.start_date && isValid(data.start_date)
-          ? format(new Date(data.start_date), 'yyyy/MM/dd')
+          ? format(new Date(data.start_date), 'yyyy-MM-dd')
           : null,
       due_date:
         data.due_date && isValid(data.due_date)
-          ? format(new Date(data.due_date), 'yyyy/MM/dd')
+          ? format(new Date(data.due_date), 'yyyy-MM-dd')
           : null,
       assign_user_id: data?.assign_user_id?.id,
       parent_issue_id: data?.parent_issue_id?.id,
@@ -104,6 +105,12 @@ const ModalSubIssue = ({ open, handleClose, parentIssue }) => {
     [KEY_QUERIES.FETCH_PARENT_ISSUE, projectId],
     () => projectAPI.getIssues({ projectId }),
   );
+  const {
+    data: targetVersions,
+    isLoading: isTargetVersionsLoading,
+  } = useQuery([KEY_QUERIES.FETCH_TARGET_VERSION, projectId], () =>
+    projectAPI.getTargetVersions({ projectId }),
+  );
   return (
     <FormDialog
       open={open}
@@ -113,7 +120,12 @@ const ModalSubIssue = ({ open, handleClose, parentIssue }) => {
       isPending={isLoading}
       formId="form-issue"
       maxWidth="md"
-      isLoading={isMembersLoading || isTrackersLoading}
+      isLoading={
+        isMembersLoading ||
+        isTrackersLoading ||
+        isTargetVersionsLoading ||
+        isIssuesLoading
+      }
     >
       <Stack spacing={2}>
         <FormTextField
@@ -129,16 +141,38 @@ const ModalSubIssue = ({ open, handleClose, parentIssue }) => {
           placeholder="Description..."
           label="Description"
         />
-        <FormAutocomplete
-          control={control}
-          name="assign_user_id"
-          sx={{ flexGrow: 1 }}
-          disableCloseOnSelect={false}
-          getOptionLabel={(option) => `${option.name}`}
-          options={data?.map(({ id, name }) => ({ id, name }))}
-          isOptionEqualToValue={(option, value) => option.id === value.id}
-          renderInput={(params) => <TextField {...params} label="Assignee" />}
-        />
+        <Grid container>
+          <Grid item xs={6}>
+            <Box pr={1}>
+              <FormAutocomplete
+                control={control}
+                name="assign_user_id"
+                sx={{ flexGrow: 1 }}
+                disableCloseOnSelect={false}
+                getOptionLabel={(option) => `${option.name}`}
+                options={data?.map(({ id, name }) => ({ id, name }))}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                renderInput={(params) => (
+                  <TextField {...params} label="Assignee" />
+                )}
+              />
+            </Box>
+          </Grid>
+          <Grid item xs={6}>
+            <Box pl={1}>
+              <FormSelect
+                fullWidth
+                control={control}
+                name="target_version_id"
+                label="Target Version"
+                options={targetVersions?.map((targetVersion) => ({
+                  key: targetVersion?.name,
+                  val: targetVersion?.id,
+                }))}
+              />
+            </Box>
+          </Grid>
+        </Grid>
         <Grid container>
           <Grid item xs={6}>
             <Box pr={1}>

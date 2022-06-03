@@ -21,6 +21,7 @@ import RelativeIssues from './RelativeIssues';
 import SubIssues from './SubIssues';
 import LoadingIndicator from './../../components/LoadingIndicator';
 import useParamsInt from '../../hooks/useParamInt';
+import { NavLink } from 'react-router-dom';
 
 const InfoItem = ({ label, value }) => {
   return (
@@ -145,7 +146,7 @@ const DetailIssuePage = () => {
                         <InfoItem
                           label="Target Version"
                           value={
-                            <Link underline="hover" href="#">
+                            <Link underline="hover" to="#" component={NavLink}>
                               {data?.target_version?.name}
                             </Link>
                           }

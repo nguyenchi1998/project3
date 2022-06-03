@@ -6,9 +6,11 @@ use App\Http\Requests\Project\AddProjectRequest;
 use App\Http\Requests\Project\FilterIssueRequest;
 use App\Http\Requests\Project\ProjectStoreRequest;
 use App\Models\Issue;
+use App\Models\IssueHistory;
 use App\Models\Project;
 use App\Models\TargetVersion;
 use App\Models\Tracker;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
@@ -166,6 +168,16 @@ class ProjectController extends Controller
         return $project->members;
     }
 
+    public function findMember($projectId, $memberId)
+    {
+        $member = User::where('id', $memberId)
+            ->whereHas('projects', function ($query) use ($projectId) {
+                $query->where('project_id', $projectId);
+            })->first();
+
+        return $member;
+    }
+
     public function updateMember($id, $memberId, Request $request)
     {
         $updateData = $request->only(['effort', 'role']);
@@ -234,5 +246,17 @@ class ProjectController extends Controller
     {
         return TargetVersion::where('project_id', $projectId)
             ->get();
+    }
+
+    public function getMemberActivities($projectId, $memberId, Request $request)
+    {
+        return IssueHistory::where('updated_user_id', $memberId)
+            ->whereHas('issue', function ($query) use ($projectId) {
+                $query->where('project_id', $projectId);
+            })
+            ->with('detailHistories', 'issue')
+            ->orderBy('updated_date', 'desc')
+            ->get()
+            ->groupBy('updated_date');
     }
 }
