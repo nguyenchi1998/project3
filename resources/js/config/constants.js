@@ -21,18 +21,19 @@ export const PROJECT_MEMBER_ROLES = ['Viewer', 'Developer', 'QA', 'BRSE', 'PM'];
 export const POSITIONS = ['Employee', 'Manager', 'Director'];
 
 export const ISSUE_STATUS = [
-  'New',
-  'Assigned',
-  'To Be Confirm',
-  'Suspended',
-  'Done',
-  'Feedback',
-  'Confirmed',
-  'Closed',
-  'Reject',
+  { key: 'New', value: 0 },
+  { key: 'Assigned', value: 1 },
+  { key: 'To Be Confirm', value: 2 },
+  { key: 'Suspended', value: 3 },
+  { key: 'Done', value: 4 },
+  { key: 'Feedback', value: 5 },
+  { key: 'Confirmed', value: 6 },
+  { key: 'Closed', value: 7 },
+  { key: 'Reject', value: 8 },
 ];
 
-export const ISSUE_STATUS_CLOSED = [4, 5];
+export const ISSUE_STATUS_CLOSED = [6, 7, 8];
+export const ISSUE_STATUS_OPEN = [1, 2, 3, 4, 5];
 
 export const ISSUE_PRIORITIES = ['Low', 'Normal', 'High', 'Immediate'];
 

@@ -40,6 +40,11 @@ const Filter = ({ totalFilter, onChangeTotalFilter, filterOpen }) => {
   const handleChangeAutocomplete = useCallback((_, value, name) => {
     onChangeTotalFilter({ [name]: value?.id });
   }, []);
+  const handleChangeMultiAutocomplete = useCallback((_, value, name) => {
+    onChangeTotalFilter({
+      [name]: value.map(({ value }) => value),
+    });
+  }, []);
   const onChangeDate = useCallback((value, name) => {
     onChangeTotalFilter({
       [name]: isValid(value) ? format(new Date(value), 'yyyy-MM-dd') : null,
@@ -59,22 +64,22 @@ const Filter = ({ totalFilter, onChangeTotalFilter, filterOpen }) => {
                 onChange={handleChange}
               />
             </FormControl>
-            <FormControl fullWidth>
-              <InputLabel>Status</InputLabel>
-              <Select
-                value={totalFilter.status}
-                label="status"
-                onChange={handleChange}
-                name="status"
-              >
-                <MenuItem value="all">All</MenuItem>
-                {ISSUE_STATUS.map((status, key) => (
-                  <MenuItem key={status} value={key}>
-                    {status}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <Autocomplete
+              multiple
+              onChange={(e, value) =>
+                handleChangeMultiAutocomplete(e, value, 'status')
+              }
+              value={ISSUE_STATUS.filter(({ value }) =>
+                totalFilter.status.includes(value),
+              )}
+              options={ISSUE_STATUS}
+              isOptionEqualToValue={(option, value) =>
+                value.value === option.value
+              }
+              limitTags={1}
+              getOptionLabel={(option) => option.key ?? ''}
+              renderInput={(params) => <TextField {...params} label="Status" />}
+            />
             <FormControl fullWidth>
               <InputLabel>Priority</InputLabel>
               <Select

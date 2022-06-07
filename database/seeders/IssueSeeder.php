@@ -18,20 +18,23 @@ class IssueSeeder extends Seeder
      */
     public function run()
     {
-        Project::with(['members'])->get()->each(function ($project) {
-            // get PM project
-            $projectPM = $project->members->filter(function ($member) {
-                return $member->pivot->role === config('constant.project_member_role.pm');
-            })->first();
-            $trackerIds = Tracker::all()->pluck('id')->toArray();
-            $states = array_flip(config('constant.issue_status'));
-            Issue::factory()->count(random_int(0, 400))
-                ->create([
-                    'project_id' => $project->id,
-                    'created_user_id' => $projectPM->id,
-                    'tracker_id' => $trackerIds[array_rand($trackerIds)],
-                    'status' => $states[array_rand($states)],
-                ]);
-        });
+        Project::with(['members'])
+            ->get()
+            ->each(function ($project) {
+                // get PM project
+                $projectPM = $project->members->filter(function ($member) {
+                    return $member->pivot->role === config('constant.project_member_role.pm');
+                })->first();
+                $trackerIds = Tracker::all()->pluck('id')
+                    ->toArray();
+                $states = array_flip(config('constant.issue_status'));
+                Issue::factory()->count(random_int(0, 10))
+                    ->create([
+                        'project_id' => $project->id,
+                        'created_user_id' => $projectPM->id,
+                        'tracker_id' => $trackerIds[array_rand($trackerIds)],
+                        'status' => $states[array_rand($states)],
+                    ]);
+            });
     }
 }

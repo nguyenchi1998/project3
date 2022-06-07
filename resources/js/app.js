@@ -23,9 +23,14 @@ import PrivateRoute from './components/PrivateRoute';
 import 'react-toastify/dist/ReactToastify.css';
 import ManagerLayout from './layouts/main';
 import ProjectLayout from './layouts/project';
+import ForbiddenPage from './pages/Error/ForbiddenPage';
 
 const queryClient = new QueryClient({
-  defaultOptions: { refetchOnWindowFocus: false, refetchOnMount: false },
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
 });
 ReactDOM.render(
   <QueryClientProvider client={queryClient}>
@@ -41,6 +46,9 @@ ReactDOM.render(
                   <Switch>
                     <Route path={AUTH_PATH.SIGN_IN_PAGE}>
                       <LoginPage />
+                    </Route>
+                    <Route path={ERROR_PATH.FORBIDDEN_PAGE}>
+                      <ForbiddenPage />
                     </Route>
                     <Route path={ERROR_PATH.INTERNAL_ERROR_PAGE}>
                       <InternalErrorPage />

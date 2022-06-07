@@ -8,17 +8,13 @@ import Stack from '@mui/material/Stack';
 import { PROJECT_MEMBER_ROLES } from '../../config/constants';
 import Box from '@mui/material/Box';
 import { Link } from '@mui/material';
-import { useContext, useMemo } from 'react';
+import { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import { ProjectContext } from '../../layouts/project';
+import { PATH, PROJECT_PATH } from '../../routes/paths';
 
 const MembersStatistic = () => {
   const projectId = useContext(ProjectContext);
-  const memberRoles = useMemo(() => {
-    const roles = [...PROJECT_MEMBER_ROLES];
-
-    return roles.reverse();
-  }, []);
   const { data, isLoading, isError, error } = useQuery(
     [KEY_QUERIES.FETCH_PROJECT_MEMBER, projectId, { groupByRole: true }],
     () => projectAPI.getMembers({ projectId, groupByRole: true }),
@@ -42,7 +38,7 @@ const MembersStatistic = () => {
       <Paper variant="outlined">
         <Box px={2}>
           <Stack>
-            {memberRoles.map((role, key) => (
+            {PROJECT_MEMBER_ROLES.map((role, key) => (
               <Box
                 key={role}
                 display="flex"
@@ -53,9 +49,13 @@ const MembersStatistic = () => {
                 <Box mr={0.5}>{`${role}:`}</Box>
                 {data[key] && (
                   <Box display="inline-block">
-                    {data[key].map(({ name }, index) => (
+                    {data[key].map(({ name, id }, index) => (
                       <Box display="inline-flex" key={name}>
-                        <Link component={NavLink} underline="hover" to="#">
+                        <Link
+                          component={NavLink}
+                          underline="hover"
+                          to={`${PATH.PROJECT_PAGE}/${projectId}/${PROJECT_PATH.MEMBER}/${id}`}
+                        >
                           {name}
                         </Link>
                         {index < data[key].length - 1 && (

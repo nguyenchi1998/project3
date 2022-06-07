@@ -22,7 +22,7 @@ export default function useDebounce(value, delay, pushUrl = false) {
         }
         history.replace({
           pathname: location.pathname,
-          search: queryString.stringify(params),
+          search: queryString.stringify(params, { arrayFormat: 'index' }),
         });
       }
     }, delay);

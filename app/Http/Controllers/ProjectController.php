@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Issue\LinkIssueRequest;
 use App\Http\Requests\Project\AddProjectRequest;
 use App\Http\Requests\Project\FilterIssueRequest;
 use App\Http\Requests\Project\ProjectStoreRequest;
@@ -12,29 +13,50 @@ use App\Models\TargetVersion;
 use App\Models\Tracker;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class ProjectController extends Controller
 {
-
     public function index(Request $request)
     {
         $filters = $request->only(['type', 'keyword']);
 
-        return Project::when(isset($filters['type']), function ($query) use ($filters) {
-            $query->where('type', $filters['type']);
-        })->when(isset($filters['keyword']), function ($query) use ($filters) {
-            $query->where('name', 'like', '%' . $filters['keyword'] . '%');
-        })->with([
-            'members' => function ($query) {
-                $query->orderBy('role', 'DESC')
-                    ->orderBy('created_at', 'DESC');
+        $auth = auth()->user();
+        return Project::when(
+            $this->checkIsDirectorPosition($auth),
+            function ($query) {
+                $query->get();
             },
-            'languages',
-            'targetVersions',
-        ])->latest()->get();
+            function ($query) use ($auth) {
+                $query->whereHas('members', function ($query) use ($auth) {
+                    $query->where('users.id', $auth->id);
+                });
+            }
+        )
+            ->when(isset($filters['type']), function ($query) use ($filters) {
+                $query->where('type', $filters['type']);
+            })
+            ->when(isset($filters['keyword']), function ($query) use ($filters) {
+                $query->where('name', 'like', '%' . $filters['keyword'] . '%');
+            })
+            ->with([
+                'members' => function ($query) {
+                    $query->orderBy('role', 'DESC')
+                        ->orderBy('created_at', 'DESC');
+                },
+                'languages',
+                'targetVersions',
+            ])
+            ->orderBy('id', 'desc')
+            ->get();
     }
 
+    private function checkIsDirectorPosition($auth)
+    {
+        return $auth->position === config('constant.position.director');
+    }
 
     public function store(ProjectStoreRequest $request)
     {
@@ -55,7 +77,7 @@ class ProjectController extends Controller
 
     public function show($id)
     {
-        return Project::findOrFail($id)
+        $project = Project::findOrFail($id)
             ->load([
                 'members' => function ($query) {
                     return $query->orderBy('role', 'DESC');
@@ -65,6 +87,8 @@ class ProjectController extends Controller
                 'issues.assignee',
                 'issues.tracker'
             ]);
+
+        return $project;
     }
 
 
@@ -144,12 +168,22 @@ class ProjectController extends Controller
     public function priorityIssuesStatistic($id, Request $request)
     {
         $filters = $request->only(['trackerId']);
-        return Issue::where('project_id', $id)
+        $data =   Issue::where('project_id', $id)
             ->when(isset($filters['trackerId']), function ($query) use ($filters) {
                 $query->where('tracker_id', $filters['trackerId']);
             })
             ->get()
             ->groupBy('priority');
+        $priorities = [];
+        foreach (config('constant.issue_priority') as $key => $value) {
+            if (isset($data[$value])) {
+                $priorities[$value] = $data[$value];
+            } else {
+                $priorities[$value] = [];
+            }
+        }
+
+        return response()->json($priorities);
     }
 
     public function getMembers($id, Request $request)
@@ -162,7 +196,7 @@ class ProjectController extends Controller
                 })->orderBy('role', 'desc')->orderBy('id', 'desc');
             }]);
         if ($request->groupByRole) {
-            return $project->members->groupBy('pivot.role');
+            return  $project->members->groupBy('pivot.role');
         }
 
         return $project->members;
@@ -258,5 +292,68 @@ class ProjectController extends Controller
             ->orderBy('updated_date', 'desc')
             ->get()
             ->groupBy('updated_date');
+    }
+
+    public function toggleLinkRelativeIssue($issueId, LinkIssueRequest $request)
+    {
+        $action = $request->get('action');
+        $relativeIssueId = $request->get('relative_issue_id');
+
+        $issue = Issue::find($issueId)->load('project.issues');
+
+        $checkIssueBelongedToProject = $issue->project->issues->search(function ($issue) use ($relativeIssueId) {
+            return $issue->id == $relativeIssueId;
+        });
+
+        if (!$checkIssueBelongedToProject) {
+            return response()->json([
+                'message' => 'Issue not be long to project',
+            ], ResponseAlias::HTTP_FORBIDDEN);
+        }
+        if ($action == config('constant.relative_issue_action.link')) {
+            $issue->relativeIssues()->create([
+                'relative_issue_id' => $relativeIssueId
+            ]);
+        } else {
+            $issue->relativeIssues()->where([
+                'relative_issue_id' => $relativeIssueId
+            ])->delete();
+        }
+
+        return $issue->load([
+            'author',
+            'assignee',
+            'tracker',
+            'histories.detailHistories',
+            'histories.updatedUser',
+            'parentIssue',
+            'relativeIssues.issue.tracker',
+            'subIssues.tracker',
+        ]);
+    }
+
+    public function removeLinkSubIssue($issueId, Request $request)
+    {
+        $deletedStatus = Issue::where('id', $request->get('subIssueId'))
+            ->where('parent_issue_id', $issueId)
+            ->delete();
+        if ($deletedStatus) {
+            return Issue::find($issueId)
+                ->load([
+                    'author',
+                    'assignee',
+                    'tracker',
+                    'histories.detailHistories',
+                    'histories.updatedUser',
+                    'parentIssue',
+                    'relativeIssues.issue.tracker',
+                    'subIssues.tracker',
+                    'targetVersion',
+                ]);
+        }
+
+        return response()->json([
+            'message' => 'Error',
+        ], ResponseAlias::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

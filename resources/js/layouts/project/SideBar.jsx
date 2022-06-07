@@ -15,16 +15,17 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import { useQuery } from 'react-query';
 import projectAPI from '../../services/project';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Skeleton } from '@mui/material';
 
-const user = {
-  avatar: '/static/images/avatars/avatar_6.png',
-  jobTitle: 'Senior Developer',
-  name: 'Katarina Smith',
-};
-
 const items = [
+  {
+    href: PATH.PROJECT_PAGE,
+    icon: ArrowBackIcon,
+    title: 'Back',
+    isHome: true,
+  },
   {
     href: PROJECT_PATH.OVERVIEW,
     icon: BarChartIcon,
@@ -57,9 +58,8 @@ const items = [
   },
 ];
 const DashboardSidebar = ({ onMobileClose, openMobile, projectId }) => {
-  const dispatch = useDispatch();
   const location = useLocation();
-  const { data, isLoading, isError, isSuccess } = useQuery(
+  const { data, isLoading } = useQuery(
     [KEY_QUERIES.FETCH_PROJECT, projectId],
     () => projectAPI.find(projectId),
   );

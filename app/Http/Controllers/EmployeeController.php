@@ -40,4 +40,11 @@ class EmployeeController extends Controller
     {
         //
     }
+
+    public function getProjects($employeeId, Request $request)
+    {
+        return Project::whereHas('members', function ($query) use ($employeeId) {
+            $query->where('users.id', $employeeId);
+        })->get();
+    }
 }

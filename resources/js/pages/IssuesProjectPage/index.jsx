@@ -18,7 +18,7 @@ const IssuesProjectPage = () => {
     assigneeId: '',
     authorId: '',
     trackerId: '',
-    status: '',
+    status: [],
     priority: '',
     percent: '',
     startDate: null,

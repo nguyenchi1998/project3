@@ -15,6 +15,8 @@ import { KEY_QUERIES } from '../../config/keyQueries';
 import { useQuery } from 'react-query';
 import * as authAPI from '../../services/auth';
 import { POSITIONS } from '../../config/constants';
+import { useDispatch } from 'react-redux';
+import { setAuth } from './../../store/slices/user';
 
 const user = {
   avatar: '/static/images/avatars/avatar_6.png',
@@ -36,11 +38,18 @@ const items = [
 ];
 
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
+  const dispatch = useDispatch();
   const location = useLocation();
-  const { data, isLoading, isError } = useQuery(
+  const { data, isSuccess } = useQuery(
     [KEY_QUERIES.FETCH_AUTH],
     authAPI.fetchAuthUser,
   );
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      dispatch(setAuth(data));
+    }
+  }, [data, isSuccess]);
 
   useEffect(() => {
     if (openMobile && onMobileClose) {

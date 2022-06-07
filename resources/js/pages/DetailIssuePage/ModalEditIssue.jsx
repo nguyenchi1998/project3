@@ -249,8 +249,8 @@ const ModalEditIssue = ({ issueId, handleClose }) => {
                 name="status"
                 label="Status"
                 fullWidth
-                options={ISSUE_STATUS.map((status, index) => ({
-                  key: status,
+                options={ISSUE_STATUS.map(({ key, value }) => ({
+                  key: key,
                   val: index,
                 }))}
               />

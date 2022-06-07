@@ -89,7 +89,7 @@ class IssueController extends Controller
                     'note' => $request->get('note'),
                     'issue_id' => $issue->id,
                     'updated_user_id' => auth()->id(),
-                    'updated_date'=> Carbon::now()->format('y/m/d'),
+                    'updated_date' => Carbon::now()->format('y/m/d'),
                 ]);
                 foreach ($detailHistories as $detailHistory) {
                     IssueHistoryDetail::create(array_merge($detailHistory, [
@@ -178,66 +178,5 @@ class IssueController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function toggleLinkRelativeIssue($id, LinkIssueRequest $request)
-    {
-        $action = $request->get('action');
-        $relativeIssueId = $request->get('relative_issue_id');
-
-        $issue = Issue::find($id)->load('project.issues');
-
-        $checkIssueBelongedToProject = $issue->project->issues->search(function ($issue) use ($relativeIssueId) {
-            return $issue->id == $relativeIssueId;
-        });
-
-        if (!$checkIssueBelongedToProject) {
-            return response()->json([
-                'message' => 'Issue not be long to project',
-            ], Response::HTTP_FORBIDDEN);
-        }
-        if ($action == config('constant.relative_issue_action.link')) {
-            $issue->relativeIssues()->create([
-                'relative_issue_id' => $relativeIssueId
-            ]);
-        } else {
-            $issue->relativeIssues()->where([
-                'relative_issue_id' => $relativeIssueId
-            ])->delete();
-        }
-
-        return $issue->load([
-            'author',
-            'assignee',
-            'tracker',
-            'histories.detailHistories',
-            'histories.updatedUser',
-            'parentIssue',
-            'relativeIssues.issue.tracker',
-            'subIssues.tracker',
-        ]);
-    }
-
-    public function removeLinkSubIssue($id, Request $request)
-    {
-        $deletedStatus = Issue::where('id', $request->get('subIssueId'))->where('parent_issue_id', $id)->delete();
-        if ($deletedStatus) {
-            return Issue::find($id)
-                ->load([
-                    'author',
-                    'assignee',
-                    'tracker',
-                    'histories.detailHistories',
-                    'histories.updatedUser',
-                    'parentIssue',
-                    'relativeIssues.issue.tracker',
-                    'subIssues.tracker',
-                    'targetVersion',
-                ]);
-        }
-
-        return response()->json([
-            'message' => 'Error',
-        ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

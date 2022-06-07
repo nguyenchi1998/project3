@@ -37,10 +37,19 @@ const destroy = async (id) => {
   return data;
 };
 
+const getProjects = async (employeeId) => {
+  const { data } = await request().get(
+    `${baseResourceUri}/${employeeId}/projects`,
+  );
+
+  return data;
+};
+
 export default {
   all,
   find,
   store,
   update,
   destroy,
+  getProjects,
 };

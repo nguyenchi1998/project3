@@ -152,7 +152,11 @@ const RelativeIssues = ({ relativeIssues, issueId }) => {
                       </Typography>
                     </TableCell>
                     <TableCell size="small">
-                      {ISSUE_STATUS[relativeIssue.issue.status]}
+                      {
+                        ISSUE_STATUS.find(
+                          ({ value }) => value === relativeIssue.issue.status,
+                        ).key
+                      }
                     </TableCell>
                     <TableCell size="small">
                       {relativeIssue.issue.start_date}

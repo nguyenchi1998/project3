@@ -31,7 +31,7 @@ const PriorityChart = ({ trackerId }) => {
   if (isError) {
     return <Typography>{error.message}</Typography>;
   }
-  if (!Object.entries(data).length) {
+  if (!data.length) {
     return <NoData />;
   }
 
@@ -44,9 +44,7 @@ const PriorityChart = ({ trackerId }) => {
         datasets: [
           {
             backgroundColor: CHART_ISSUE_PRIORITY_COLORS,
-            data: Object.entries(data).map(
-              (priorityIssue) => priorityIssue[1].length,
-            ),
+            data: data.map((issues) => issues.length),
           },
         ],
       }}

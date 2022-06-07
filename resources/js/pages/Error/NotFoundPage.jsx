@@ -21,7 +21,7 @@ const NotFoundPage = () => {
         }}
       >
         <Container maxWidth="md">
-          <Typography align="center" color="textPrimary" variant="h1">
+          <Typography align="center" color="textPrimary" variant="h5">
             404: The page you are looking for isn’t here
           </Typography>
           <Typography align="center" color="textPrimary" variant="subtitle2">

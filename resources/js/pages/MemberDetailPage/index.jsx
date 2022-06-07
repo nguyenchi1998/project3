@@ -60,7 +60,7 @@ const MemberDetailPage = () => {
               <ActivityTab memberId={data.id} />
             </TabPanel>
             <TabPanel value={'two'}>
-              <ProjectTab />
+              <ProjectTab memberId={data.id} />
             </TabPanel>
           </TabContext>
         </Box>

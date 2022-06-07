@@ -117,7 +117,10 @@ const SubIssues = ({ parentIssue }) => {
                       </Typography>
                     </TableCell>
                     <TableCell size="small" width={150}>
-                      {ISSUE_STATUS[issue.status]}
+                      {
+                        ISSUE_STATUS.find(({ value }) => value === issue.status)
+                          .key
+                      }
                     </TableCell>
                     <TableCell size="small" width={130}>
                       {issue?.assignee?.name}

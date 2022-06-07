@@ -9,7 +9,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { useQuery } from 'react-query';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import issueAPI from '../../services/issue';
@@ -17,11 +17,13 @@ import { ISSUE_PRIORITIES, ISSUE_STATUS } from '../../config/constants';
 import HeaderDetailIssuePage from './HeaderDetailIssuePage';
 import ModalEditIssue from './ModalEditIssue';
 import IssueHistories from './IssueHistories';
+import { NavLink } from 'react-router-dom';
 import RelativeIssues from './RelativeIssues';
 import SubIssues from './SubIssues';
 import LoadingIndicator from './../../components/LoadingIndicator';
 import useParamsInt from '../../hooks/useParamInt';
-import { NavLink } from 'react-router-dom';
+import { PATH, PROJECT_PATH } from '../../routes/paths';
+import { ProjectContext } from '../../layouts/project';
 
 const InfoItem = ({ label, value }) => {
   return (
@@ -35,6 +37,7 @@ const InfoItem = ({ label, value }) => {
 };
 
 const DetailIssuePage = () => {
+  const projectId = useContext(ProjectContext);
   const [editIssueId, setIssueId] = useState(null);
   const issueId = useParamsInt('issueId');
   const handleCloseIssue = useCallback(() => {
@@ -93,7 +96,11 @@ const DetailIssuePage = () => {
                       <Stack spacing={0.5}>
                         <InfoItem
                           label="status"
-                          value={ISSUE_STATUS[data.status]}
+                          value={
+                            ISSUE_STATUS.find(
+                              ({ value }) => value === data.status,
+                            ).key
+                          }
                         />
                         <InfoItem
                           label="priority"
@@ -102,7 +109,11 @@ const DetailIssuePage = () => {
                         <InfoItem
                           label="author"
                           value={
-                            <Link underline="hover" href="#">
+                            <Link
+                              underline="hover"
+                              component={NavLink}
+                              to={`${PATH.PROJECT_PAGE}/${projectId}/${PROJECT_PATH.MEMBER}/${data?.author?.id}`}
+                            >
                               {data?.author?.name}
                             </Link>
                           }

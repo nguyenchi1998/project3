@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { API_URL, AUTH_API } from '../config';
 import {
+  FORBIDDEN,
   INTERNAL_ERROR,
   PAGE_NOT_FOUND,
   UNAUTHORIZED,
@@ -13,15 +14,19 @@ import {
 } from './storage';
 
 export const handle500Error = () => {
-  window.location.href = `${process.env.PUBLIC_URL}/500`;
+  window.location.href = `/500`;
+};
+
+export const handle403Error = () => {
+  window.location.href = `/403`;
 };
 
 export const handle404Error = () => {
-  window.location.href = `${process.env.PUBLIC_URL}/404`;
+  window.location.href = `/404`;
 };
 
 export const redirectSignIn = () => {
-  window.location.href = `${process.env.PUBLIC_URL}/login`;
+  window.location.href = `/login`;
 };
 
 const getNewToken = () => {
@@ -68,6 +73,10 @@ export const request = (responseType = 'json') => {
         }
         if (error.response.status === INTERNAL_ERROR) {
           // handle500Error();
+          return Promise.reject(error);
+        }
+        if (error.response.status === FORBIDDEN) {
+          // handle403Error();
           return Promise.reject(error);
         }
         if (

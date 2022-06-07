@@ -13,8 +13,9 @@ class ProjectFactory extends Factory
      */
     public function definition()
     {
+        static $i = 1;
         return [
-            'name' => $this->faker->sentence(2),
+            'name' => 'Project ' . $i++,
             'start_date' => null,
             'due_date' => null,
             'status' => config('constant.project_status.new'),

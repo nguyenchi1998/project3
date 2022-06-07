@@ -17,6 +17,7 @@ import { PATH, PROJECT_PATH } from '../../routes/paths';
 import queryString from 'query-string';
 import { NavLink } from 'react-router-dom';
 import { ProjectContext } from '../../layouts/project';
+import { ISSUE_STATUS_CLOSED, ISSUE_STATUS_OPEN } from '../../config/constants';
 
 const headers = ['', 'Open', 'Closed', 'Total'];
 
@@ -55,16 +56,48 @@ const TrackerIssuesStatistic = () => {
                     component={NavLink}
                     to={`${PATH.PROJECT_PAGE}/${projectId}/${
                       PROJECT_PATH.ISSUE
-                    }?${queryString.stringify({
-                      trackerId: tracker.id,
-                    })}`}
+                    }?${queryString.stringify(
+                      {
+                        trackerId: tracker.id,
+                        status: ISSUE_STATUS_CLOSED,
+                      },
+                      { arrayFormat: 'index' },
+                    )}`}
                     underline="hover"
                   >
                     {tracker.issues.open}
                   </Link>
                 </TableCell>
-                <TableCell>{tracker.issues.closed}</TableCell>
-                <TableCell>{tracker.issues.total}</TableCell>
+                <TableCell>
+                  <Link
+                    component={NavLink}
+                    to={`${PATH.PROJECT_PAGE}/${projectId}/${
+                      PROJECT_PATH.ISSUE
+                    }?${queryString.stringify(
+                      {
+                        trackerId: tracker.id,
+                        status: ISSUE_STATUS_OPEN,
+                      },
+                      { arrayFormat: 'index' },
+                    )}`}
+                    underline="hover"
+                  >
+                    {tracker.issues.closed}
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  <Link
+                    component={NavLink}
+                    to={`${PATH.PROJECT_PAGE}/${projectId}/${
+                      PROJECT_PATH.ISSUE
+                    }?${queryString.stringify({
+                      trackerId: tracker.id,
+                    })}`}
+                    underline="hover"
+                  >
+                    {tracker.issues.total}
+                  </Link>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
