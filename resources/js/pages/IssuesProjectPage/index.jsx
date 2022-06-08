@@ -8,6 +8,7 @@ import ListIssues from './ListIssues';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import _isEmpty from 'lodash/isEmpty';
+import Filter from './Filter';
 
 const IssuesProjectPage = () => {
   const params = useQueryParam();
@@ -68,13 +69,21 @@ const IssuesProjectPage = () => {
             </Box>
           </Box>
           <Divider sx={{ mt: 2, mb: 1 }} />
-          <ListIssues
-            debounceFilter={debounceFilter}
-            totalFilter={totalFilter}
-            onChangeTotalFilter={onChangeTotalFilter}
-            filterOpen={filterOpen}
-            handleToggleFilter={handleToggleFilter}
-          />
+          <Box display="flex" justifyContent="space-between">
+            <ListIssues
+              debounceFilter={debounceFilter}
+              totalFilter={totalFilter}
+              onChangeTotalFilter={onChangeTotalFilter}
+              filterOpen={filterOpen}
+              handleToggleFilter={handleToggleFilter}
+            />
+            <Filter
+              filterOpen={filterOpen}
+              handleToggleFilter={handleToggleFilter}
+              totalFilter={totalFilter}
+              onChangeTotalFilter={onChangeTotalFilter}
+            />
+          </Box>
         </Box>
       </Box>
       {openIssue && (

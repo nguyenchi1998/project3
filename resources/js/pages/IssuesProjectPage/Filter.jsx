@@ -66,6 +66,8 @@ const Filter = ({ totalFilter, onChangeTotalFilter, filterOpen }) => {
             </FormControl>
             <Autocomplete
               multiple
+              sx={{ maxWidth: 250 }}
+              disableCloseOnSelect
               onChange={(e, value) =>
                 handleChangeMultiAutocomplete(e, value, 'status')
               }

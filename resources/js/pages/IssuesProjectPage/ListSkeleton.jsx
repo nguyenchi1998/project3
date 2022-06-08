@@ -14,9 +14,6 @@ import ListHead from './ListHead';
 const ListSkeleton = ({ columnCount, numberRow = 5 }) => {
   return (
     <>
-      <Box display="flex" justifyContent="flex-end">
-        <Skeleton width={240} height="45px" />
-      </Box>
       <TableContainer component={Paper} variant="outlined">
         <Table stickyHeader>
           <ListHead />

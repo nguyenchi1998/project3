@@ -251,7 +251,7 @@ const ModalEditIssue = ({ issueId, handleClose }) => {
                 fullWidth
                 options={ISSUE_STATUS.map(({ key, value }) => ({
                   key: key,
-                  val: index,
+                  val: value,
                 }))}
               />
             </Box>

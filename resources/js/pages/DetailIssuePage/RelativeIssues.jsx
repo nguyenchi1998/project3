@@ -16,6 +16,7 @@ import {
 import { useCallback, useContext, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import issueAPI from '../../services/issue';
+import projectAPI from '../../services/project';
 import {
   ISSUE_STATUS,
   ISSUE_STATUS_CLOSED,
@@ -51,17 +52,22 @@ const RelativeIssues = ({ relativeIssues, issueId }) => {
   const [relativeIssueOpen, setRelativeIssueOpen] = useState(false);
 
   const onSubmit = (data) => {
-    mutate({ ...data, id: issueId, action: LINK_ISSUE_ACTION });
+    mutate({ ...data, id: issueId, action: LINK_ISSUE_ACTION, projectId });
   };
   const handleToggleRelativeIssueOpen = useCallback(() => {
     setRelativeIssueOpen(!relativeIssueOpen);
     clearErrors();
   }, [relativeIssueOpen]);
   const handleUnLinkRelativeIssue = useCallback((relative_issue_id) => {
-    mutate({ relative_issue_id, id: issueId, action: UNLINK_ISSUE_ACTION });
+    mutate({
+      relative_issue_id,
+      id: issueId,
+      action: UNLINK_ISSUE_ACTION,
+      projectId,
+    });
   }, []);
   const { mutate, isLoading: isLinkIssueLoading } = useMutation(
-    issueAPI.toggleLinkRelativeIssue,
+    projectAPI.toggleLinkRelativeIssue,
     {
       onSuccess: (response) => {
         queryClient.setQueryData([KEY_QUERIES.FETCH_ISSUE, issueId], (old) => ({

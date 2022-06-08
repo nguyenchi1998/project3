@@ -146,6 +146,34 @@ const getMemberActivities = async ({ projectId, memberId }) => {
   return data;
 };
 
+const toggleLinkRelativeIssue = async ({
+  projectId,
+  id,
+  relative_issue_id,
+  action,
+}) => {
+  const { data } = await request().post(
+    `${baseResourceUri}/${projectId}/issues/${id}/toggle-link-relative-issue`,
+    {
+      relative_issue_id,
+      action,
+    },
+  );
+
+  return data;
+};
+
+const removeLinkSubIssue = async ({ projectId, id, subIssueId }) => {
+  const { data } = await request().post(
+    `${baseResourceUri}/${projectId}/issues/${id}/remove-link-sub-issue`,
+    {
+      subIssueId,
+    },
+  );
+
+  return data;
+};
+
 export default {
   all,
   find,
@@ -163,4 +191,6 @@ export default {
   getTargetVersions,
   getMemberActivities,
   findMember,
+  toggleLinkRelativeIssue,
+  removeLinkSubIssue,
 };

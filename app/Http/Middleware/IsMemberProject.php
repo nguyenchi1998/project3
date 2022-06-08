@@ -23,10 +23,10 @@ class IsMemberProject
             || auth()->user()->position === config('constant.position.director') // auth is director
         ) {
             return $next($request);
-        } else {
-            return response()->json([
-                'message' => 'Access Denied'
-            ], Response::HTTP_FORBIDDEN);
         }
+
+        return response()->json([
+            'message' => 'Access Denied'
+        ], Response::HTTP_FORBIDDEN);
     }
 }

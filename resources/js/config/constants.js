@@ -18,7 +18,7 @@ export const PROJECT_STATUS = ['New', 'Progress', 'Done', 'Pending'];
 
 export const PROJECT_MEMBER_ROLES = ['Viewer', 'Developer', 'QA', 'BRSE', 'PM'];
 
-export const POSITIONS = ['Employee', 'Manager', 'Director'];
+export const POSITIONS = ['Employee', 'Marketing', 'Manager', 'Director'];
 
 export const ISSUE_STATUS = [
   { key: 'New', value: 0 },

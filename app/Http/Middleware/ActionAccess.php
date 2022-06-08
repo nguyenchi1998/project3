@@ -22,8 +22,9 @@ class ActionAccess
     {
         $position = config('constant.position')[$guard];
         $auth = auth('sanctum')->user();
-        if ($auth->position === $position)
+        if ($auth->position === $position) {
             return $next($request);
+        }
 
         return response()->json([
             'message' => 'access denied',

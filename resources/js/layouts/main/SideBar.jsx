@@ -79,8 +79,8 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
           src={user.avatar}
           sx={{
             cursor: 'pointer',
-            width: 64,
-            height: 64,
+            width: 56,
+            height: 56,
           }}
           to="/app/account"
         />

@@ -8,24 +8,29 @@ use App\Http\Requests\Project\FilterIssueRequest;
 use App\Http\Requests\Project\ProjectStoreRequest;
 use App\Models\Issue;
 use App\Models\IssueHistory;
+use App\Models\IssueHistoryDetail;
 use App\Models\Project;
 use App\Models\TargetVersion;
 use App\Models\Tracker;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class ProjectController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Project::class, 'project');
+    }
+
     public function index(Request $request)
     {
         $filters = $request->only(['type', 'keyword']);
 
         $auth = auth()->user();
         return Project::when(
-            $this->checkIsDirectorPosition($auth),
+            $this->canViewAllProjects($auth),
             function ($query) {
                 $query->get();
             },
@@ -53,9 +58,9 @@ class ProjectController extends Controller
             ->get();
     }
 
-    private function checkIsDirectorPosition($auth)
+    private function canViewAllProjects($auth)
     {
-        return $auth->position === config('constant.position.director');
+        return $auth->position !== config('constant.position.employee');
     }
 
     public function store(ProjectStoreRequest $request)
@@ -75,9 +80,9 @@ class ProjectController extends Controller
     }
 
 
-    public function show($id)
-    {
-        $project = Project::findOrFail($id)
+    public function show(Project $project)
+    {;
+        $project
             ->load([
                 'members' => function ($query) {
                     return $query->orderBy('role', 'DESC');
@@ -87,15 +92,12 @@ class ProjectController extends Controller
                 'issues.assignee',
                 'issues.tracker'
             ]);
-
         return $project;
     }
 
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, Project $project)
     {
-        $project = Project::findOrFail($id);
-
         $project->update($request->all());
 
         $project->languages()->sync($request->get('languages'));
@@ -104,9 +106,8 @@ class ProjectController extends Controller
     }
 
 
-    public function destroy($id)
+    public function destroy(Project $project)
     {
-        $project = Project::findOrFail($id);
         if ($project->delete()) {
             return response()->json([
                 'message' => 'Success',
@@ -118,13 +119,12 @@ class ProjectController extends Controller
         ], ResponseAlias::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    public function addMember(AddProjectRequest $request, $id)
+    public function addMember(AddProjectRequest $request, Project $project)
     {
         $employeeData = $request->only(
             'role',
             'effort'
         );
-        $project = Project::find($id);
         $project->members()->attach(
             $request->get('employeeId'),
             $employeeData
@@ -134,9 +134,8 @@ class ProjectController extends Controller
             ->orderBy('id', 'desc')->get();
     }
 
-    public function removeMember($projectId, $memberId)
+    public function removeMember(Project $project, $memberId)
     {
-        $project = Project::find($projectId);
         $project->members()->detach($memberId);
         return $project->members()
             ->orderBy('role', 'desc')
@@ -168,7 +167,7 @@ class ProjectController extends Controller
     public function priorityIssuesStatistic($id, Request $request)
     {
         $filters = $request->only(['trackerId']);
-        $data =   Issue::where('project_id', $id)
+        $data = Issue::where('project_id', $id)
             ->when(isset($filters['trackerId']), function ($query) use ($filters) {
                 $query->where('tracker_id', $filters['trackerId']);
             })
@@ -186,17 +185,17 @@ class ProjectController extends Controller
         return response()->json($priorities);
     }
 
-    public function getMembers($id, Request $request)
+    public function getMembers(Project $project, Request $request)
     {
         $filters = $request->only(['keyword']);
-        $project = Project::find($id)
+        $project
             ->load(['members' => function ($query) use ($filters) {
                 $query->when(isset($filters['keyword']), function ($query) use ($filters) {
                     $query->where('name', 'like', '%' . $filters['keyword'] . '%');
                 })->orderBy('role', 'desc')->orderBy('id', 'desc');
             }]);
         if ($request->groupByRole) {
-            return  $project->members->groupBy('pivot.role');
+            return $project->members->groupBy('pivot.role');
         }
 
         return $project->members;
@@ -212,10 +211,10 @@ class ProjectController extends Controller
         return $member;
     }
 
-    public function updateMember($id, $memberId, Request $request)
+    public function updateMember(Project $project, $memberId, Request $request)
     {
         $updateData = $request->only(['effort', 'role']);
-        $project = Project::find($id)->load(['members' => function ($query) {
+        $project->load(['members' => function ($query) {
             $query->orderBy('role', 'desc')
                 ->orderBy('id', 'desc');
         }]);
@@ -276,10 +275,11 @@ class ProjectController extends Controller
             ]);
     }
 
-    public function getTargetVersions($projectId)
+    public function getTargetVersions(Project $project)
     {
-        return TargetVersion::where('project_id', $projectId)
-            ->get();
+        $project->load('targetVersions');
+
+        return $project->targetVersions;
     }
 
     public function getMemberActivities($projectId, $memberId, Request $request)
@@ -294,16 +294,18 @@ class ProjectController extends Controller
             ->groupBy('updated_date');
     }
 
-    public function toggleLinkRelativeIssue($issueId, LinkIssueRequest $request)
+    public function toggleLinkRelativeIssue(Project $project, Issue $issue, LinkIssueRequest $request)
     {
         $action = $request->get('action');
         $relativeIssueId = $request->get('relative_issue_id');
 
-        $issue = Issue::find($issueId)->load('project.issues');
+        $issue->load('project.issues');
 
-        $checkIssueBelongedToProject = $issue->project->issues->search(function ($issue) use ($relativeIssueId) {
-            return $issue->id == $relativeIssueId;
-        });
+        $checkIssueBelongedToProject = $issue->project
+            ->issues
+            ->contains(function ($issue) use ($relativeIssueId) {
+                return $issue->id == $relativeIssueId;
+            });
 
         if (!$checkIssueBelongedToProject) {
             return response()->json([
@@ -320,6 +322,19 @@ class ProjectController extends Controller
             ])->delete();
         }
 
+        $issueHistory = IssueHistory::create([
+            'issue_id' => $issue->id,
+            'updated_user_id' => auth()->id(),
+            'updated_date' => Carbon::now()->format('y/m/d'),
+        ]);
+        IssueHistoryDetail::create(
+            [
+                'issue_history_id' => $issueHistory->id,
+                'key' => 'relative_issue',
+                'new_value' => $relativeIssueId
+            ]
+        );
+
         return $issue->load([
             'author',
             'assignee',
@@ -332,13 +347,13 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function removeLinkSubIssue($issueId, Request $request)
+    public function removeLinkSubIssue(Issue $issue, Request $request)
     {
         $deletedStatus = Issue::where('id', $request->get('subIssueId'))
-            ->where('parent_issue_id', $issueId)
+            ->where('parent_issue_id', $issue->id)
             ->delete();
         if ($deletedStatus) {
-            return Issue::find($issueId)
+            return $issue
                 ->load([
                     'author',
                     'assignee',

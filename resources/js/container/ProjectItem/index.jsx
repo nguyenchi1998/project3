@@ -34,8 +34,8 @@ const ProjectItem = ({ project }) => {
         old.filter(({ id }) => project.id !== id),
       );
     },
-    onError: ({ data }) => {
-      toast.success(data.message);
+    onError: ({ response: { data } }) => {
+      toast.error(data.message);
     },
   });
   const handleDelete = () => {
@@ -82,7 +82,7 @@ const ProjectItem = ({ project }) => {
           >
             <Button
               variant="outlined"
-              sx={{ p: 'unset', px: 1, py: 0.5 }}
+              sx={{ p: 'unset', px: 1, py: 0.3 }}
               component={NavLink}
               to={`${PATH.PROJECT_PAGE}/${project.id}/${PROJECT_PATH.ISSUE}`}
             >

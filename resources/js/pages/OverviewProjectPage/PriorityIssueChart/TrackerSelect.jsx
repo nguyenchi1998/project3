@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Skeleton from '@mui/material/Skeleton';
 
 const TrackerSelect = ({ trackerId, handleChangeTracker }) => {
-  const { data, isLoading, isError } = useQuery(
+  const { data, isLoading, isError, error } = useQuery(
     [KEY_QUERIES.FETCH_TRACKER],
     () => trackerAPI.all(),
   );

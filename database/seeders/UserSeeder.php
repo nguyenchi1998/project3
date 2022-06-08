@@ -27,6 +27,18 @@ class UserSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'position' => config('constant.position.director')
         ]);
+        User::factory(1)->create([
+            'email' => 'marketing@gmail.com',
+            'position' => config('constant.position.marketing')
+        ]);
+        User::factory(1)->create([
+            'email' => 'employee@gmail.com',
+            'position' => config('constant.position.employee')
+        ]);
+        User::factory(1)->create([
+            'email' => 'manager@gmail.com',
+            'position' => config('constant.position.manager')
+        ]);
         User::factory(4)
             ->create([
                 'position' => config('constant.position.manager'),

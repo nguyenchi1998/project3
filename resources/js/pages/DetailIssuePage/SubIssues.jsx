@@ -18,6 +18,7 @@ import { useTheme } from '@emotion/react';
 import ModalSubIssue from './ModalSubIssue';
 import { useMutation, useQueryClient } from 'react-query';
 import issueAPI from './../../services/issue';
+import projectAPI from './../../services/project';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import { toast } from 'react-toastify';
 import { PATH, PROJECT_PATH } from '../../routes/paths';
@@ -36,9 +37,9 @@ const SubIssues = ({ parentIssue }) => {
     setSubIssueOpen(true);
   }, []);
   const handleUnLinkSubIssue = useCallback((subIssueId) => {
-    mutate({ subIssueId, id: parentIssue.id });
+    mutate({ subIssueId, id: parentIssue.id, projectId });
   }, []);
-  const { mutate, isLoading } = useMutation(issueAPI.removeLinkSubIssue, {
+  const { mutate, isLoading } = useMutation(projectAPI.removeLinkSubIssue, {
     onSuccess: (response) => {
       queryClient.setQueryData(
         [KEY_QUERIES.FETCH_ISSUE, parentIssue.id],

@@ -19,8 +19,9 @@ return [
     ],
     'position' => [
         'employee' => 0,
-        'manager' => 1,
-        'director' => 2,
+        'marketing' => 1,
+        'manager' => 2,
+        'director' => 3,
     ],
     'project_status' => [
         'new' => 0,

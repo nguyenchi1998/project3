@@ -13,7 +13,7 @@ export default function useDebounce(value, delay, pushUrl = false) {
       if (pushUrl) {
         let params = {};
         for (const v in value) {
-          if (value[v] || (value[v] && value[v] === 0)) {
+          if (value[v] || (value[v] && value[v] == 0)) {
             params = {
               ...params,
               [v]: value[v],

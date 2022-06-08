@@ -7,6 +7,8 @@ use App\Http\Requests\Issue\LinkIssueRequest;
 use App\Models\Issue;
 use App\Models\IssueHistory;
 use App\Models\IssueHistoryDetail;
+use App\Models\TargetVersion;
+use App\Models\Tracker;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -75,6 +77,8 @@ class IssueController extends Controller
             DB::beginTransaction();
             $issue = Issue::find($id)
                 ->load([
+                    'project.members',
+                    'project.targetVersions',
                     'author',
                     'assignee',
                     'tracker',
@@ -143,6 +147,8 @@ class IssueController extends Controller
 
     protected function createDetailHistories($issue, $newData)
     {
+        $members = $issue->project->members->pluck('name', 'id')->toArray();
+        $targetVersions = $issue->project->targetVersions->pluck('name', 'id')->toArray();
         $detailHistoriesKey = [
             'description' => 'Description',
             'due_date' => 'Due date',
@@ -157,17 +163,27 @@ class IssueController extends Controller
             'assign_user_id' => 'Assignee',
             'target_version_id' => 'Target version',
         ];
+        $values = [
+            'progress_percent' => array_map(function ($percent) {
+                return $percent . '%';
+            }, range(0, 100, 1)),
+            'priority' => array_flip(config('constant.issue_priority')),
+            'status' => array_flip(config('constant.issue_status')),
+            'tracker_id' => Tracker::all()->pluck('name', 'id')->toArray(),
+            'assign_user_id' => $members,
+            'target_version_id' => $targetVersions,
+        ];
         unset($newData['note']);
         $detailHistories = [];
         foreach ($newData as $key => $value) {
             if ($issue[$key] != $value) {
-                $detailHistories = array_merge($detailHistories, [
-                    [
-                        'key' => $detailHistoriesKey[$key],
-                        'old_value' => $issue[$key],
-                        'new_value' => $value,
-                    ]
-                ]);
+                $detailHistories[] =  [
+                    'key' => $detailHistoriesKey[$key],
+                    'old_value' => isset($values[$key]) && isset($issue[$key])
+                        ? ucfirst(str_replace('_', ' ', $values[$key][$issue[$key]]))
+                        : $issue[$key],
+                    'new_value' => isset($values[$key]) ? ucfirst(str_replace('_', ' ', $values[$key][$value])) : $value,
+                ];
             }
         }
 

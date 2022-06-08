@@ -29,7 +29,7 @@ const ListProject = ({ debounceFilter, filter, setFilter }) => {
   const handleTypeFilter = (_, type) => {
     setFilter({ ...filter, ...{ type: type } });
   };
-  const { data, isLoading, isSuccess, error, isError } = useQuery(
+  const { data, isLoading, error, isError } = useQuery(
     [KEY_QUERIES.FETCH_PROJECT, { ...debounceFilter }],
     () => projectAPI.all({ ...debounceFilter }),
   );

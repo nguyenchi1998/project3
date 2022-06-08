@@ -29,29 +29,30 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('profile', [AuthController::class, 'profile']);
 });
-Route::group(['middleware' => ['auth:sanctum', 'access:director']], function () {
-    Route::resource('projects', ProjectController::class);
-    Route::group(['prefix' => 'projects/{id}/', 'middleware'=> ['is_member_project']], function () {
-        Route::get('tracker-issues-statistic', [ProjectController::class, 'trackerIssuesStatistic']);
-        Route::get('priority-issues-statistic', [ProjectController::class, 'priorityIssuesStatistic']);
-        Route::get('members', [ProjectController::class, 'getMembers']);
-        Route::post('members', [ProjectController::class, 'addMember']);
-        Route::get('members/{memberId}', [ProjectController::class, 'findMember']);
-        Route::put('members/{memberId}', [ProjectController::class, 'updateMember']);
-        Route::delete('members/{memberId}', [ProjectController::class, 'removeMember']);
-        Route::get('members/{memberId}/activities', [ProjectController::class, 'getMemberActivities']);
-        Route::get('issues', [ProjectController::class, 'getIssues']);
-        Route::post('issues/{issueId}/toggle-link-relative-issue', [ProjectController::class, 'toggleLinkRelativeIssue']);
-        Route::post('issues/{issueId}/remove-link-sub-issue', [ProjectController::class, 'removeLinkSubIssue']);
-        Route::get('target-versions', [ProjectController::class, 'getTargetVersions']);
+Route::group(['middleware' => ['auth:sanctum',]], function () {
+    Route::group(['middleware' => 'access:director'], function () {
+        Route::group(['prefix' => 'projects/{project}/', 'middleware' => ['is_member_project']], function () {
+            Route::get('tracker-issues-statistic', [ProjectController::class, 'trackerIssuesStatistic']);
+            Route::get('priority-issues-statistic', [ProjectController::class, 'priorityIssuesStatistic']);
+            Route::get('members', [ProjectController::class, 'getMembers']);
+            Route::post('members', [ProjectController::class, 'addMember']);
+            Route::get('members/{member}', [ProjectController::class, 'findMember']);
+            Route::put('members/{member}', [ProjectController::class, 'updateMember']);
+            Route::delete('members/{member}', [ProjectController::class, 'removeMember']);
+            Route::get('members/{member}/activities', [ProjectController::class, 'getMemberActivities']);
+            Route::get('issues', [ProjectController::class, 'getIssues']);
+            Route::post('issues/{issue}/toggle-link-relative-issue', [ProjectController::class, 'toggleLinkRelativeIssue']);
+            Route::post('issues/{issue}/remove-link-sub-issue', [ProjectController::class, 'removeLinkSubIssue']);
+            Route::get('target-versions', [ProjectController::class, 'getTargetVersions']);
+        });
+        Route::resource('groups', GroupController::class);
+        Route::resource('languages', LanguageController::class);
+        Route::resource('users', UserController::class);
+        Route::resource('issues', IssueController::class)->except('index');
+        Route::resource('trackers', TrackerController::class);
+        Route::resource('target-versions', TargetVersionController::class);
     });
-    Route::resource('groups', GroupController::class);
-    Route::resource('languages', LanguageController::class);
-    Route::resource('users', UserController::class);
-    Route::resource('issues', IssueController::class);
-
-    Route::resource('trackers', TrackerController::class);
-    Route::resource('target-versions', TargetVersionController::class);
+    Route::resource('projects', ProjectController::class);
 });
 Route::resource('employees', EmployeeController::class);
 Route::get('employees/{id}/projects', [EmployeeController::class, 'getProjects']);
