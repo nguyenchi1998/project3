@@ -40,7 +40,7 @@ const PriorityChart = ({ trackerId }) => {
       height={200}
       width={200}
       data={{
-        labels: ISSUE_PRIORITIES,
+        labels: ISSUE_PRIORITIES.map(({ label }) => label),
         datasets: [
           {
             backgroundColor: CHART_ISSUE_PRIORITY_COLORS,

@@ -124,7 +124,13 @@ const HeaderDetailIssuePage = ({ issue }) => {
                 borderRadius={1}
                 sx={{ backgroundColor: ISSUE_PRIORITY_COLORS[issue.priority] }}
               >
-                <Typography>{ISSUE_PRIORITIES[issue.priority]}</Typography>
+                <Typography>
+                  {
+                    ISSUE_PRIORITIES.find(
+                      ({ value }) => value === issue.priority,
+                    ).label
+                  }
+                </Typography>
               </Box>
             </Box>
           </Box>

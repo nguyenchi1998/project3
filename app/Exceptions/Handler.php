@@ -37,15 +37,21 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
-            //
-        });
+        $this->reportable(
+            function (Throwable $e) {
+                //
+            }
+        );
 
-        $this->renderable(function (NotFoundHttpException $e) {
-            return response()->json([
-                'error_code' => 1,
-                'message' => 'resource not found'
-            ], ResponseAlias::HTTP_NOT_FOUND);
-        });
+        $this->renderable(
+            function (NotFoundHttpException $e) {
+                return response()->json(
+                    [
+                    'error_code' => 1,
+                    'message' => 'resource not found'
+                    ], ResponseAlias::HTTP_NOT_FOUND
+                );
+            }
+        );
     }
 }

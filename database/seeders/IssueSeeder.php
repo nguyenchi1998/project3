@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
+use Exception;
 use App\Models\Issue;
 use App\Models\Project;
 use App\Models\Tracker;
-use Exception;
 use Illuminate\Database\Seeder;
 
 class IssueSeeder extends Seeder

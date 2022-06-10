@@ -90,7 +90,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
               {data.name}
             </Typography>
             <Typography color="textSecondary" variant="body1">
-              {POSITIONS[data.position]}
+              {POSITIONS.find(({ value }) => value === data?.position).label}
             </Typography>
           </Box>
         )}

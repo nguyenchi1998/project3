@@ -147,9 +147,9 @@ const ModalTargetVersion = ({
           name="status"
           label="Status"
           fullWidth
-          options={TARGET_VERSION_STATUS.map((status, index) => ({
-            key: status,
-            val: index,
+          options={TARGET_VERSION_STATUS.map(({ label, value }) => ({
+            key: label,
+            val: value,
           }))}
         />
       </Stack>

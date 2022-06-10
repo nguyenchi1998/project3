@@ -181,9 +181,9 @@ const ModalSubIssue = ({ open, handleClose, parentIssue }) => {
                 name="priority"
                 label="Priority"
                 fullWidth
-                options={ISSUE_PRIORITIES.map((priority, index) => ({
-                  key: priority,
-                  val: index,
+                options={ISSUE_PRIORITIES.map(({ label, value }) => ({
+                  key: label,
+                  val: value,
                 }))}
               />
             </Box>

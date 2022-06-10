@@ -91,7 +91,11 @@ const ListTargetVersion = ({ debounceFilter, handleOpenEdit }) => {
                   <TableRow key={targetVersion.id}>
                     <TableCell width={'80%'}>{targetVersion.name}</TableCell>
                     <TableCell>
-                      {TARGET_VERSION_STATUS[targetVersion.status]}
+                      {
+                        TARGET_VERSION_STATUS.find(
+                          ({ value }) => value === targetVersion.status,
+                        ).label
+                      }
                     </TableCell>
                     <TableCell width={100}>
                       <Box display="flex">

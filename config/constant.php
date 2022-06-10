@@ -2,72 +2,72 @@
 
 return [
     'project_priority' => [
-        'low' => 0,
-        'normal' => 1,
-        'high' => 2,
+        'low' => 1,
+        'normal' => 2,
+        'high' => 3,
     ],
     'project_type' => [
-        'strategy' => 1,
-        'business' => 0,
+        'business' => 1,
+        'strategy' => 2,
     ],
     'project_member_role' => [
-        'viewer' => 0,
-        'developer' => 1,
-        'qa' => 2,
-        'brse' => 3,
-        'pm' => 4,
+        'viewer' => 1,
+        'developer' => 2,
+        'qa' => 3,
+        'brse' => 4,
+        'pm' => 5,
     ],
     'position' => [
-        'employee' => 0,
-        'marketing' => 1,
-        'manager' => 2,
-        'director' => 3,
+        'employee' => 1,
+        'marketing' => 2,
+        'manager' => 3,
+        'director' => 4,
     ],
     'project_status' => [
-        'new' => 0,
-        'progress' => 1,
-        'done' => 2,
-        'pending' => 3,
+        'new' => 1,
+        'progress' => 2,
+        'done' => 3,
+        'pending' => 4,
     ],
     'assign_type' => [
-        'support' => 0,
-        'main' => 1,
+        'support' => 1,
+        'main' => 2,
     ],
     'assign_status' => [
-        'active' => 0,
-        'reject' => 1,
+        'active' => 1,
+        'reject' => 2,
     ],
     'language_level' => [
-        'beginner' => 0,
-        'intermediate' => 1,
-        'proficient' => 2
+        'beginner' => 1,
+        'intermediate' => 2,
+        'proficient' => 3
     ],
     'issue_status' => [
         //open
-        'new' => 0,
-        'assigned' => 1,
-        'to_be_confirm' => 2,
-        'suspended' => 3,
-        'done' => 4,
-        'feedback' => 5,
+        'new' => 1,
+        'assigned' => 2,
+        'to_be_confirm' => 3,
+        'suspended' => 4,
+        'done' => 5,
+        'feedback' => 6,
         //closed
-        'confirmed' => 6,
-        'closed' => 7,
-        'reject' => 8,
+        'confirmed' => 7,
+        'closed' => 8,
+        'reject' => 9,
     ],
     'issue_priority' => [
-        'low' => 0,
-        'normal' => 1,
-        'high' => 2,
-        'immediate' => 3
+        'low' => 1,
+        'normal' => 2,
+        'high' => 3,
+        'immediate' => 4
     ],
     'relative_issue_action' => [
-        'link' => 1,
-        'unlink' => 0
+        'unlink' => 1,
+        'link' => 2,
     ],
     'target_version_status' => [
-        'closed' => 0,
-        'lock' => 1,
-        'open' => 2,
+        'closed' => 1,
+        'lock' => 2,
+        'open' => 3,
     ],
 ];

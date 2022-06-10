@@ -17,24 +17,30 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         $token = auth()->attempt($credentials);
         if ($token) {
-            return response()->json([
+            return response()->json(
+                [
                 'access_token' => $request->user()->createToken('')->plainTextToken,
                 'type' => 'Bearer',
                 'user' => $request->user(),
-            ]);
+                ]
+            );
         }
-        return response()->json([
+        return response()->json(
+            [
             'message' => 'login failed credentials not found',
-        ], ResponseAlias::HTTP_UNAUTHORIZED);
+            ], ResponseAlias::HTTP_UNAUTHORIZED
+        );
     }
 
     public function logout()
     {
         auth('sanctum')->user()->tokens()->delete();
 
-        return response()->json([
+        return response()->json(
+            [
             'message' => 'logout success',
-        ]);
+            ]
+        );
     }
 
     public function profile(Request $request)

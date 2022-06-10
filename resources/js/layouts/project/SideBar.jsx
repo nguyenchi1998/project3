@@ -18,6 +18,8 @@ import projectAPI from '../../services/project';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Skeleton } from '@mui/material';
+import * as authAPI from '../../services/auth';
+import { setAuth } from './../../store/slices/user';
 
 const items = [
   {
@@ -57,12 +59,24 @@ const items = [
     title: 'Setting',
   },
 ];
-const DashboardSidebar = ({ onMobileClose, openMobile, projectId }) => {
+const ProjectSidebar = ({ onMobileClose, openMobile, projectId }) => {
   const location = useLocation();
+  const dispatch = useDispatch();
   const { data, isLoading } = useQuery(
     [KEY_QUERIES.FETCH_PROJECT, projectId],
     () => projectAPI.find(projectId),
   );
+
+  const { data: auth, isSuccess } = useQuery(
+    [KEY_QUERIES.FETCH_AUTH],
+    authAPI.fetchAuthUser,
+  );
+
+  useEffect(() => {
+    if (isSuccess && auth) {
+      dispatch(setAuth(auth));
+    }
+  }, [data, isSuccess]);
   useEffect(() => {
     if (openMobile && onMobileClose) {
       onMobileClose();
@@ -164,4 +178,4 @@ const DashboardSidebar = ({ onMobileClose, openMobile, projectId }) => {
   );
 };
 
-export default DashboardSidebar;
+export default ProjectSidebar;

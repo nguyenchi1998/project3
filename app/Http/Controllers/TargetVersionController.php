@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TargetVersion\TargetVersionStoreRequest;
-use App\Models\TargetVersion;
 use Illuminate\Http\Request;
+use App\Models\TargetVersion;
+use App\Http\Requests\TargetVersion\TargetVersionStoreRequest;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class TargetVersionController extends Controller
@@ -16,13 +16,15 @@ class TargetVersionController extends Controller
 
     public function store(TargetVersionStoreRequest $request)
     {
-        $targetVersionData = $request->only([
+        $targetVersionData = $request->only(
+            [
             'name',
             'status',
             'start_date',
             'due_date',
             'project_id',
-        ]);
+            ]
+        );
 
         return TargetVersion::create(
             $targetVersionData
@@ -38,12 +40,14 @@ class TargetVersionController extends Controller
     {
         $targetVersion = TargetVersion::find($id);
 
-        $targetVersion->update($request->only(
-            'name',
-            'status',
-            'start_date',
-            'due_date',
-        ));
+        $targetVersion->update(
+            $request->only(
+                'name',
+                'status',
+                'start_date',
+                'due_date',
+            )
+        );
 
         return $targetVersion;
     }
@@ -55,8 +59,10 @@ class TargetVersionController extends Controller
             return $id;
         }
 
-        return response()->json([
+        return response()->json(
+            [
             'message' => 'Error',
-        ], ResponseAlias::HTTP_INTERNAL_SERVER_ERROR);
+            ], ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+        );
     }
 }

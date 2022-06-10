@@ -107,7 +107,13 @@ const ListIssues = ({
                       </TableCell>
                       <TableCell>{issue.tracker?.name}</TableCell>
                       <TableCell>{issue.status.name}</TableCell>
-                      <TableCell>{ISSUE_PRIORITIES[issue.priority]}</TableCell>
+                      <TableCell>
+                        {
+                          ISSUE_PRIORITIES.find(
+                            ({ value }) => value === issue.priority,
+                          ).label
+                        }
+                      </TableCell>
                       <TableCell>
                         <NavLink className={classes.textLink} to="#">
                           {issue.author.name}

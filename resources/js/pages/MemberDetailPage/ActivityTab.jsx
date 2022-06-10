@@ -10,7 +10,7 @@ import { useTheme } from '@emotion/react';
 import { NavLink } from 'react-router-dom';
 import { PATH, PROJECT_PATH } from '../../routes/paths';
 
-const Activity = ({ memberId }) => {
+const ActivityTab = ({ memberId }) => {
   const theme = useTheme();
   const projectId = useContext(ProjectContext);
   const { data, isLoading, isError, error } = useQuery(
@@ -133,4 +133,4 @@ const Activity = ({ memberId }) => {
     </Box>
   );
 };
-export default Activity;
+export default ActivityTab;

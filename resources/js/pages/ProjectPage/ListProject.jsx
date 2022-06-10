@@ -51,13 +51,13 @@ const ListProject = ({ debounceFilter, filter, setFilter }) => {
           <ToggleButton value="" sx={{ paddingX: 2, paddingY: 0.8 }}>
             All
           </ToggleButton>
-          {PROJECT_STATUS.map((status, index) => (
+          {PROJECT_STATUS.map(({ label, value }) => (
             <ToggleButton
-              value={index}
-              key={index}
+              value={value}
+              key={value}
               sx={{ paddingX: 2, paddingY: 0.8 }}
             >
-              {status}
+              {label}
             </ToggleButton>
           ))}
         </ToggleButtonGroup>

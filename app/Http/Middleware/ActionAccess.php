@@ -2,8 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Manager;
 use Closure;
+use App\Models\Manager;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -13,9 +13,9 @@ class ActionAccess
     /**
      * Handle an incoming request.
      *
-     * @param Request $request
-     * @param Closure $next
-     * @param $guard
+     * @param  Request $request
+     * @param  Closure $next
+     * @param  $guard
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|Response
      */
     public function handle(Request $request, Closure $next, $guard)
@@ -26,8 +26,10 @@ class ActionAccess
             return $next($request);
         }
 
-        return response()->json([
+        return response()->json(
+            [
             'message' => 'access denied',
-        ], ResponseAlias::HTTP_FORBIDDEN);
+            ], ResponseAlias::HTTP_FORBIDDEN
+        );
     }
 }

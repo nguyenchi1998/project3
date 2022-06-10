@@ -99,12 +99,16 @@ const DetailIssuePage = () => {
                           value={
                             ISSUE_STATUS.find(
                               ({ value }) => value === data.status,
-                            ).key
+                            ).label
                           }
                         />
                         <InfoItem
                           label="priority"
-                          value={ISSUE_PRIORITIES[data.priority]}
+                          value={
+                            ISSUE_PRIORITIES.find(
+                              ({ value }) => value === data.priority,
+                            ).label
+                          }
                         />
                         <InfoItem
                           label="author"

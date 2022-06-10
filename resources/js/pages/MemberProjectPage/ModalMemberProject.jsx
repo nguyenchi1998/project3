@@ -160,9 +160,9 @@ const ModalMemberProject = ({ handleClose, member, keyQuery, action }) => {
           name="role"
           label="Role"
           fullWidth
-          options={PROJECT_MEMBER_ROLES.map((role, index) => ({
-            key: role,
-            val: index,
+          options={PROJECT_MEMBER_ROLES.map(({ label, value }) => ({
+            key: label,
+            val: value,
           }))}
         />
         <FormSelect

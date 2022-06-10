@@ -219,9 +219,9 @@ const ModalEditIssue = ({ issueId, handleClose }) => {
                 control={control}
                 name="priority"
                 label="Priority"
-                options={ISSUE_PRIORITIES.map((priority, index) => ({
-                  key: priority,
-                  val: index,
+                options={ISSUE_PRIORITIES.map(({ label, value }) => ({
+                  key: label,
+                  val: value,
                 }))}
               />
             </Box>

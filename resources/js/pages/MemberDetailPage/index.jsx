@@ -15,7 +15,7 @@ const MemberDetailPage = () => {
   const memberId = useParamInt('memberId');
   const projectId = useContext(ProjectContext);
   const [value, setValue] = useState('one');
-  const handleChange = useCallback((event, newValue) => {
+  const handleChange = useCallback((_, newValue) => {
     setValue(newValue);
   }, []);
   const { data, isLoading, isError, error } = useQuery(
@@ -39,7 +39,10 @@ const MemberDetailPage = () => {
               <Box ml={1}>
                 <Typography variant="h6">{data?.name}</Typography>
                 <Typography variant="subtitle1">
-                  {POSITIONS[data?.position]}
+                  {
+                    POSITIONS.find(({ value }) => value === data?.position)
+                      .label
+                  }
                 </Typography>
               </Box>
             </Box>
@@ -57,10 +60,10 @@ const MemberDetailPage = () => {
               </TabList>
             </Box>
             <TabPanel value={'one'}>
-              <ActivityTab memberId={data.id} />
+              <ActivityTab memberId={memberId} />
             </TabPanel>
             <TabPanel value={'two'}>
-              <ProjectTab memberId={data.id} />
+              <ProjectTab memberId={memberId} />
             </TabPanel>
           </TabContext>
         </Box>

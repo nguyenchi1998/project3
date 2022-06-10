@@ -38,18 +38,18 @@ const MembersStatistic = () => {
       <Paper variant="outlined">
         <Box px={2}>
           <Stack>
-            {PROJECT_MEMBER_ROLES.map((role, key) => (
+            {PROJECT_MEMBER_ROLES.map(({ label, value }) => (
               <Box
-                key={role}
+                key={value}
                 display="flex"
                 justifyContent="flex-start"
                 justifyItems="center"
                 py={1}
               >
-                <Box mr={0.5}>{`${role}:`}</Box>
-                {data[key] && (
+                <Box mr={0.5}>{`${label}:`}</Box>
+                {data[value] && (
                   <Box display="inline-block">
-                    {data[key].map(({ name, id }, index) => (
+                    {data[value].map(({ name, id }, index) => (
                       <Box display="inline-flex" key={name}>
                         <Link
                           component={NavLink}
@@ -58,7 +58,7 @@ const MembersStatistic = () => {
                         >
                           {name}
                         </Link>
-                        {index < data[key].length - 1 && (
+                        {index < data[value].length - 1 && (
                           <Box mr={0.5}>{`,`}</Box>
                         )}
                       </Box>

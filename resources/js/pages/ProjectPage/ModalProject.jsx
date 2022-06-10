@@ -111,9 +111,9 @@ const ModalProject = ({ handleClose, keyQuery, open }) => {
           name="type"
           label="Type"
           fullWidth
-          options={PROJECT_TYPES.map((type, index) => ({
-            key: type,
-            val: index,
+          options={PROJECT_TYPES.map(({ label, value }) => ({
+            key: label,
+            val: value,
           }))}
         />
         <FormInputDate
@@ -133,9 +133,9 @@ const ModalProject = ({ handleClose, keyQuery, open }) => {
           name="priority"
           label="Priority"
           fullWidth
-          options={PROJECT_PRIORITIES.map((priority, index) => ({
-            key: priority,
-            val: index,
+          options={PROJECT_PRIORITIES.map(({ label, value }) => ({
+            key: label,
+            val: value,
           }))}
         />
         <FormAutocomplete

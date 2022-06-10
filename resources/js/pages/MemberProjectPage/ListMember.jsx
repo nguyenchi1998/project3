@@ -112,7 +112,11 @@ const ListMember = ({ debounceFilter, handleOpenEdit }) => {
                       </Link>
                     </TableCell>
                     <TableCell>
-                      {PROJECT_MEMBER_ROLES[member?.pivot?.role]}
+                      {
+                        PROJECT_MEMBER_ROLES.find(
+                          ({ value }) => value === member?.pivot?.role,
+                        ).label
+                      }
                     </TableCell>
                     <TableCell>{member.email}</TableCell>
                     <TableCell>{`${member?.pivot?.effort}%`}</TableCell>

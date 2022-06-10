@@ -158,7 +158,12 @@ const ProjectItem = ({ project }) => {
                 alignItems="center"
               >
                 <BsHddStack />
-                <Box ml={1}>{PROJECT_TYPES[project.type]}</Box>
+                <Box ml={1}>
+                  {
+                    PROJECT_TYPES.find(({ value }) => value === project.type)
+                      ?.label
+                  }
+                </Box>
               </Grid>
             </Grid>
           </Box>

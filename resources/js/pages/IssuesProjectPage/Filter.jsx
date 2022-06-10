@@ -91,9 +91,9 @@ const Filter = ({ totalFilter, onChangeTotalFilter, filterOpen }) => {
                 name="priority"
               >
                 <MenuItem value="all">All</MenuItem>
-                {ISSUE_PRIORITIES.map((priority, index) => (
-                  <MenuItem value={index} key={priority}>
-                    {priority}
+                {ISSUE_PRIORITIES.map(({ label, value }) => (
+                  <MenuItem value={value} key={value}>
+                    {label}
                   </MenuItem>
                 ))}
               </Select>

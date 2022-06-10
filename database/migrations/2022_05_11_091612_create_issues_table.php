@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateIssuesTable extends Migration
 {
@@ -29,7 +29,7 @@ class CreateIssuesTable extends Migration
             $table->unsignedFloat('actual_time')->nullable();
             $table->unsignedFloat('progress_percent')->default(0);
             $table->unsignedInteger('target_version_id')->nullable();
-            $table->unsignedInteger('status');
+            $table->unsignedInteger('status')->default(config('constant.issue_status.new'));
             $table->softDeletes();
             $table->timestamps();
         });

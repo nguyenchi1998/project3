@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy } from 'react';
 import ReactDOM from 'react-dom';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import { Provider } from 'react-redux';
@@ -16,9 +16,6 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { ToastContainer } from 'react-toastify';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { AUTH_PATH, ERROR_PATH, PATH } from './routes/paths';
-import LoginPage from '../js/pages/Auth/Login';
-import NotFoundPage from '../js/pages/Error/NotFoundPage';
-import InternalErrorPage from '../js/pages/Error/InternalErrorPage';
 import PrivateRoute from './components/PrivateRoute';
 import 'react-toastify/dist/ReactToastify.css';
 import ManagerLayout from './layouts/main';
@@ -32,6 +29,13 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+const NotFoundPage = lazy(() => import('../js/pages/Error/NotFoundPage'));
+const InternalErrorPage = lazy(() =>
+  import('../js/pages/Error/InternalErrorPage'),
+);
+const LoginPage = lazy(() => import('../js/pages/Auth/Login'));
+
 ReactDOM.render(
   <QueryClientProvider client={queryClient}>
     <Provider store={store}>
