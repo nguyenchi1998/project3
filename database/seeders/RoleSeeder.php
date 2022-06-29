@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Level;
 use App\Models\Role;
+use App\Models\Level;
 use Illuminate\Database\Seeder;
 
 class RoleSeeder extends Seeder
@@ -32,12 +32,10 @@ class RoleSeeder extends Seeder
             'Accountant',
             'Designer'
         ];
-
         foreach ($roles as $role) {
             $role = Role::create([
                 'name' => $role,
             ]);
-
             for ($i = 1; $i <= 4; $i++) {
                 Level::create([
                     'name' => $role . $i,

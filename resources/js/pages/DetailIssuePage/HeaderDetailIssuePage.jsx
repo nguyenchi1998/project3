@@ -33,7 +33,7 @@ const HeaderDetailIssuePage = ({ issue }) => {
             <Box>
               <Typography>Status</Typography>
               <Typography sx={{ textTransform: 'capitalize' }}>
-                {ISSUE_STATUS.find(({ value }) => value === issue.status).key}
+                {ISSUE_STATUS.find(({ value }) => value === issue.status).label}
               </Typography>
             </Box>
           </Box>

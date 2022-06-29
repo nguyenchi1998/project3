@@ -22,10 +22,10 @@ export const PROJECT_PRIORITIES = [
 ];
 
 export const PROJECT_STATUS = [
-  { Label: 'New', value: 1 },
-  { Label: 'Progress', value: 2 },
-  { Label: 'Done', value: 3 },
-  { Label: 'Pending', value: 4 },
+  { label: 'New', value: 1 },
+  { label: 'Progress', value: 2 },
+  { label: 'Done', value: 3 },
+  { label: 'Pending', value: 4 },
 ];
 
 export const PROJECT_MEMBER_ROLES = [
@@ -44,15 +44,15 @@ export const POSITIONS = [
 ];
 
 export const ISSUE_STATUS = [
-  { key: 'New', value: 1 },
-  { key: 'Assigned', value: 2 },
-  { key: 'To Be Confirm', value: 3 },
-  { key: 'Suspended', value: 4 },
-  { key: 'Done', value: 5 },
-  { key: 'Feedback', value: 6 },
-  { key: 'Confirmed', value: 76 },
-  { key: 'Closed', value: 8 },
-  { key: 'Reject', value: 9 },
+  { label: 'New', value: 1 },
+  { label: 'Assigned', value: 2 },
+  { label: 'To Be Confirm', value: 3 },
+  { label: 'Suspended', value: 4 },
+  { label: 'Done', value: 5 },
+  { label: 'Feedback', value: 6 },
+  { label: 'Confirmed', value: 7 },
+  { label: 'Closed', value: 8 },
+  { label: 'Reject', value: 9 },
 ];
 
 export const ISSUE_STATUS_CLOSED = [6, 7, 8];

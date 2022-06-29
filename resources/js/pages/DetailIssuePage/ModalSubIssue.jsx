@@ -26,9 +26,9 @@ const defaultValues = {
   name: '',
   start_date: null,
   tracker_id: 2,
-  priority: 0,
+  priority: 1,
   due_date: null,
-  status: 0,
+  status: 1,
   assign_user_id: null,
   estimate_time: 0,
   parent_issue_id: null,
@@ -211,8 +211,8 @@ const ModalSubIssue = ({ open, handleClose, parentIssue }) => {
                 name="status"
                 label="Status"
                 fullWidth
-                options={ISSUE_STATUS.map(({ key, value }) => ({
-                  key: key,
+                options={ISSUE_STATUS.map(({ label, value }) => ({
+                  key: label,
                   val: value,
                 }))}
               />

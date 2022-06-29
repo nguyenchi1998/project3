@@ -1,9 +1,14 @@
 import { Avatar, Box, Divider, Link, Stack, Typography } from '@mui/material';
 import { useTheme } from '@emotion/react';
 import { diffForHumans } from '../../utils/common';
+import { PATH, PROJECT_PATH } from '../../routes/paths';
+import { NavLink } from 'react-router-dom';
+import { useContext } from 'react';
+import { ProjectContext } from '../../layouts/project';
 
 const IssueHistories = ({ histories }) => {
   const theme = useTheme();
+  const projectId = useContext(ProjectContext);
 
   return (
     <Box>
@@ -38,7 +43,8 @@ const IssueHistories = ({ histories }) => {
                     </Typography>
                     <Typography display="inline" variant="subtitle2">
                       <Link
-                        href="#"
+                        component={NavLink}
+                        to={`${PATH.PROJECT_PAGE}/${projectId}/${PROJECT_PATH.MEMBER}/${history?.updated_user?.id}`}
                         underline="hover"
                         sx={{ fontWeight: 'bold' }}
                       >

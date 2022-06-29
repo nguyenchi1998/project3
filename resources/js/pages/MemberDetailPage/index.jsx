@@ -22,7 +22,6 @@ const MemberDetailPage = () => {
     [KEY_QUERIES.FETCH_PROJECT_MEMBER, projectId, memberId],
     () => projectAPI.findMember({ projectId, memberId }),
   );
-
   if (isLoading) {
     return 'loading';
   }

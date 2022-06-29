@@ -27,7 +27,7 @@ class IssueSeeder extends Seeder
                 })->first();
                 $trackerIds = Tracker::all()->pluck('id')
                     ->toArray();
-                $states = array_flip(config('constant.issue_status'));
+                $states = array_values(config('constant.issue_status'));
                 Issue::factory()->count(random_int(0, 10))
                     ->create([
                         'project_id' => $project->id,

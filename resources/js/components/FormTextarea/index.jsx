@@ -11,7 +11,7 @@ const FormTextarea = ({ name, control, placeholder, label }) => {
             position: 'absolute',
             top: -8,
             left: 8,
-            px: 1,
+            px: 0.8,
             fontSize: 'small',
             backgroundColor: 'white',
           }}

@@ -120,7 +120,7 @@ const SubIssues = ({ parentIssue }) => {
                     <TableCell size="small" width={150}>
                       {
                         ISSUE_STATUS.find(({ value }) => value === issue.status)
-                          .key
+                          .label
                       }
                     </TableCell>
                     <TableCell size="small" width={130}>

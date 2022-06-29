@@ -79,7 +79,7 @@ const Filter = ({ totalFilter, onChangeTotalFilter, filterOpen }) => {
                 value.value === option.value
               }
               limitTags={1}
-              getOptionLabel={(option) => option.key ?? ''}
+              getOptionLabel={(option) => option.label ?? ''}
               renderInput={(params) => <TextField {...params} label="Status" />}
             />
             <FormControl fullWidth>

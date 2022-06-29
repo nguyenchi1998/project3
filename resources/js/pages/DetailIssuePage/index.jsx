@@ -130,6 +130,10 @@ const DetailIssuePage = () => {
                             </Link>
                           }
                         />
+                        <InfoItem
+                          label="Estimate time"
+                          value={`${data?.estimate_time}h`}
+                        />
                       </Stack>
                     </Box>
                     <Box flexGrow={1}>

@@ -14,10 +14,7 @@ class PositionSeeder extends Seeder
      */
     public function run()
     {
-        $positions = [
-            'CTO', "Division Manager", "Group Manager", 'Employee',
-        ];
-
+        $positions = ['CTO', "Division Manager", "Group Manager", 'Employee',];
         foreach ($positions as $position) {
             Position::create([
                 'name' => $position

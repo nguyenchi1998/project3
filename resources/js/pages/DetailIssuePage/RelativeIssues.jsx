@@ -161,7 +161,7 @@ const RelativeIssues = ({ relativeIssues, issueId }) => {
                       {
                         ISSUE_STATUS.find(
                           ({ value }) => value === relativeIssue.issue.status,
-                        ).key
+                        ).label
                       }
                     </TableCell>
                     <TableCell size="small">

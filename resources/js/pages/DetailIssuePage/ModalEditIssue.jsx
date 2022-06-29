@@ -27,9 +27,9 @@ const defaultValues = {
   start_date: null,
   tracker_id: 2,
   target_version_id: '',
-  priority: 0,
+  priority: 1,
   due_date: null,
-  status: 0,
+  status: 1,
   assign_user_id: null,
   progress_percent: 0,
   estimate_time: 0,
@@ -73,7 +73,6 @@ const ModalEditIssue = ({ issueId, handleClose }) => {
     defaultValues,
   });
   const onSubmit = (data) => {
-    console.log(data);
     mutate({
       ...data,
       start_date:
@@ -249,8 +248,8 @@ const ModalEditIssue = ({ issueId, handleClose }) => {
                 name="status"
                 label="Status"
                 fullWidth
-                options={ISSUE_STATUS.map(({ key, value }) => ({
-                  key: key,
+                options={ISSUE_STATUS.map(({ label, value }) => ({
+                  key: label,
                   val: value,
                 }))}
               />

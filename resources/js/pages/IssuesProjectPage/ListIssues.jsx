@@ -14,6 +14,7 @@ import TableRow from '@mui/material/TableRow';
 import {
   ISSUE_PRIORITIES,
   ISSUE_PRIORITY_COLORS,
+  ISSUE_STATUS,
 } from '../../config/constants';
 import { format } from 'date-fns';
 import { PATH, PROJECT_PATH } from '../../routes/paths';
@@ -22,7 +23,7 @@ import ListSkeleton from './ListSkeleton';
 import ListHead from './ListHead';
 import Filter from './Filter';
 import { makeStyles } from '@mui/styles';
-import { colors, Typography } from '@mui/material';
+import { colors, Link, Typography } from '@mui/material';
 import { ProjectContext } from '../../layouts/project';
 
 const useStyles = makeStyles((theme) => ({
@@ -98,15 +99,22 @@ const ListIssues = ({
                         </NavLink>
                       </TableCell>
                       <TableCell>
-                        <NavLink
-                          className={classes.textLink}
+                        <Link
+                          underline="hover"
+                          component={NavLink}
                           to={`${PATH.PROJECT_PAGE}/${projectId}/${PROJECT_PATH.ISSUE}/${issue.id}`}
                         >
                           {issue.name}
-                        </NavLink>
+                        </Link>
                       </TableCell>
                       <TableCell>{issue.tracker?.name}</TableCell>
-                      <TableCell>{issue.status.name}</TableCell>
+                      <TableCell>
+                        {
+                          ISSUE_STATUS.find(
+                            ({ value }) => value === issue.status,
+                          ).label
+                        }
+                      </TableCell>
                       <TableCell>
                         {
                           ISSUE_PRIORITIES.find(
@@ -115,9 +123,13 @@ const ListIssues = ({
                         }
                       </TableCell>
                       <TableCell>
-                        <NavLink className={classes.textLink} to="#">
+                        <Link
+                          underline="hover"
+                          component={NavLink}
+                          to={`${PATH.PROJECT_PAGE}/${projectId}/${PROJECT_PATH.MEMBER}/${issue.author.id}`}
+                        >
                           {issue.author.name}
-                        </NavLink>
+                        </Link>
                       </TableCell>
                       <TableCell>{issue.assignee?.name}</TableCell>
                       <TableCell>
