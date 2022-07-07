@@ -7,7 +7,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { HelmetProvider } from 'react-helmet-async';
 import theme from '../js/styles/theme';
 import store from '../js/store';
-import LoadingIndicator from '../js/components/LoadingIndicator';
 import GlobalStyles from '../js/styles/global';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -18,9 +17,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { AUTH_PATH, ERROR_PATH, PATH } from './routes/paths';
 import PrivateRoute from './components/PrivateRoute';
 import 'react-toastify/dist/ReactToastify.css';
-import ManagerLayout from './layouts/main';
-import ProjectLayout from './layouts/project';
-import ForbiddenPage from './pages/Error/ForbiddenPage';
+import LinearProgress from '@mui/material/LinearProgress';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,9 +28,12 @@ const queryClient = new QueryClient({
 });
 
 const NotFoundPage = lazy(() => import('../js/pages/Error/NotFoundPage'));
+const ForbiddenPage = lazy(() => import('../js/pages/Error/ForbiddenPage'));
 const InternalErrorPage = lazy(() =>
   import('../js/pages/Error/InternalErrorPage'),
 );
+const ProjectLayout = lazy(() => import('./layouts/project'));
+const ManagerLayout = lazy(() => import('./layouts/main'));
 const LoginPage = lazy(() => import('../js/pages/Auth/Login'));
 
 ReactDOM.render(
@@ -44,7 +44,7 @@ ReactDOM.render(
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <GlobalStyles />
-            <React.Suspense fallback={<LoadingIndicator />}>
+            <React.Suspense fallback={<LinearProgress />}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <Router>
                   <Switch>

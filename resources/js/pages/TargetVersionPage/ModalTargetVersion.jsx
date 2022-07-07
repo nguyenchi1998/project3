@@ -11,12 +11,15 @@ import { TARGET_VERSION_STATUS } from '../../config/constants';
 import FormSelect from '../../components/FormSelect';
 import { Stack } from '@mui/material';
 import { ProjectContext } from '../../layouts/project';
+import FormInputDate from '../../components/FormInputDate';
 
 const OPEN_STATUS = 2;
 
 const defaultValues = {
   name: '',
   status: OPEN_STATUS,
+  start_date: new Date(),
+  due_date: null,
 };
 const ModalTargetVersion = ({
   handleClose,
@@ -141,6 +144,19 @@ const ModalTargetVersion = ({
           label="Name"
           errors={errors}
           fullWidth
+        />
+        <FormInputDate
+          name="start_date"
+          control={control}
+          label="Start Date"
+          errors={errors}
+        />
+        <FormInputDate
+          name="due_date"
+          control={control}
+          label="Due Date"
+          errors={errors}
+          error={true}
         />
         <FormSelect
           control={control}

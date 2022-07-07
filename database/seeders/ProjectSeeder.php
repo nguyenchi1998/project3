@@ -26,7 +26,7 @@ class ProjectSeeder extends Seeder
         Project::factory(10)
             ->create()
             ->each(function ($project) use ($languages, $managers, $employee) {
-                TargetVersion::factory(3)->create([
+                $targetVersions = TargetVersion::factory(3)->create([
                     'project_id' => $project->id,
                 ]);
                 $project->languages()->sync(array_rand($languages, 2));
@@ -43,6 +43,9 @@ class ProjectSeeder extends Seeder
                         'role' => config('constant.project_member_role.developer'),
                     ]
                 );
+                $project->update([
+                    'current_target_version_id' => $targetVersions->first()->id,
+                ]);
             });
     }
 }

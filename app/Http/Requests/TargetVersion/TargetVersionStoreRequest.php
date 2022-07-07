@@ -26,8 +26,8 @@ class TargetVersionStoreRequest extends FormRequest
         return [
             'name' => 'required|string',
             'status' => 'required',
-            'start_date' => 'nullable|date',
-            'due_date' => 'nullable|date',
+            'start_date' => 'required|date',
+            'due_date' => 'required|date',
             'project_id' => 'required|integer',
         ];
     }

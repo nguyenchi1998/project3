@@ -66,7 +66,6 @@ const ProjectSidebar = ({ onMobileClose, openMobile, projectId }) => {
     [KEY_QUERIES.FETCH_PROJECT, projectId],
     () => projectAPI.find(projectId),
   );
-
   const { data: auth, isSuccess } = useQuery(
     [KEY_QUERIES.FETCH_AUTH],
     authAPI.fetchAuthUser,

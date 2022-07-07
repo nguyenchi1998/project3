@@ -2,9 +2,17 @@ import React from 'react';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import { Controller } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
-import { FormControl } from '@mui/material';
+import { FormControl, FormHelperText } from '@mui/material';
 
-const FormInputDate = ({ name, control, label, maxDate, minDate, ...rest }) => {
+const FormInputDate = ({
+  name,
+  control,
+  label,
+  maxDate,
+  minDate,
+  errors,
+  ...rest
+}) => {
   return (
     <FormControl {...rest}>
       <Controller
@@ -17,10 +25,15 @@ const FormInputDate = ({ name, control, label, maxDate, minDate, ...rest }) => {
             onChange={(e) => onChange(e)}
             label={label}
             value={value}
-            renderInput={(params) => <TextField {...params} />}
+            renderInput={(params) => (
+              <TextField {...params} error={!!(errors && errors[name])} />
+            )}
           />
         )}
       />
+      {errors && errors[name] && (
+        <FormHelperText>{errors[name].message}</FormHelperText>
+      )}
     </FormControl>
   );
 };

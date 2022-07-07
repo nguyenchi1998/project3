@@ -16,8 +16,8 @@ class CreateTargetVersionsTable extends Migration
         Schema::create('target_versions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->date('start_date')->nullable();
-            $table->date('due_date')->nullable();
+            $table->date('start_date');
+            $table->date('due_date');
             $table->tinyInteger('status');
             $table->unsignedInteger('project_id');
             $table->timestamps();

@@ -26,6 +26,7 @@ class CreateProjectsTable extends Migration
             $table->tinyInteger('type')->default(config('constant.project_type.business'));
             $table->tinyInteger('customer_id')->nullable();
             $table->unsignedInteger('created_user_id');
+            $table->unsignedInteger('current_target_version_id')->nullable();
             $table->timestamps();
         });
     }

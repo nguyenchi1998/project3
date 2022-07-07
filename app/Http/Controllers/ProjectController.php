@@ -50,6 +50,7 @@ class ProjectController extends Controller
             },
             'languages',
             'targetVersions',
+            'currentTargetVersion'
         ])->orderBy('id', 'desc')->get();
     }
 

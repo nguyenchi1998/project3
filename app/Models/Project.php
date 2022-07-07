@@ -46,4 +46,10 @@ class Project extends Model
     {
         return $this->hasMany(TargetVersion::class);
     }
+
+
+    public function currentTargetVersion()
+    {
+        return $this->belongsTo(TargetVersion::class, 'current_target_version_id');
+    }
 }

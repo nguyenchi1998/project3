@@ -19,10 +19,11 @@ import TableContainer from '@mui/material/TableContainer';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import NoData from '../../container/NoData';
-import { TARGET_VERSION_STATUS } from '../../config/constants';
+import { DATE_FORMAT, TARGET_VERSION_STATUS } from '../../config/constants';
 import { ProjectContext } from '../../layouts/project';
+import { format } from 'date-fns';
 
-const headers = ['Name', 'Status', 'Action'];
+const headers = ['Name', 'Start Date', 'Due Date', 'Status', 'Action'];
 
 const ListTargetVersion = ({ debounceFilter, handleOpenEdit }) => {
   const projectId = useContext(ProjectContext);
@@ -89,7 +90,20 @@ const ListTargetVersion = ({ debounceFilter, handleOpenEdit }) => {
               <TableBody>
                 {data.map((targetVersion) => (
                   <TableRow key={targetVersion.id}>
-                    <TableCell width={'80%'}>{targetVersion.name}</TableCell>
+                    <TableCell>{targetVersion.name}</TableCell>
+                    <TableCell>
+                      {targetVersion.start_date
+                        ? format(
+                            new Date(targetVersion.start_date),
+                            DATE_FORMAT,
+                          )
+                        : null}
+                    </TableCell>
+                    <TableCell>
+                      {targetVersion.due_date
+                        ? format(new Date(targetVersion.due_date), DATE_FORMAT)
+                        : null}
+                    </TableCell>
                     <TableCell>
                       {
                         TARGET_VERSION_STATUS.find(

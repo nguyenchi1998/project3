@@ -13,6 +13,10 @@ import TargetVersionPage from '../../pages/TargetVersionPage';
 import SettingProjectPage from '../../pages/SettingProjectPage';
 import useParamInt from '../../hooks/useParamInt';
 import MemberDetailPage from '../../pages/MemberDetailPage';
+import { Box } from '@mui/material';
+import { KEY_QUERIES } from '../../config/keyQueries';
+import { useIsFetching } from 'react-query';
+import LoadingIndicator from './../../components/LoadingIndicator';
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -45,10 +49,13 @@ const DashboardLayoutContent = styled('div')({
 });
 
 const ProjectContext = createContext(null);
+const AuthContext = createContext(null);
 
 const ProjectLayout = () => {
   const projectId = useParamInt('projectId');
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
+
+  const isFetchingAuth = useIsFetching([KEY_QUERIES.FETCH_AUTH]);
 
   return (
     <DashboardLayoutRoot>
@@ -62,55 +69,57 @@ const ProjectLayout = () => {
         <DashboardLayoutContainer>
           <DashboardLayoutContent>
             <ProjectContext.Provider value={projectId}>
-              <Switch>
-                <Route
-                  path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.ISSUE}/:issueId`}
-                >
-                  <DetailIssuePage />
-                </Route>
-                <Route
-                  path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.ISSUE}`}
-                  exact
-                >
-                  <IssuesProjectPage />
-                </Route>
-                <Route
-                  path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.OVERVIEW}`}
-                  exact
-                >
-                  <OverviewProjectPage />
-                </Route>
-                <Route
-                  path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.TRACKER}`}
-                  exact
-                >
-                  <TrackerPage />
-                </Route>
-                <Route
-                  path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.MEMBER}`}
-                  exact
-                >
-                  <MemberProjectPage />
-                </Route>
-                <Route
-                  path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.MEMBER}/:memberId`}
-                  exact
-                >
-                  <MemberDetailPage />
-                </Route>
-                <Route
-                  path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.TARGET_VERSION}`}
-                  exact
-                >
-                  <TargetVersionPage />
-                </Route>
-                <Route
-                  path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.SETTING_PAGE}`}
-                  exact
-                >
-                  <SettingProjectPage />
-                </Route>
-              </Switch>
+              <AuthContext.Provider value={isFetchingAuth}>
+                <Switch>
+                  <Route
+                    path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.ISSUE}/:issueId`}
+                  >
+                    <DetailIssuePage />
+                  </Route>
+                  <Route
+                    path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.ISSUE}`}
+                    exact
+                  >
+                    <IssuesProjectPage />
+                  </Route>
+                  <Route
+                    path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.OVERVIEW}`}
+                    exact
+                  >
+                    <OverviewProjectPage />
+                  </Route>
+                  <Route
+                    path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.TRACKER}`}
+                    exact
+                  >
+                    <TrackerPage />
+                  </Route>
+                  <Route
+                    path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.MEMBER}`}
+                    exact
+                  >
+                    <MemberProjectPage />
+                  </Route>
+                  <Route
+                    path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.MEMBER}/:memberId`}
+                    exact
+                  >
+                    <MemberDetailPage />
+                  </Route>
+                  <Route
+                    path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.TARGET_VERSION}`}
+                    exact
+                  >
+                    <TargetVersionPage />
+                  </Route>
+                  <Route
+                    path={`${PATH.PROJECT_PAGE}/:projectId/${PROJECT_PATH.SETTING_PAGE}`}
+                    exact
+                  >
+                    <SettingProjectPage />
+                  </Route>
+                </Switch>
+              </AuthContext.Provider>
             </ProjectContext.Provider>
           </DashboardLayoutContent>
         </DashboardLayoutContainer>
@@ -119,6 +128,6 @@ const ProjectLayout = () => {
   );
 };
 
-export { ProjectContext };
+export { ProjectContext, AuthContext };
 
 export default ProjectLayout;

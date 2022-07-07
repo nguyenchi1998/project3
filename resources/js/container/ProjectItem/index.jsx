@@ -24,6 +24,7 @@ import projectAPI from './../../services/project';
 import { useMutation, useQueryClient } from 'react-query';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import { toast } from 'react-toastify';
+import { formatDistanceToNow } from 'date-fns';
 
 const ProjectItem = ({ project }) => {
   const queryClient = useQueryClient();
@@ -42,7 +43,7 @@ const ProjectItem = ({ project }) => {
     mutate(project.id);
   };
   return (
-    <Paper variant="outlined">
+    <Paper variant="outlined" sx={{ height: '100%' }}>
       <Box position="relative">
         <Box
           top={-16}
@@ -170,22 +171,31 @@ const ProjectItem = ({ project }) => {
           <Divider />
           <Box>
             <Box display="flex" justifyContent="space-between">
-              <Box fontSize={14} fontWeight="bold">
-                Progress
+              <Box fontSize={15} fontWeight="bold">
+                {project?.current_target_version?.name}
               </Box>
-              <Box
-                sx={{ backgroundColor: 'pink' }}
-                paddingX={0.5}
-                paddingY={0.4}
-                borderRadius={2}
-                fontSize={14}
-                display="flex"
-                alignItems="center"
-              >
-                <AccessTimeIcon fontSize="small" />2 month left
-              </Box>
+              {project?.current_target_version?.due_date && (
+                <Box
+                  sx={{ backgroundColor: 'pink' }}
+                  paddingX={0.5}
+                  paddingY={0.4}
+                  borderRadius={1}
+                  fontSize={14}
+                  display="flex"
+                  alignItems="center"
+                >
+                  {project?.current_target_version?.due_date && (
+                    <>
+                      <AccessTimeIcon fontSize="small" />
+                      {`${formatDistanceToNow(
+                        new Date(project.current_target_version.due_date),
+                      )} left`}
+                    </>
+                  )}
+                </Box>
+              )}
             </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ mt: 1, display: 'flex', alignItems: 'center' }}>
               <Box sx={{ width: '100%', mr: 1 }}>
                 <LinearProgress
                   sx={{ height: 8 }}
