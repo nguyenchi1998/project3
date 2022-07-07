@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { Button, Divider, TextField, Typography } from '@mui/material';
-import ModalProject from './ModalProject';
+import ModalCreateProject from './ModalCreateProject';
 import useDebounce from './../../hooks/useDebounce';
 import useQueryParam from '../../hooks/useQueryParam';
 import ListProject from './ListProject';
@@ -61,7 +61,7 @@ const ProjectPage = () => {
           filter={filter}
         />
         {createOpen && (
-          <ModalProject
+          <ModalCreateProject
             open={createOpen}
             handleClose={handleCreateClose}
             keyQuery={debounceFilter}

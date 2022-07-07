@@ -27,29 +27,28 @@ class IssueController extends Controller
     {
         $issue = Issue::create(
             array_merge(
-                $request->all(), [
-                'created_user_id' => auth()->user()->id
+                $request->all(),
+                [
+                    'created_user_id' => auth()->user()->id
                 ]
             )
         );
 
         if ($request->get('parent_issue_id')) {
-            return Issue::find($request->get('parent_issue_id'))->load(
-                [
-                'author',
-                'assignee',
-                'tracker',
-                'histories.detailHistories',
-                'histories.updatedUser',
-                'parentIssue',
-                'relativeIssues.issue.tracker',
-                'subIssues.tracker',
-                ]
-            );
+            return Issue::find($request->get('parent_issue_id'))
+                ->load([
+                    'author',
+                    'assignee',
+                    'tracker',
+                    'histories.detailHistories',
+                    'histories.updatedUser',
+                    'parentIssue',
+                    'relativeIssues.issue.tracker',
+                    'subIssues.tracker',
+                ]);
         }
 
-        return  $issue->load(
-            [
+        return  $issue->load([
             'author',
             'assignee',
             'tracker',
@@ -58,15 +57,13 @@ class IssueController extends Controller
             'parentIssue',
             'relativeIssues.issue.tracker',
             'subIssues.tracker',
-            ]
-        );
+        ]);
     }
 
     public function show($id)
     {
         return Issue::find($id)
-            ->load(
-                [
+            ->load([
                 'author',
                 'assignee',
                 'tracker',
@@ -76,8 +73,7 @@ class IssueController extends Controller
                 'relativeIssues.issue.tracker',
                 'subIssues.tracker',
                 'targetVersion',
-                ]
-            );
+            ]);
     }
 
 
@@ -86,8 +82,7 @@ class IssueController extends Controller
         try {
             DB::beginTransaction();
             $issue = Issue::find($id)
-                ->load(
-                    [
+                ->load([
                     'project.members',
                     'project.targetVersions',
                     'author',
@@ -95,43 +90,40 @@ class IssueController extends Controller
                     'tracker',
                     'histories.detailHistories',
                     'histories.updatedUser',
-                    ]
-                );
+                ]);
 
             $detailHistories = $this->createDetailHistories($issue, $request->all());
 
             if (count($detailHistories)) {
                 $issueHistory = IssueHistory::create(
                     [
-                    'note' => $request->get('note'),
-                    'issue_id' => $issue->id,
-                    'updated_user_id' => auth()->id(),
-                    'updated_date' => Carbon::now()->format('y/m/d'),
+                        'note' => $request->get('note'),
+                        'issue_id' => $issue->id,
+                        'updated_user_id' => auth()->id(),
+                        'updated_date' => Carbon::now()->format('y/m/d'),
                     ]
                 );
                 foreach ($detailHistories as $detailHistory) {
                     IssueHistoryDetail::create(
                         array_merge(
-                            $detailHistory, [
-                            'issue_history_id' => $issueHistory->id
+                            $detailHistory,
+                            [
+                                'issue_history_id' => $issueHistory->id
                             ]
                         )
                     );
                 }
             } else {
                 if ($request->get('note')) {
-                    $issueHistory = IssueHistory::create(
-                        [
+                    $issueHistory = IssueHistory::create([
                         'note' => $request->get('note'),
                         'issue_id' => $issue->id,
                         'updated_user_id' => auth()->id()
-                        ]
-                    );
+                    ]);
                 }
             }
             $issue->update(
-                $request->only(
-                    [
+                $request->only([
                     'name',
                     'tracker_id',
                     'project_id',
@@ -146,13 +138,11 @@ class IssueController extends Controller
                     'progress_percent',
                     'status',
                     'target_version_id',
-                    ]
-                )
+                ])
             );
             DB::commit();
 
-            return $issue->load(
-                [
+            return $issue->load([
                 'author',
                 'assignee',
                 'tracker',
@@ -162,8 +152,7 @@ class IssueController extends Controller
                 'relativeIssues.issue.tracker',
                 'subIssues.tracker',
                 'targetVersion',
-                ]
-            );
+            ]);
         } catch (Exception $e) {
             DB::rollBack();
             throw $e;
@@ -193,7 +182,8 @@ class IssueController extends Controller
             'progress_percent' => array_map(
                 function ($percent) {
                     return $percent . '%';
-                }, range(0, 100, 1)
+                },
+                range(0, 100, 1)
             ),
             'priority' => array_flip(config('constant.issue_priority')),
             'status' => array_flip(config('constant.issue_status')),

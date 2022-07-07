@@ -38,7 +38,7 @@ class RoleSeeder extends Seeder
             ]);
             for ($i = 1; $i <= 4; $i++) {
                 Level::create([
-                    'name' => $role . $i,
+                    'name' => $role->name . '-' . $i,
                     'role_id' => $role->id
                 ]);
             }

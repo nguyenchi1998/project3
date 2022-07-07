@@ -132,7 +132,9 @@ const DetailIssuePage = () => {
                         />
                         <InfoItem
                           label="Estimate time"
-                          value={`${data?.estimate_time}h`}
+                          value={
+                            data?.estimate_time ? `${data?.estimate_time}h` : ''
+                          }
                         />
                       </Stack>
                     </Box>

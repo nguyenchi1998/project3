@@ -18,11 +18,11 @@ class TargetVersionController extends Controller
     {
         $targetVersionData = $request->only(
             [
-            'name',
-            'status',
-            'start_date',
-            'due_date',
-            'project_id',
+                'name',
+                'status',
+                'start_date',
+                'due_date',
+                'project_id',
             ]
         );
 
@@ -61,8 +61,9 @@ class TargetVersionController extends Controller
 
         return response()->json(
             [
-            'message' => 'Error',
-            ], ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
+                'message' => 'Error',
+            ],
+            ResponseAlias::HTTP_INTERNAL_SERVER_ERROR
         );
     }
 }

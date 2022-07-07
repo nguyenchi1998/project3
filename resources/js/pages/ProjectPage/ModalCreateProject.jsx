@@ -14,21 +14,21 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import * as API_CODES from '../../config/API_CODES';
 import { PROJECT_PRIORITIES, PROJECT_TYPES } from '../../config/constants';
 import { KEY_QUERIES } from '../../config/keyQueries';
-import FormTextField from './../../components/FormTextField';
-import groupAPI from './../../services/group';
-import languageAPI from './../../services/language';
-import projectAPI from './../../services/project';
+import FormTextField from '../../components/FormTextField';
+import groupAPI from '../../services/group';
+import languageAPI from '../../services/language';
+import projectAPI from '../../services/project';
 
 const defaultValues = {
   name: '',
-  type: 0,
+  type: 1,
   priority: 1,
   group_id: '',
   start_date: null,
   due_date: null,
   languages: [],
 };
-const ModalProject = ({ handleClose, keyQuery, open }) => {
+const ModalCreateProject = ({ handleClose, keyQuery, open }) => {
   const queryClient = useQueryClient();
   const {
     handleSubmit,
@@ -192,4 +192,4 @@ const ModalProject = ({ handleClose, keyQuery, open }) => {
   );
 };
 
-export default ModalProject;
+export default ModalCreateProject;

@@ -15,8 +15,12 @@ import projectAPI from '../../services/project';
 import trackerAPI from '../../services/tracker';
 import { format, isValid } from 'date-fns';
 import { toast } from 'react-toastify';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { ProjectContext } from '../../layouts/project';
+import { Editor } from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { EditorState, convertToRaw, ContentState } from 'draft-js';
+import htmlToDraft from 'html-to-draftjs';
 
 const defaultValues = {
   name: '',
@@ -32,6 +36,12 @@ const defaultValues = {
 };
 
 const ModalCreateIssue = ({ open, handleClose, debounceFilter }) => {
+  const [editorState] = useState(
+    EditorState.createWithContent(
+      ContentState.createFromBlockArray(htmlToDraft('').contentBlocks),
+    ),
+  );
+
   const projectId = useContext(ProjectContext);
   const queryClient = useQueryClient();
   const { mutate, isLoading } = useMutation(issueAPI.store, {
@@ -110,6 +120,10 @@ const ModalCreateIssue = ({ open, handleClose, debounceFilter }) => {
       isLoading={isMembersLoading || isTrackersLoading}
     >
       <Stack spacing={2}>
+        <Editor
+          editorState={editorState}
+          wrapperStyle={{ border: '1px solid #ADADAD', borderRadius: 4 }}
+        />
         <FormTextField
           control={control}
           name="name"
