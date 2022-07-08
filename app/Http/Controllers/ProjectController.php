@@ -9,7 +9,6 @@ use App\Models\Project;
 use App\Models\Tracker;
 use App\Models\IssueHistory;
 use Illuminate\Http\Request;
-use App\Models\TargetVersion;
 use App\Models\IssueHistoryDetail;
 use App\Http\Requests\Issue\LinkIssueRequest;
 use App\Http\Requests\Project\AddProjectRequest;
@@ -22,15 +21,16 @@ class ProjectController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(Project::class, 'project');
+        $this->middleware('role:cto|division-manager')->only('store');
     }
 
     public function index(Request $request)
     {
-        $filters = $request->only(['type', 'keyword']);
-
+        $filters = $request->only(['type', 'q']);
         $auth = auth()->user();
-        return Project::when($this->canViewAllProjects($auth), function ($query) {
+        return Project::when($auth->hasRole([
+            'cto', 'super-admin', 'division-manager', 'group-manager',
+        ]), function ($query) {
             $query->get();
         }, function ($query) use ($auth) {
             $query->whereHas(
@@ -41,8 +41,8 @@ class ProjectController extends Controller
             );
         })->when(isset($filters['type']),  function ($query) use ($filters) {
             $query->where('type', $filters['type']);
-        })->when(isset($filters['keyword']), function ($query) use ($filters) {
-            $query->where('name', 'like', '%' . $filters['keyword'] . '%');
+        })->when(isset($filters['q']), function ($query) use ($filters) {
+            $query->where('name', 'like', '%' . $filters['q'] . '%');
         })->with([
             'members' => function ($query) {
                 $query->orderBy('role', 'DESC')
@@ -191,10 +191,10 @@ class ProjectController extends Controller
 
     public function getMembers(Project $project, Request $request)
     {
-        $filters = $request->only(['keyword']);
+        $filters = $request->only(['q']);
         $project->load(['members' => function ($query) use ($filters) {
-            $query->when(isset($filters['keyword']), function ($query) use ($filters) {
-                $query->where('name', 'like', '%' . $filters['keyword'] . '%');
+            $query->when(isset($filters['q']), function ($query) use ($filters) {
+                $query->where('name', 'like', '%' . $filters['q'] . '%');
             })->orderBy('role', 'desc')->orderBy('id', 'desc');
         }]);
         if ($request->groupByRole) {
@@ -253,7 +253,7 @@ class ProjectController extends Controller
             ->when(count($filters),   function ($query) use ($filters) {
                 $query->where(
                     function ($query) use ($filters) {
-                        $query->when(isset($filters['keyword']),   function ($query) use ($filters) {
+                        $query->when(isset($filters['q']),   function ($query) use ($filters) {
                             $query->where('name', 'like', '%' . $filters['name'] . '%');
                         })->when(isset($filters['assigneeId']),   function ($query) use ($filters) {
                             $query->where('assign_user_id', $filters['assigneeId']);

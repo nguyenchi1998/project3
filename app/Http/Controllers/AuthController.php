@@ -20,12 +20,12 @@ class AuthController extends Controller
             return response()->json([
                 'access_token' => $request->user()->createToken('')->plainTextToken,
                 'type' => 'Bearer',
-                'user' => $request->user(),
+                'user' => auth()->user()->load('roles', 'permissions'),
             ]);
         }
 
         return response()->json([
-            'message' => 'login failed credentials not found',
+            'message' => 'Login failed! Credentials not found',
         ], ResponseAlias::HTTP_UNAUTHORIZED);
     }
 
@@ -40,6 +40,7 @@ class AuthController extends Controller
 
     public function profile(Request $request)
     {
-        return $request->user();
+        return auth()->user()
+            ->load('roles', 'permissions');
     }
 }

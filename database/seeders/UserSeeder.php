@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Group;
 use App\Models\Language;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class UserSeeder extends Seeder
 {
@@ -16,44 +17,33 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
+        $superAdminRole = Role::findById(config('constant.role.super-admin'));
+        $managerRole = Role::findById(config('constant.role.manager'));
+        $employeeRole = Role::findById(config('constant.role.employee'));
         $languages = Language::all()
             ->pluck('id')
             ->toArray();
         $groupIds = Group::all()
             ->pluck('id')
             ->toArray();
+        $superAdmin =  User::factory(1)->create([
+            'email' => 'super-admin@gmail.com',
+        ])->first();
+        $superAdmin->assignRole($superAdminRole);
 
         User::factory(1)->create([
-            'email' => 'admin@gmail.com',
-            'position' => config('constant.position.director')
-        ]);
-        User::factory(1)->create([
-            'email' => 'marketing@gmail.com',
-            'position' => config('constant.position.marketing')
-        ]);
-        User::factory(1)->create([
-            'email' => 'employee@gmail.com',
-            'position' => config('constant.position.employee')
-        ]);
-        User::factory(1)->create([
             'email' => 'manager@gmail.com',
-            'position' => config('constant.position.manager')
-        ]);
-        User::factory(4)
-            ->create([
-                'position' => config('constant.position.manager'),
-                'group_id' => array_rand($groupIds),
-            ])->each(function ($user) use ($languages) {
-                $user->languages()
-                    ->sync(array_rand($languages, 3));
-            });
+        ])->each(function ($user) use ($managerRole) {
+            $user->assignRole($managerRole);
+        });
+
         User::factory(20)
             ->create([
                 'group_id' => array_rand($groupIds),
-            ])
-            ->each(function ($user) use ($languages) {
+            ])->each(function ($user) use ($languages, $employeeRole) {
                 $user->languages()
                     ->sync(array_rand($languages, 3));
+                $user->assignRole($employeeRole);
             });
     }
 }

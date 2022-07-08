@@ -37,11 +37,49 @@ export const PROJECT_MEMBER_ROLES = [
 ];
 
 export const POSITIONS = [
-  { label: 'Employee', value: 1 },
-  { label: 'Marketing', value: 2 },
-  { label: 'Manager', value: 3 },
-  { label: 'Director', value: 4 },
+  { label: 'CTO', value: 1 },
+  { label: 'Division Manager', value: 2 },
+  { label: 'Group Manager', value: 3 },
+  { label: 'Manager', value: 4 },
+  { label: 'DEV', value: 5 },
+  { label: 'BRSE', value: 6 },
+  { label: 'Part-time', value: 7 },
+  { label: 'QA Manual', value: 8 },
+  { label: 'QA Auto', value: 9 },
+  { label: 'Comtor', value: 10 },
+  { label: 'PQA', value: 11 },
+  { label: 'BO', value: 12 },
+  { label: 'IT-GUY', value: 13 },
+  { label: 'CI', value: 14 },
+  { label: 'Marketing', value: 15 },
+  { label: 'HR', value: 16 },
+  { label: 'Accountant', value: 17 },
+  { label: 'Designer', value: 19 },
 ];
+
+export const ROLES = [
+  { label: 'Super Admin', value: 1 },
+  { label: 'Director', value: 2 },
+  { label: 'Manager', value: 3 },
+  { label: 'Marketing', value: 4 },
+  { label: 'Employee', value: 5 },
+];
+
+export const PERMISSIONS = [
+  { label: 'Project List', value: 1 },
+  { label: 'Project Store', value: 2 },
+  { label: 'Project Update', value: 3 },
+  { label: 'Project Delete', value: 4 },
+
+  { label: 'Employee List', value: 5 },
+  { label: 'Employee Store', value: 6 },
+  { label: 'Employee Update', value: 7 },
+  { label: 'Employee Delete', value: 8 },
+];
+
+export const CREATE_PROJECT_ROLE = [1, 2, 3, 4];
+
+export const CREATE_PROJECT_PERMISSION = [2];
 
 export const ISSUE_STATUS = [
   { label: 'New', value: 1 },

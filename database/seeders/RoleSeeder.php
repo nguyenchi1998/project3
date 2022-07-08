@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
-use App\Models\Level;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+
 
 class RoleSeeder extends Seeder
 {
@@ -15,33 +16,17 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        $roles = [
-            'DEV',
-            'BSE',
-            'Part-time',
-            'QA Manual',
-            'QA Auto',
-            'Comtor',
-            'PQA',
-            'Manager',
-            'BO',
-            'IT-GUY',
-            'CI',
-            'Marketing',
-            'HR',
-            'Accountant',
-            'Designer'
-        ];
-        foreach ($roles as $role) {
-            $role = Role::create([
-                'name' => $role,
+        $permissions = config('constant.permission');
+        $roles = config('constant.role');
+        foreach ($roles as $key => $role) {
+            Role::create([
+                'name' => $key,
             ]);
-            for ($i = 1; $i <= 4; $i++) {
-                Level::create([
-                    'name' => $role->name . '-' . $i,
-                    'role_id' => $role->id
-                ]);
-            }
+        }
+        foreach ($permissions as $key =>  $permission) {
+            Permission::create([
+                'name' => $key,
+            ]);
         }
     }
 }

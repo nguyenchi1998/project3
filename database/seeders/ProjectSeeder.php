@@ -21,8 +21,11 @@ class ProjectSeeder extends Seeder
     {
         $languages = Language::all()->pluck('id')
             ->toArray();
-        $managers = User::where('position', config('constant.position.manager'))->get('id')->pluck('id');
-        $employee = User::where('position', config('constant.position.employee'))->get('id')->pluck('id')->toArray();
+        $managers = User::where('position', config('constant.position.manager'))
+            ->pluck('id');
+        $employee = User::where('position', config('constant.position.dev'))
+            ->pluck('id')
+            ->toArray();
         Project::factory(10)
             ->create()
             ->each(function ($project) use ($languages, $managers, $employee) {
@@ -34,11 +37,11 @@ class ProjectSeeder extends Seeder
                 $project->members()->attach([
                     $managers->random() => [
                         'role' => config('constant.project_member_role.pm')
-                    ]
+                    ],
                 ]);
                 // add member to project
                 $project->members()->attach(
-                    array_rand($employee, random_int(2, 5)),
+                    array_rand($employee, 2),
                     [
                         'role' => config('constant.project_member_role.developer'),
                     ]

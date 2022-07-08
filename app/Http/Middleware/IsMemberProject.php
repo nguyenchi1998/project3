@@ -18,16 +18,18 @@ class IsMemberProject
     public function handle(Request $request, Closure $next)
     {
         $authProjects = auth()->user()->projects;
-        if ($authProjects->contains($request->route()->parameter('id')) //check member belong to project
-            || auth()->user()->position === config('constant.position.director') // auth is director
+        if (
+            $authProjects->contains($request->route()->parameter('id'))
+            || auth()->user()->position === config('constant.role.director')
         ) {
             return $next($request);
         }
 
         return response()->json(
             [
-            'message' => 'Access Denied'
-            ], Response::HTTP_FORBIDDEN
+                'message' => 'Access Denied'
+            ],
+            Response::HTTP_FORBIDDEN
         );
     }
 }

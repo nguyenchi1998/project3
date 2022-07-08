@@ -11,12 +11,10 @@ import { PATH } from '../../routes/paths';
 import NavItem from './NavItem';
 import FilterIcon from '@mui/icons-material/Filter';
 import BarChartIcon from '@mui/icons-material/BarChart';
-import { KEY_QUERIES } from '../../config/keyQueries';
-import { useQuery } from 'react-query';
-import * as authAPI from '../../services/auth';
-import { POSITIONS } from '../../config/constants';
-import { useDispatch } from 'react-redux';
-import { setAuth } from './../../store/slices/user';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import GroupIcon from '@mui/icons-material/Group';
+import { useSelector } from 'react-redux';
+import { selectAuth } from '../../store/slices/user';
 
 const user = {
   avatar: '/static/images/avatars/avatar_6.png',
@@ -35,21 +33,21 @@ const items = [
     icon: FilterIcon,
     title: 'Project',
   },
+  {
+    href: PATH.EMPLOYEE_PAGE,
+    icon: GroupIcon,
+    title: 'Employee',
+  },
+  {
+    href: PATH.ROLE_PAGE,
+    icon: AssignmentIndIcon,
+    title: 'Role',
+  },
 ];
 
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
-  const dispatch = useDispatch();
   const location = useLocation();
-  const { data, isSuccess } = useQuery(
-    [KEY_QUERIES.FETCH_AUTH],
-    authAPI.fetchAuthUser,
-  );
-
-  useEffect(() => {
-    if (isSuccess && data) {
-      dispatch(setAuth(data));
-    }
-  }, [data, isSuccess]);
+  const auth = useSelector(selectAuth);
 
   useEffect(() => {
     if (openMobile && onMobileClose) {
@@ -84,13 +82,13 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
           }}
           to="/app/account"
         />
-        {data && (
+        {auth && (
           <Box>
             <Typography color="textPrimary" variant="h6">
-              {data.name}
+              {auth?.name}
             </Typography>
             <Typography color="textSecondary" variant="body1">
-              {POSITIONS.find(({ value }) => value === data?.position).label}
+              {auth?.position?.name}
             </Typography>
           </Box>
         )}

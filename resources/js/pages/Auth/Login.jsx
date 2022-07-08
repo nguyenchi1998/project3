@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const defaultValues = {
-  email: 'admin@gmail.com',
+  email: 'super-admin@gmail.com',
   password: 'password',
 };
 const schema = joi

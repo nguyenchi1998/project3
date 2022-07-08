@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { Button, Divider, TextField, Typography } from '@mui/material';
@@ -6,11 +6,18 @@ import ModalCreateProject from './ModalCreateProject';
 import useDebounce from './../../hooks/useDebounce';
 import useQueryParam from '../../hooks/useQueryParam';
 import ListProject from './ListProject';
+import { useSelector } from 'react-redux';
+import { selectAuth } from '../../store/slices/user';
+import {
+  CREATE_PROJECT_PERMISSION,
+  CREATE_PROJECT_ROLE,
+} from '../../config/constants';
 
 const ProjectPage = () => {
+  const auth = useSelector(selectAuth);
   const params = useQueryParam();
   const [filter, setFilter] = useState({
-    keyword: '',
+    q: '',
     type: '',
     ...params,
   });
@@ -18,10 +25,17 @@ const ProjectPage = () => {
   const handleCreateClose = useCallback(() => {
     setCreateOpen(false);
   }, []);
-
-  const handleChangeFilter = ({ target: { name, value } }) => {
+  const canCreateProject = useMemo(() => {
+    return (
+      auth?.roles?.some((role) => CREATE_PROJECT_ROLE.includes(role.id)) ||
+      auth?.permissions?.some((permission) =>
+        CREATE_PROJECT_PERMISSION.includes(permission.id),
+      )
+    );
+  }, [auth]);
+  const handleChangeFilter = useCallback(({ target: { name, value } }) => {
     setFilter({ [name]: value });
-  };
+  }, []);
   const debounceFilter = useDebounce(filter, 500, true);
 
   return (
@@ -34,21 +48,23 @@ const ProjectPage = () => {
             </Typography>
           </Box>
           <Box display="flex">
-            <Button
-              onClick={() => {
-                setCreateOpen(true);
-              }}
-              variant="contained"
-            >
-              <Box>Create</Box>
-            </Button>
+            {canCreateProject && (
+              <Button
+                onClick={() => {
+                  setCreateOpen(true);
+                }}
+                variant="contained"
+              >
+                <Box>Create</Box>
+              </Button>
+            )}
             <Box ml={2}>
               <TextField
                 variant="outlined"
                 placeholder="Search..."
                 onChange={handleChangeFilter}
-                value={filter.keyword}
-                name="keyword"
+                value={filter.q}
+                name="q"
                 size="small"
               />
             </Box>

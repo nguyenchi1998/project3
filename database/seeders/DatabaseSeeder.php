@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->resetDatabase();
+        // $this->resetDatabase();
         $this->call(TrackerSeeder::class);
         $this->call(RoleSeeder::class);
         $this->call(PositionSeeder::class);

@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Response;
+use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
@@ -42,14 +43,26 @@ class Handler extends ExceptionHandler
                 //
             }
         );
-
         $this->renderable(
             function (NotFoundHttpException $e) {
                 return response()->json(
                     [
-                    'error_code' => 1,
-                    'message' => 'resource not found'
-                    ], ResponseAlias::HTTP_NOT_FOUND
+                        'error_code' => 1,
+                        'message' => 'resource not found'
+                    ],
+                    ResponseAlias::HTTP_NOT_FOUND
+                );
+            },
+        );
+        $this->renderable(
+
+            function (UnauthorizedException $e) {
+                return response()->json(
+                    [
+                        'error_code' => 1,
+                        'message' => 'You do not have the required authorization'
+                    ],
+                    ResponseAlias::HTTP_FORBIDDEN
                 );
             }
         );

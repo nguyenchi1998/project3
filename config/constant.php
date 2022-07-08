@@ -17,12 +17,27 @@ return [
         'brse' => 4,
         'pm' => 5,
     ],
-    'position' => [
-        'employee' => 1,
-        'marketing' => 2,
+    'role' => [
+        'super-admin' => 1,
+        'director' => 2,
         'manager' => 3,
-        'director' => 4,
+        'marketing' => 4,
+        'employee' => 5,
     ],
+    'permission' => [
+        'project-list' => 1,
+        'project-store' => 2,
+        'project-update' => 3,
+        'project-delete' => 4,
+
+        'employee-list' => 5,
+        'employee-store' => 6,
+        'employee-update' => 7,
+        'employee-delete' => 8,
+    ],
+    'create_project_role' => [1, 2, 3, 4],
+    'create_project_permission' => [2],
+    'position' => [],
     'project_status' => [
         'new' => 1,
         'progress' => 2,

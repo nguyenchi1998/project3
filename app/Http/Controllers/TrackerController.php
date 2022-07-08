@@ -11,15 +11,15 @@ class TrackerController extends Controller
     public function index(Request $request)
     {
         $filters = $request->only([
-            'keyword',
+            'q',
             'project_id',
         ]);
 
         return Tracker::when(isset($filters['project_id']),  function ($query) use ($filters) {
             $query->where('project_id', $filters['project_id'])
                 ->orWhere('project_id', null);
-        })->when(isset($filters['keyword']),  function ($query) use ($filters) {
-            $query->where('name', 'like', '%' . $filters['keyword'] . '%');
+        })->when(isset($filters['q']),  function ($query) use ($filters) {
+            $query->where('name', 'like', '%' . $filters['q'] . '%');
         })->get();
     }
 

@@ -1,0 +1,81 @@
+import React, { useCallback, useState } from 'react';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import useDebounce from '../../hooks/useDebounce';
+import ModalEmployeeProject from './ModalEmployeeProject';
+import ListMember from './ListEmployee';
+import useQueryParam from '../../hooks/useQueryParam';
+
+const EmployeePage = () => {
+  const params = useQueryParam();
+  const [filter, setFilter] = useState({
+    q: '',
+    ...params,
+  });
+  const [action, setAction] = useState(null);
+  const [selectedMember, setSelectedMember] = useState(null);
+  const handleMemberClose = useCallback(() => {
+    setSelectedMember(null);
+    setAction(null);
+  }, []);
+  const handleChangeFilter = ({ target: { name, value } }) => {
+    setFilter({ [name]: value });
+  };
+  const debounceFilter = useDebounce(filter, 500, true);
+
+  const handleOpenEdit = useCallback((data) => {
+    setSelectedMember(data);
+    setAction('edit');
+  }, []);
+
+  return (
+    <Container maxWidth={false}>
+      <Box py={2}>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Box>
+            <Typography variant="h5">Employees</Typography>
+          </Box>
+          <Box display="flex">
+            <Button
+              onClick={() => {
+                setAction('create');
+                setSelectedMember(null);
+              }}
+              variant="contained"
+            >
+              New Employee
+            </Button>
+            <Box ml={2}>
+              <TextField
+                variant="outlined"
+                placeholder="Search..."
+                onChange={handleChangeFilter}
+                value={filter.q}
+                name="q"
+                size="small"
+              />
+            </Box>
+          </Box>
+        </Box>
+        <Divider sx={{ mt: 2, mb: 1 }} />
+        <ListMember
+          debounceFilter={debounceFilter}
+          handleOpenEdit={handleOpenEdit}
+        />
+        {!!action && (
+          <ModalEmployeeProject
+            member={selectedMember}
+            handleClose={handleMemberClose}
+            keyQuery={debounceFilter}
+            action={action}
+          />
+        )}
+      </Box>
+    </Container>
+  );
+};
+export default EmployeePage;

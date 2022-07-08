@@ -1,10 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\IssueController;
-use App\Http\Controllers\IssueStatusController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TargetVersionController;
@@ -30,8 +29,8 @@ Route::group(['prefix' => 'auth'], function () {
     Route::get('profile', [AuthController::class, 'profile']);
 });
 Route::group(['middleware' => ['auth:sanctum',]], function () {
-    Route::group(['middleware' => 'access:director'], function () {
-        Route::group(['prefix' => 'projects/{project}/', 'middleware' => ['is_member_project']], function () {
+    Route::group(['middleware' => ''], function () {
+        Route::group(['prefix' => 'projects/{project}/', 'middleware' => []], function () {
             Route::get('tracker-issues-statistic', [ProjectController::class, 'trackerIssuesStatistic']);
             Route::get('priority-issues-statistic', [ProjectController::class, 'priorityIssuesStatistic']);
             Route::get('members', [ProjectController::class, 'getMembers']);
@@ -53,6 +52,9 @@ Route::group(['middleware' => ['auth:sanctum',]], function () {
         Route::resource('target-versions', TargetVersionController::class);
     });
     Route::resource('projects', ProjectController::class);
+    Route::resource('employees', UserController::class);
+    Route::resource('roles', RoleController::class)->only(['index', 'update']);
+    Route::get('/permissions', [RoleController::class, 'getAllPermissions']);
 });
-Route::resource('employees', EmployeeController::class);
-Route::get('employees/{id}/projects', [EmployeeController::class, 'getProjects']);
+Route::resource('employees', UserController::class);
+Route::get('employees/{id}/projects', [UserController::class, 'getProjects']);
