@@ -26,7 +26,7 @@ import { makeStyles } from '@mui/styles';
 import { colors, Link, Typography } from '@mui/material';
 import { ProjectContext } from '../../../layouts/project';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   textLink: {
     color: colors.blue[500],
     '&:hover': {
@@ -35,16 +35,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ListIssues = ({
-  debounceFilter,
-  totalFilter,
-  onChangeTotalFilter,
-  filterOpen,
-  handleToggleFilter,
-}) => {
+const ListIssues = ({ debounceFilter }) => {
   const projectId = useContext(ProjectContext);
   const classes = useStyles();
-  const theme = useTheme();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const handleChangePage = useCallback((_event, newPage) => {
@@ -65,7 +58,7 @@ const ListIssues = ({
     return <ListSkeleton columnCount={8} />;
   }
   return (
-    <Box flexGrow={1}>
+    <Box>
       {data.length ? (
         <Box>
           <TablePagination

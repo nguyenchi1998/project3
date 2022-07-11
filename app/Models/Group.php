@@ -13,4 +13,9 @@ class Group extends Model
     {
         return $this->belongsTo(Division::class);
     }
+
+    public function manager()
+    {
+        return $this->belongsTo(User::class, 'group_manager_id');
+    }
 }

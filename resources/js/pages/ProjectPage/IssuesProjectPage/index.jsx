@@ -88,13 +88,9 @@ const IssuesProjectPage = () => {
           </Box>
           <Divider sx={{ mt: 2, mb: 1 }} />
           <Box display="flex" justifyContent="space-between">
-            <ListIssues
-              debounceFilter={debounceFilter}
-              totalFilter={totalFilter}
-              onChangeTotalFilter={onChangeTotalFilter}
-              filterOpen={filterOpen}
-              handleToggleFilter={handleToggleFilter}
-            />
+            <Box flexGrow={1}>
+              <ListIssues debounceFilter={debounceFilter} />
+            </Box>
             <Filter
               filterOpen={filterOpen}
               handleToggleFilter={handleToggleFilter}

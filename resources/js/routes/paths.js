@@ -14,6 +14,7 @@ const TARGET_VERSION_PAGE = 'TARGET_VERSION';
 const PROJECT_POSITION_PAGE = 'PROJECT_POSITION';
 const SETTING_PAGE = 'SETTING_PAGE';
 const ROLE_PAGE = 'ROLE_PAGE';
+const POSITION_PAGE = 'POSITION_PAGE';
 
 export const AUTH_PATH = {
   [SIGN_IN_PAGE]: '/login',
@@ -31,6 +32,7 @@ export const PATH = {
   [EMPLOYEE_PAGE]: `/employees`,
   [PROJECT_PAGE]: `/projects`,
   [ROLE_PAGE]: `/roles`,
+  [POSITION_PAGE]: `/positions`,
 };
 
 export const PROJECT_PATH = {

@@ -21,25 +21,14 @@ class ProjectController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('role:cto|division-manager')->only('store');
+        $this->middleware('role:super_admin|director|manager|')->only('store');
     }
 
     public function index(Request $request)
     {
         $filters = $request->only(['type', 'q']);
-        $auth = auth()->user();
-        return Project::when($auth->hasRole([
-            'cto', 'super-admin', 'division-manager', 'group-manager',
-        ]), function ($query) {
-            $query->get();
-        }, function ($query) use ($auth) {
-            $query->whereHas(
-                'members',
-                function ($query) use ($auth) {
-                    $query->where('users.id', $auth->id);
-                }
-            );
-        })->when(isset($filters['type']),  function ($query) use ($filters) {
+
+        return Project::when(isset($filters['type']), function ($query) use ($filters) {
             $query->where('type', $filters['type']);
         })->when(isset($filters['q']), function ($query) use ($filters) {
             $query->where('name', 'like', '%' . $filters['q'] . '%');
@@ -52,11 +41,6 @@ class ProjectController extends Controller
             'targetVersions',
             'currentTargetVersion'
         ])->orderBy('id', 'desc')->get();
-    }
-
-    private function canViewAllProjects($auth)
-    {
-        return $auth->position !== config('constant.position.employee');
     }
 
     public function store(ProjectStoreRequest $request)
@@ -250,7 +234,7 @@ class ProjectController extends Controller
                     $query->whereNotIn('id', $ignoreIds);
                 }
             )
-            ->when(count($filters),   function ($query) use ($filters) {
+            ->when(count($filters), function ($query) use ($filters) {
                 $query->where(
                     function ($query) use ($filters) {
                         $query->when(isset($filters['q']),   function ($query) use ($filters) {

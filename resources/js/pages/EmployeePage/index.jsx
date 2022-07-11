@@ -3,32 +3,41 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import useDebounce from '../../hooks/useDebounce';
-import ModalEmployeeProject from './ModalEmployeeProject';
-import ListMember from './ListEmployee';
+import ModalEmployee from './ModalEmployee';
+import ListEmployee from './ListEmployee';
 import useQueryParam from '../../hooks/useQueryParam';
+import Filter from './Filter';
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
+import _isEmpty from 'lodash/isEmpty';
 
 const EmployeePage = () => {
   const params = useQueryParam();
-  const [filter, setFilter] = useState({
+  const [filterOpen, setFilterOpen] = useState(!_isEmpty(params));
+  const [totalFilter, setTotalFilter] = useState({
     q: '',
+    positionId: '',
     ...params,
   });
   const [action, setAction] = useState(null);
-  const [selectedMember, setSelectedMember] = useState(null);
-  const handleMemberClose = useCallback(() => {
-    setSelectedMember(null);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const handleToggleFilter = () => {
+    setFilterOpen(!filterOpen);
+  };
+  const onChangeTotalFilter = (filter) => {
+    const newFilter = { ...totalFilter, ...filter };
+    setTotalFilter(newFilter);
+  };
+  const handleEmployeeClose = useCallback(() => {
+    setSelectedEmployee(null);
     setAction(null);
   }, []);
-  const handleChangeFilter = ({ target: { name, value } }) => {
-    setFilter({ [name]: value });
-  };
-  const debounceFilter = useDebounce(filter, 500, true);
+  const debounceFilter = useDebounce(totalFilter, 500, true);
 
   const handleOpenEdit = useCallback((data) => {
-    setSelectedMember(data);
+    setSelectedEmployee(data);
     setAction('edit');
   }, []);
 
@@ -43,33 +52,43 @@ const EmployeePage = () => {
             <Button
               onClick={() => {
                 setAction('create');
-                setSelectedMember(null);
+                setSelectedEmployee(null);
               }}
               variant="contained"
             >
               New Employee
             </Button>
             <Box ml={2}>
-              <TextField
-                variant="outlined"
-                placeholder="Search..."
-                onChange={handleChangeFilter}
-                value={filter.q}
-                name="q"
-                size="small"
-              />
+              <Button onClick={handleToggleFilter} variant="contained">
+                <Typography>Filter</Typography>
+                {filterOpen ? (
+                  <KeyboardDoubleArrowRightIcon />
+                ) : (
+                  <KeyboardDoubleArrowLeftIcon />
+                )}
+              </Button>
             </Box>
           </Box>
         </Box>
         <Divider sx={{ mt: 2, mb: 1 }} />
-        <ListMember
-          debounceFilter={debounceFilter}
-          handleOpenEdit={handleOpenEdit}
-        />
+        <Box display="flex" justifyContent="space-between">
+          <Box flexGrow={1}>
+            <ListEmployee
+              debounceFilter={debounceFilter}
+              handleOpenEdit={handleOpenEdit}
+            />
+          </Box>
+          <Filter
+            filterOpen={filterOpen}
+            handleToggleFilter={handleToggleFilter}
+            totalFilter={totalFilter}
+            onChangeTotalFilter={onChangeTotalFilter}
+          />
+        </Box>
         {!!action && (
-          <ModalEmployeeProject
-            member={selectedMember}
-            handleClose={handleMemberClose}
+          <ModalEmployee
+            employee={selectedEmployee}
+            handleClose={handleEmployeeClose}
             keyQuery={debounceFilter}
             action={action}
           />

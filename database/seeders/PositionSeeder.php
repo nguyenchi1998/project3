@@ -15,28 +15,10 @@ class PositionSeeder extends Seeder
      */
     public function run()
     {
-        $positions = [
-            'Director',
-            'Division Manager',
-            'Group Manager',
-            'DEV',
-            'BRSE',
-            'Part Time',
-            'QA Manual',
-            'QA Auto',
-            'Comtor',
-            'PQA',
-            'BO',
-            'IT-Guy',
-            'CI',
-            'Marketing',
-            'HR',
-            'Accountant',
-            'Designer',
-        ];
-        foreach ($positions as $position) {
+        $positions = config('constant.position');
+        foreach ($positions as $key => $value) {
             $position = Position::create([
-                "name" => $position
+                "name" => ucwords(str_replace('_', ' ', $key)),
             ]);
             for ($i = 1; $i <= 4; $i++) {
                 Level::create([

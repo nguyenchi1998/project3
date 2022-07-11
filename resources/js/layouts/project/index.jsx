@@ -18,7 +18,7 @@ import { KEY_QUERIES } from '../../config/keyQueries';
 import { useIsFetching } from 'react-query';
 import LoadingIndicator from './../../components/LoadingIndicator';
 
-const DashboardLayoutRoot = styled('div')(({ theme }) => ({
+const ProjectLayoutRoot = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
   display: 'flex',
   height: '100%',
@@ -26,7 +26,7 @@ const DashboardLayoutRoot = styled('div')(({ theme }) => ({
   width: '100%',
 }));
 
-const DashboardLayoutWrapper = styled('div')(({ theme }) => ({
+const ProjectLayoutWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   flex: '1 1 auto',
   overflow: 'hidden',
@@ -36,13 +36,13 @@ const DashboardLayoutWrapper = styled('div')(({ theme }) => ({
   },
 }));
 
-const DashboardLayoutContainer = styled('div')({
+const ProjectLayoutContainer = styled('div')({
   display: 'flex',
   flex: '1 1 auto',
   overflow: 'hidden',
 });
 
-const DashboardLayoutContent = styled('div')({
+const ProjectLayoutContent = styled('div')({
   flex: '1 1 auto',
   height: '100%',
   overflow: 'auto',
@@ -58,16 +58,16 @@ const ProjectLayout = () => {
   const isFetchingAuth = useIsFetching([KEY_QUERIES.FETCH_AUTH]);
 
   return (
-    <DashboardLayoutRoot>
+    <ProjectLayoutRoot>
       <ProjectNavbar onMobileNavOpen={() => setMobileNavOpen(true)} />
       <ProjectSidebar
         projectId={projectId}
         onMobileClose={() => setMobileNavOpen(false)}
         openMobile={isMobileNavOpen}
       />
-      <DashboardLayoutWrapper>
-        <DashboardLayoutContainer>
-          <DashboardLayoutContent>
+      <ProjectLayoutWrapper>
+        <ProjectLayoutContainer>
+          <ProjectLayoutContent>
             <ProjectContext.Provider value={projectId}>
               <AuthContext.Provider value={isFetchingAuth}>
                 <Switch>
@@ -121,10 +121,10 @@ const ProjectLayout = () => {
                 </Switch>
               </AuthContext.Provider>
             </ProjectContext.Provider>
-          </DashboardLayoutContent>
-        </DashboardLayoutContainer>
-      </DashboardLayoutWrapper>
-    </DashboardLayoutRoot>
+          </ProjectLayoutContent>
+        </ProjectLayoutContainer>
+      </ProjectLayoutWrapper>
+    </ProjectLayoutRoot>
   );
 };
 

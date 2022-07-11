@@ -66,7 +66,7 @@ ReactDOM.render(
                     <PrivateRoute path={PATH.HOME_PAGE}>
                       <ManagerLayout />
                     </PrivateRoute>
-                    <Route path="*">
+                    <Route>
                       <NotFoundPage />
                     </Route>
                   </Switch>

@@ -9,7 +9,7 @@ const NotFoundPage = () => {
   return (
     <>
       <Helmet>
-        <title>404 | Material Kit</title>
+        <title>404 | Data Warehouse</title>
       </Helmet>
       <Box
         sx={{
@@ -21,10 +21,10 @@ const NotFoundPage = () => {
         }}
       >
         <Container maxWidth="md">
-          <Typography align="center" color="textPrimary" variant="h5">
+          <Typography align="center" color="textPrimary" variant="h4">
             404: The page you are looking for isn’t here
           </Typography>
-          <Typography align="center" color="textPrimary" variant="subtitle2">
+          <Typography align="center" color="textPrimary" variant="subtitle1">
             You either tried some shady route or you came here by mistake.
             Whichever it is, try using the navigation
           </Typography>

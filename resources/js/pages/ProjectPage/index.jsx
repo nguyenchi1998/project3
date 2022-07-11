@@ -10,8 +10,9 @@ import { useSelector } from 'react-redux';
 import { selectAuth } from '../../store/slices/user';
 import {
   CREATE_PROJECT_PERMISSION,
-  CREATE_PROJECT_ROLE,
+  MANAGER_ROLE,
 } from '../../config/constants';
+import useAuthRole from '../../hooks/useAuthRole';
 
 const ProjectPage = () => {
   const auth = useSelector(selectAuth);
@@ -25,14 +26,10 @@ const ProjectPage = () => {
   const handleCreateClose = useCallback(() => {
     setCreateOpen(false);
   }, []);
-  const canCreateProject = useMemo(() => {
-    return (
-      auth?.roles?.some((role) => CREATE_PROJECT_ROLE.includes(role.id)) ||
-      auth?.permissions?.some((permission) =>
-        CREATE_PROJECT_PERMISSION.includes(permission.id),
-      )
-    );
-  }, [auth]);
+  const canCreateProject = useAuthRole({
+    roles: MANAGER_ROLE,
+    permissions: CREATE_PROJECT_PERMISSION,
+  });
   const handleChangeFilter = useCallback(({ target: { name, value } }) => {
     setFilter({ [name]: value });
   }, []);

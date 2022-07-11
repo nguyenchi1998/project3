@@ -9,7 +9,7 @@ class GroupController extends Controller
 {
     public function index()
     {
-        return Group::all()->load('division');
+        return Group::all()->load('division', 'manager');
     }
 
     public function store(Request $request)

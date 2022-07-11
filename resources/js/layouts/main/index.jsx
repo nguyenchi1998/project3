@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import DashboardSidebar from './SideBar';
@@ -15,6 +15,9 @@ import { useDispatch } from 'react-redux';
 import { setAuth } from './../../store/slices/user';
 import LoadingIndicator from './../../components/LoadingIndicator';
 import { Box } from '@mui/material';
+import PositionPage from '../../pages/PositionPage';
+import RoleAllowRoute from '../../components/RoleAllowRoute';
+import { MANAGER_ROLE } from '../../config/constants';
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -78,9 +81,12 @@ const ManagerLayout = () => {
         <DashboardLayoutContainer>
           <DashboardLayoutContent>
             <Switch>
-              <Route path={PATH.ROLE_PAGE} exact>
-                <RolePage />
+              <Route path={PATH.POSITION_PAGE} exact>
+                <PositionPage />
               </Route>
+              <RoleAllowRoute path={PATH.ROLE_PAGE} exact roles={MANAGER_ROLE}>
+                <RolePage />
+              </RoleAllowRoute>
               <Route path={PATH.EMPLOYEE_PAGE} exact>
                 <EmployeePage />
               </Route>

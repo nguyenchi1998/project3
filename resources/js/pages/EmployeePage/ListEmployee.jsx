@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { KEY_QUERIES } from '../../config/keyQueries';
 import userAPI from '../../services/user';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import TableSkeleton from '../../components/TableSkeleton';
 import Box from '@mui/material/Box';
@@ -17,17 +17,22 @@ import TableRow from '@mui/material/TableRow';
 import TableContainer from '@mui/material/TableContainer';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { format } from 'date-fns';
-import { PROJECT_MEMBER_ROLES } from '../../config/constants';
 import ConfirmDialog from '../../components/ConfirmDialog';
 import { ProjectContext } from '../../layouts/project';
 import { Link } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { PATH, PROJECT_PATH } from '../../routes/paths';
-
-const headers = ['Name', 'Email', 'Role', 'Action'];
+import {
+  ACTION_EMPLOYEE_PERMISSION,
+  SUPER_ADMIN_ROLE,
+} from '../../config/constants';
+import useAuthRole from '../../hooks/useAuthRole';
 
 const ListEmployee = ({ debounceFilter, handleOpenEdit }) => {
+  const canActionEmployee = useAuthRole({
+    permissions: ACTION_EMPLOYEE_PERMISSION,
+  });
+  const headers = ['Name', 'Email', 'Position', 'Role'];
   const projectId = useContext(ProjectContext);
   const queryClient = useQueryClient();
   const [deleteId, setDeleteId] = useState(null);
@@ -49,10 +54,10 @@ const ListEmployee = ({ debounceFilter, handleOpenEdit }) => {
   const { mutate: deleteMutate, isLoading: isDestroyPending } = useMutation(
     userAPI.destroy,
     {
-      onSuccess: (response) => {
+      onSuccess: () => {
         queryClient.setQueryData(
           [KEY_QUERIES.FETCH_EMPLOYEE, { ...debounceFilter }],
-          () => response,
+          (old) => old.filter((e) => e.id !== deleteId),
         );
         toast.success('Employee deleted successfully');
       },
@@ -67,6 +72,10 @@ const ListEmployee = ({ debounceFilter, handleOpenEdit }) => {
   const handleRemoveEmployee = () => {
     deleteMutate(deleteId);
   };
+  const isSuperAdminRole = useCallback(
+    (roles) => roles.map((r) => r.id).includes(SUPER_ADMIN_ROLE),
+    [],
+  );
   const { data, isLoading, isError, error } = useQuery(
     [KEY_QUERIES.FETCH_EMPLOYEE, { ...debounceFilter }],
     () => userAPI.all({ ...debounceFilter }),
@@ -94,44 +103,57 @@ const ListEmployee = ({ debounceFilter, handleOpenEdit }) => {
             <Table>
               <TableHead>
                 <TableRow>
-                  {headers.map((header) => (
-                    <TableCell key={header}>{header}</TableCell>
-                  ))}
+                  {[...headers, ...(canActionEmployee ? ['Action'] : [])].map(
+                    (header) => (
+                      <TableCell key={header}>{header}</TableCell>
+                    ),
+                  )}
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data.map((employee) => (
-                  <TableRow key={employee.id}>
-                    <TableCell>
-                      <Link
-                        component={NavLink}
-                        to={`${PATH.PROJECT_PAGE}/${projectId}/${PROJECT_PATH.MEMBER}/${employee.id}`}
-                        underline="hover"
-                      >
-                        {employee.name}
-                      </Link>
-                    </TableCell>
-                    <TableCell>{employee.email}</TableCell>
-                    <TableCell>
-                      {employee?.roles.map((role) => role.name).join(',')}
-                    </TableCell>
-                    <TableCell width={100}>
-                      <Box display="flex">
-                        <IconButton onClick={() => handleOpenEdit(employee)}>
-                          <EditIcon />
-                        </IconButton>
-                        <IconButton
-                          disabled={isDestroyPending}
-                          onClick={() =>
-                            handleConfirmDeleteEmployee(employee.id)
-                          }
+                {data
+                  .slice(rowsPerPage * page, (page + 1) * rowsPerPage)
+                  .map((employee) => (
+                    <TableRow key={employee.id}>
+                      <TableCell>
+                        <Link
+                          component={NavLink}
+                          to={`${PATH.PROJECT_PAGE}/${projectId}/${PROJECT_PATH.MEMBER}/${employee.id}`}
+                          underline="hover"
                         >
-                          <DeleteIcon color="error" />
-                        </IconButton>
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                          {employee.name}
+                        </Link>
+                      </TableCell>
+                      <TableCell>{employee.email}</TableCell>
+                      <TableCell>{employee?.position?.name}</TableCell>
+                      <TableCell sx={{ textTransform: 'capitalize' }}>
+                        {employee.roles
+                          .map((role) => role.name.replace('_', ' '))
+                          .join(',')}
+                      </TableCell>
+                      {canActionEmployee && (
+                        <TableCell width={100}>
+                          <Box display="flex">
+                            <IconButton
+                              onClick={() => handleOpenEdit(employee)}
+                            >
+                              <EditIcon />
+                            </IconButton>
+                            {!isSuperAdminRole(employee.roles) && (
+                              <IconButton
+                                disabled={isDestroyPending}
+                                onClick={() =>
+                                  handleConfirmDeleteEmployee(employee.id)
+                                }
+                              >
+                                <DeleteIcon color="error" />
+                              </IconButton>
+                            )}
+                          </Box>
+                        </TableCell>
+                      )}
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>

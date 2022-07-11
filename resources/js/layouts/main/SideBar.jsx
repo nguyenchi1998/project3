@@ -15,6 +15,8 @@ import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import GroupIcon from '@mui/icons-material/Group';
 import { useSelector } from 'react-redux';
 import { selectAuth } from '../../store/slices/user';
+import useAuthRole from '../../hooks/useAuthRole';
+import { MANAGER_ROLE } from '../../config/constants';
 
 const user = {
   avatar: '/static/images/avatars/avatar_6.png',
@@ -22,30 +24,41 @@ const user = {
   name: 'Katarina Smith',
 };
 
-const items = [
-  {
-    href: PATH.HOME_PAGE,
-    icon: BarChartIcon,
-    title: 'Dashboard',
-  },
-  {
-    href: PATH.PROJECT_PAGE,
-    icon: FilterIcon,
-    title: 'Project',
-  },
-  {
-    href: PATH.EMPLOYEE_PAGE,
-    icon: GroupIcon,
-    title: 'Employee',
-  },
-  {
-    href: PATH.ROLE_PAGE,
-    icon: AssignmentIndIcon,
-    title: 'Role',
-  },
-];
-
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
+  const isManager = useAuthRole({ roles: MANAGER_ROLE });
+  const items = [
+    {
+      href: PATH.HOME_PAGE,
+      icon: BarChartIcon,
+      title: 'Dashboard',
+      show: true,
+    },
+    {
+      href: PATH.PROJECT_PAGE,
+      icon: FilterIcon,
+      title: 'Project',
+      show: true,
+    },
+    {
+      href: PATH.EMPLOYEE_PAGE,
+      icon: GroupIcon,
+      title: 'Employee',
+      show: true,
+    },
+    {
+      href: PATH.ROLE_PAGE,
+      icon: AssignmentIndIcon,
+      title: 'Role',
+      show: isManager,
+    },
+    {
+      href: PATH.POSITION_PAGE,
+      icon: AssignmentIndIcon,
+      title: 'Position',
+      show: true,
+    },
+  ];
+
   const location = useLocation();
   const auth = useSelector(selectAuth);
 
@@ -87,22 +100,39 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
             <Typography color="textPrimary" variant="h6">
               {auth?.name}
             </Typography>
-            <Typography color="textSecondary" variant="body1">
-              {auth?.position?.name}
-            </Typography>
+            {auth?.group && (
+              <Typography
+                color="textSecondary"
+                variant="body1"
+                textAlign="center"
+              >
+                {auth.group.division.name} - {auth.group.name}
+              </Typography>
+            )}
+            {auth?.position && (
+              <Typography
+                color="textSecondary"
+                variant="body1"
+                textAlign="center"
+              >
+                {auth?.position?.name}
+              </Typography>
+            )}
           </Box>
         )}
       </Box>
       <Divider />
       <List>
-        {items.map((item) => (
-          <NavItem
-            href={item.href}
-            key={item.title}
-            title={item.title}
-            icon={item.icon}
-          />
-        ))}
+        {items
+          .filter(({ show }) => show)
+          .map((item) => (
+            <NavItem
+              href={item.href}
+              key={item.title}
+              title={item.title}
+              icon={item.icon}
+            />
+          ))}
       </List>
       <Box sx={{ flexGrow: 1 }} />
     </Box>

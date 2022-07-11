@@ -14,7 +14,7 @@ import TableRow from '@mui/material/TableRow';
 import TableContainer from '@mui/material/TableContainer';
 import EditIcon from '@mui/icons-material/Edit';
 
-const headers = ['Name', 'Permission', 'Action'];
+const headers = ['Name', 'Permissions', 'Action'];
 
 const ListRole = ({ handleOpenEdit }) => {
   const { data, isLoading, isError, error } = useQuery(

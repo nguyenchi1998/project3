@@ -28,5 +28,7 @@ class RoleSeeder extends Seeder
                 'name' => $key,
             ]);
         }
+        $superAdmin = Role::findById(config('constant.role.super_admin'));
+        $superAdmin->syncPermissions(array_values(config('constant.permission')));
     }
 }

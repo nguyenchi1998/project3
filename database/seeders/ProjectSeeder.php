@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Language;
+use App\Models\Position;
 use App\Models\Project;
 use App\Models\TargetVersion;
 use App\Models\User;
@@ -21,9 +22,15 @@ class ProjectSeeder extends Seeder
     {
         $languages = Language::all()->pluck('id')
             ->toArray();
-        $managers = User::where('position', config('constant.position.manager'))
-            ->pluck('id');
-        $employee = User::where('position', config('constant.position.dev'))
+        $managers = User::whereHas('position', function ($query) {
+            $query->whereIN('id', [
+                config('constant.position.division_manager'),
+                config('constant.position.group_manager')
+            ]);
+        })->pluck('id');
+        $employee = User::whereHas('position', function ($query) {
+            $query->where('id', config('constant.position.dev'));
+        })
             ->pluck('id')
             ->toArray();
         Project::factory(10)

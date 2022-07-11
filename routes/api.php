@@ -5,6 +5,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\PositionController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TargetVersionController;
 use App\Http\Controllers\TrackerController;
@@ -29,8 +30,8 @@ Route::group(['prefix' => 'auth'], function () {
     Route::get('profile', [AuthController::class, 'profile']);
 });
 Route::group(['middleware' => ['auth:sanctum',]], function () {
-    Route::group(['middleware' => ''], function () {
-        Route::group(['prefix' => 'projects/{project}/', 'middleware' => []], function () {
+    Route::group([], function () {
+        Route::group(['prefix' => 'projects/{project}/',], function () {
             Route::get('tracker-issues-statistic', [ProjectController::class, 'trackerIssuesStatistic']);
             Route::get('priority-issues-statistic', [ProjectController::class, 'priorityIssuesStatistic']);
             Route::get('members', [ProjectController::class, 'getMembers']);
@@ -52,8 +53,8 @@ Route::group(['middleware' => ['auth:sanctum',]], function () {
         Route::resource('target-versions', TargetVersionController::class);
     });
     Route::resource('projects', ProjectController::class);
-    Route::resource('employees', UserController::class);
     Route::resource('roles', RoleController::class)->only(['index', 'update']);
+    Route::resource('positions', PositionController::class);
     Route::get('/permissions', [RoleController::class, 'getAllPermissions']);
 });
 Route::resource('employees', UserController::class);

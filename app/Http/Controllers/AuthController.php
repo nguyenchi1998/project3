@@ -20,7 +20,7 @@ class AuthController extends Controller
             return response()->json([
                 'access_token' => $request->user()->createToken('')->plainTextToken,
                 'type' => 'Bearer',
-                'user' => auth()->user()->load('roles', 'permissions'),
+                'user' => auth()->user()->load('roles.permissions', 'permissions', 'position', 'group.division'),
             ]);
         }
 
@@ -41,6 +41,6 @@ class AuthController extends Controller
     public function profile(Request $request)
     {
         return auth()->user()
-            ->load('roles', 'permissions');
+            ->load('roles.permissions', 'permissions', 'position', 'group.division');
     }
 }

@@ -26,7 +26,7 @@ class DivisionSeeder extends Seeder
 
             for ($i = 1; $i <= 3; $i++) {
                 Group::create([
-                    'name' => 'Group' . $i,
+                    'name' => 'Group ' . $i,
                     'division_id' => $division->id
                 ]);
             }

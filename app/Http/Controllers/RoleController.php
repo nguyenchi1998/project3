@@ -15,7 +15,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return Role::where('name', '!=', 'super-admin')
+        return Role::where('name', '!=', 'super_admin')
             ->get()
             ->load('permissions');
     }
