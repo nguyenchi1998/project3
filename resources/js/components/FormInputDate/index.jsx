@@ -20,6 +20,7 @@ const FormInputDate = ({
         control={control}
         render={({ field: { onChange, value } }) => (
           <DesktopDatePicker
+            clearable
             maxDate={maxDate}
             minDate={minDate}
             onChange={(e) => onChange(e)}

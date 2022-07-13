@@ -128,17 +128,17 @@ const ModalEmployeeProject = ({ handleClose, employee, keyQuery, action }) => {
     >
       <Stack spacing={2}>
         <FormTextField
-          control={control}
-          name="name"
-          errors={errors}
-          label="Name"
-        />
-        <FormTextField
           disabled={action == 'edit'}
           control={control}
           name="email"
           errors={errors}
           label="Email"
+        />
+        <FormTextField
+          control={control}
+          name="name"
+          errors={errors}
+          label="Name"
         />
         <FormAutocomplete
           control={control}
@@ -174,7 +174,7 @@ const ModalEmployeeProject = ({ handleClose, employee, keyQuery, action }) => {
           disableCloseOnSelect={false}
           isOptionEqualToValue={(option, value) => option.id === value?.id}
           getOptionLabel={(option) =>
-            `${option?.name} - Manager: ${option?.manager?.name}` ?? ''
+            `${option?.division.name} - ${option?.name}` ?? ''
           }
           renderInput={(params) => (
             <TextField

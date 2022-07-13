@@ -8,6 +8,7 @@ use App\Models\Project;
 use App\Models\TargetVersion;
 use App\Models\User;
 use Exception;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 
 class ProjectSeeder extends Seeder
@@ -34,7 +35,12 @@ class ProjectSeeder extends Seeder
             ->pluck('id')
             ->toArray();
         Project::factory(10)
-            ->create()
+            ->state(new Sequence(
+                fn () => [
+                    'created_user_id' => $managers->random()
+                ],
+            ))
+            ->create([])
             ->each(function ($project) use ($languages, $managers, $employee) {
                 $targetVersions = TargetVersion::factory(3)->create([
                     'project_id' => $project->id,

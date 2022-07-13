@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Dialog from '@mui/material/Dialog';
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
@@ -18,7 +18,7 @@ const FormDialog = ({
   isLoading,
   isPending = false,
   maxWidth = 'sm',
-  fullWidth = true,
+  fullWidth = false,
   formId,
   actionButtonShow = true,
   disableEscapeKeyDown = true,
@@ -80,4 +80,4 @@ const FormDialog = ({
   );
 };
 
-export default FormDialog;
+export default memo(FormDialog);

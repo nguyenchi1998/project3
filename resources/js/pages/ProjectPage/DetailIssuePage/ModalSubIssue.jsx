@@ -30,7 +30,7 @@ const defaultValues = {
   due_date: null,
   status: 1,
   assign_user_id: null,
-  estimate_time: 0,
+  estimate_time: '',
   parent_issue_id: null,
   progress_percent: 0,
   target_version_id: '',
@@ -223,8 +223,7 @@ const ModalSubIssue = ({ open, handleClose, parentIssue }) => {
               <FormTextField
                 control={control}
                 name="estimate_time"
-                label="Estimate Time"
-                type="number"
+                label="Estimated Time"
                 errors={errors}
                 fullWidth
               />

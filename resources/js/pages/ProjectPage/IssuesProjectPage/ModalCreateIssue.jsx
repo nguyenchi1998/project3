@@ -205,7 +205,7 @@ const ModalCreateIssue = ({ open, handleClose, debounceFilter }) => {
               <FormTextField
                 control={control}
                 name="estimate_time"
-                label="Estimate Time"
+                label="Estimated Time"
                 type="number"
                 errors={errors}
                 fullWidth

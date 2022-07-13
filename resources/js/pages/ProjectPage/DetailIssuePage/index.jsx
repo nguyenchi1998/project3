@@ -134,7 +134,7 @@ const DetailIssuePage = () => {
                           }
                         />
                         <InfoItem
-                          label="Estimate time"
+                          label="Estimated time"
                           value={
                             data?.estimate_time ? `${data?.estimate_time}h` : ''
                           }

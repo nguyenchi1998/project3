@@ -38,10 +38,7 @@ const MemberDetailPage = () => {
               <Box ml={1}>
                 <Typography variant="h6">{data?.name}</Typography>
                 <Typography variant="subtitle1">
-                  {
-                    POSITIONS.find(({ value }) => value === data?.position)
-                      .label
-                  }
+                  {data.position.name}
                 </Typography>
               </Box>
             </Box>

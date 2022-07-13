@@ -190,9 +190,10 @@ class ProjectController extends Controller
 
     public function findMember($projectId, $memberId)
     {
-        $member = User::where('id', $memberId)->whereHas('projects', function ($query) use ($projectId) {
-            $query->where('project_id', $projectId);
-        })->first();
+        $member = User::where('id', $memberId)
+            ->whereHas('projects', function ($query) use ($projectId) {
+                $query->where('project_id', $projectId);
+            })->first()->load('position');
 
         return $member;
     }

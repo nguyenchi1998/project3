@@ -14,6 +14,7 @@ use App\Models\IssueHistoryDetail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Issue\LinkIssueRequest;
 use App\Http\Requests\Issue\IssueStoreRequest;
+use App\Http\Requests\Issue\IssueUpdateRequest;
 
 class IssueController extends Controller
 {
@@ -27,7 +28,7 @@ class IssueController extends Controller
     {
         $issue = Issue::create(
             array_merge(
-                $request->all(),
+                $request->post(),
                 [
                     'created_user_id' => auth()->user()->id
                 ]
@@ -48,7 +49,7 @@ class IssueController extends Controller
                 ]);
         }
 
-        return  $issue->load([
+        return $issue->load([
             'author',
             'assignee',
             'tracker',
@@ -77,7 +78,7 @@ class IssueController extends Controller
     }
 
 
-    public function update(Request $request, $id)
+    public function update(IssueUpdateRequest $request, $id)
     {
         try {
             DB::beginTransaction();

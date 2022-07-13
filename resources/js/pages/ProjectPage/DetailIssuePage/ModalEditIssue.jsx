@@ -32,7 +32,7 @@ const defaultValues = {
   status: 1,
   assign_user_id: null,
   progress_percent: 0,
-  estimate_time: 0,
+  estimate_time: '',
   parent_issue_id: null,
   note: '',
 };
@@ -140,7 +140,7 @@ const ModalEditIssue = ({ issueId, handleClose }) => {
         assign_user_id: assignee,
         parent_issue_id: parent_issue,
         progress_percent,
-        estimate_time: estimate_time ?? 0,
+        estimate_time: estimate_time,
         description: description ?? '',
         target_version_id: target_version?.id ?? '',
       });
@@ -149,6 +149,7 @@ const ModalEditIssue = ({ issueId, handleClose }) => {
 
   return (
     <FormDialog
+      fullWidth={true}
       open={!!issueId}
       title="Edit Issue"
       onSubmit={handleSubmit(onSubmit)}
@@ -260,8 +261,7 @@ const ModalEditIssue = ({ issueId, handleClose }) => {
               <FormTextField
                 control={control}
                 name="estimate_time"
-                label="Estimate Time"
-                type="number"
+                label="Estimated Time"
                 errors={errors}
                 fullWidth
               />
