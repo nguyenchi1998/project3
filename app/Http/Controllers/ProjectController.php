@@ -228,35 +228,31 @@ class ProjectController extends Controller
             'dueDate',
         ]);
         return Issue::where('project_id', $id)
-            ->when(
-                isset($ignoreIds),
-                function ($query) use ($ignoreIds) {
-                    $query->whereNotIn('id', $ignoreIds);
-                }
-            )
-            ->when(count($filters), function ($query) use ($filters) {
-                $query->where(
-                    function ($query) use ($filters) {
-                        $query->when(isset($filters['q']),   function ($query) use ($filters) {
-                            $query->where('name', 'like', '%' . $filters['name'] . '%');
-                        })->when(isset($filters['assigneeId']),   function ($query) use ($filters) {
-                            $query->where('assign_user_id', $filters['assigneeId']);
-                        })->when(isset($filters['authorId']),  function ($query) use ($filters) {
-                            $query->where('created_user_id', $filters['authorId']);
-                        })->when(isset($filters['trackerId']), function ($query) use ($filters) {
-                            $query->where('tracker_id', $filters['trackerId']);
-                        })->when(isset($filters['status']) && $filters['status'] != 'all',  function ($query) use ($filters) {
-                            $query->where('status', $filters['status']);
-                        })->when(isset($filters['priority']) && $filters['priority'] != 'all', function ($query) use ($filters) {
-                            $query->where('priority', $filters['priority']);
-                        })->when(isset($filters['startDate']), function ($query) use ($filters) {
-                            $query->whereDate('start_date', '>=', $filters['startDate']);
-                        })->when(isset($filters['dueDate']), function ($query) use ($filters) {
-                            $query->whereDate('due_date', '<=', $filters['dueDate']);
-                        });
-                    }
-                );
-            })->orderBy('id', 'desc')->get()->load([
+            ->when(isset($ignoreIds), function ($query) use ($ignoreIds) {
+                $query->whereNotIn('id', $ignoreIds);
+            })
+            ->where(function ($query) use ($filters) {
+                $query->when(isset($filters['q']), function ($query) use ($filters) {
+                    $query->where('name', 'like', '%' . $filters['name'] . '%');
+                })->when(isset($filters['assigneeId']),   function ($query) use ($filters) {
+                    $query->where('assign_user_id', $filters['assigneeId']);
+                })->when(isset($filters['authorId']), function ($query) use ($filters) {
+                    $query->where('created_user_id', $filters['authorId']);
+                })->when(isset($filters['trackerId']), function ($query) use ($filters) {
+                    $query->where('tracker_id', $filters['trackerId']);
+                })->when(isset($filters['status']) && $filters['status'] != '', function ($query) use ($filters) {
+                    $query->where('status', $filters['status']);
+                })->when(isset($filters['priority']) && $filters['priority'] != '', function ($query) use ($filters) {
+                    $query->where('priority', $filters['priority']);
+                })->when(isset($filters['startDate']), function ($query) use ($filters) {
+                    $query->whereDate('start_date', '>=', $filters['startDate']);
+                })->when(isset($filters['dueDate']), function ($query) use ($filters) {
+                    $query->whereDate('due_date', '<=', $filters['dueDate']);
+                });
+            })
+            ->orderBy('id', 'desc')
+            ->get()
+            ->load([
                 'tracker',
                 'author',
                 'assignee',

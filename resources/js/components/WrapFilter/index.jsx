@@ -4,7 +4,7 @@ import { Stack } from '@mui/material';
 import { isValid } from 'date-fns';
 import { format } from 'date-fns/esm';
 
-const Filter = ({ onChangeTotalFilter, filterOpen, children }) => {
+const Filter = ({ onChangeTotalFilter, filterOpen, children, ...rest }) => {
   const handleChange = useCallback(({ target: { name, value } }) => {
     onChangeTotalFilter({ [name]: value });
   }, []);
@@ -23,7 +23,7 @@ const Filter = ({ onChangeTotalFilter, filterOpen, children }) => {
   }, []);
 
   return (
-    <Box>
+    <Box {...rest}>
       {filterOpen && (
         <Box minWidth={200} py={1} pl={2}>
           <Stack spacing={2}>

@@ -25,7 +25,7 @@ const TrackerPage = () => {
   const handleChangeFilter = ({ target: { name, value } }) => {
     setFilter({ [name]: value });
   };
-  const debounceFilter = useDebounce(filter, 500, true);
+  const debounceFilter = useDebounce(filter);
   const handleOpenEdit = useCallback((data) => {
     setSelectedTracker(data);
     setAction('edit');
@@ -45,7 +45,7 @@ const TrackerPage = () => {
               }}
               variant="contained"
             >
-              Create
+              Create New
             </Button>
             <Box ml={2}>
               <TextField

@@ -27,12 +27,20 @@ import {
   SUPER_ADMIN_ROLE,
 } from '../../config/constants';
 import useAllowRoleOrPermission from '../../hooks/useAllowRoleOrPermission';
+import NoData from '../../components/NoData';
 
 const ListEmployee = ({ debounceFilter, handleOpenEdit }) => {
   const canActionEmployee = useAllowRoleOrPermission({
     permissions: ACTION_EMPLOYEE_PERMISSION,
   });
-  const headers = ['Name', 'Email', 'Position', 'Role'];
+  const headers = [
+    'Name',
+    'Email',
+    'Group',
+    'Position',
+    'Role',
+    ...(canActionEmployee ? ['Action'] : []),
+  ];
   const projectId = useContext(ProjectContext);
   const queryClient = useQueryClient();
   const [deleteId, setDeleteId] = useState(null);
@@ -103,11 +111,9 @@ const ListEmployee = ({ debounceFilter, handleOpenEdit }) => {
             <Table>
               <TableHead>
                 <TableRow>
-                  {[...headers, ...(canActionEmployee ? ['Action'] : [])].map(
-                    (header) => (
-                      <TableCell key={header}>{header}</TableCell>
-                    ),
-                  )}
+                  {headers.map((header) => (
+                    <TableCell key={header}>{header}</TableCell>
+                  ))}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -116,15 +122,12 @@ const ListEmployee = ({ debounceFilter, handleOpenEdit }) => {
                   .map((employee) => (
                     <TableRow key={employee.id}>
                       <TableCell>
-                        <Link
-                          component={NavLink}
-                          to={`${PATH.PROJECT_PAGE}/${projectId}/${PROJECT_PATH.MEMBER}/${employee.id}`}
-                          underline="hover"
-                        >
+                        <Link component={NavLink} to={`#`} underline="hover">
                           {employee.name}
                         </Link>
                       </TableCell>
                       <TableCell>{employee.email}</TableCell>
+                      <TableCell>{employee?.group?.name}</TableCell>
                       <TableCell>{employee?.position?.name}</TableCell>
                       <TableCell sx={{ textTransform: 'capitalize' }}>
                         {employee.roles
@@ -166,7 +169,7 @@ const ListEmployee = ({ debounceFilter, handleOpenEdit }) => {
           />
         </Box>
       ) : (
-        <Typography>No data to display</Typography>
+        <NoData />
       )}
     </Box>
   );

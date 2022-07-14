@@ -25,7 +25,7 @@ const MemberProjectPage = () => {
   const handleChangeFilter = ({ target: { name, value } }) => {
     setFilter({ [name]: value });
   };
-  const debounceFilter = useDebounce(filter, 500, true);
+  const debounceFilter = useDebounce(filter);
 
   const handleOpenEdit = useCallback((data) => {
     setSelectedMember(data);

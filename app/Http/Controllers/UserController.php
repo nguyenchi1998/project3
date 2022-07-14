@@ -23,10 +23,8 @@ class UserController extends Controller
         })->when(isset($filters['q']), function ($query) use ($filters) {
             $query->where('name', 'like', '%' . $filters['q'] . '%');
         })->when(isset($filters['positionId']), function ($query) use ($filters) {
-            $query->whereHas('position', function ($query) use ($filters) {
-                $query->where('id', $filters['positionId']);
-            });
-        })->get()->load('roles', 'position', 'group');
+            $query->where('position_id', $filters['positionId']);
+        })->get()->load('roles', 'position', 'group.manager');
     }
 
     public function store(UserStoreRequest $request)

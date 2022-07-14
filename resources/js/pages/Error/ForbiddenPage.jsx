@@ -7,7 +7,7 @@ const ForbiddenPage = ({ message }) => {
   return (
     <>
       <Helmet>
-        <title>404 | Material Kit</title>
+        <title>403 | Data Warehouse</title>
       </Helmet>
       <Box
         sx={{
@@ -27,8 +27,8 @@ const ForbiddenPage = ({ message }) => {
           >
             Oops
           </Typography>
-          <Typography align="center" color="textPrimary" variant="h5">
-            {message || '403 Access Denied'}
+          <Typography align="center" color="textPrimary" variant="h3">
+            {message || 'Access Denied'}
           </Typography>
         </Container>
       </Box>

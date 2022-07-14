@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import { ProjectContext } from '../../../layouts/project';
 import projectAPI from '../../../services/project';
 import { Box, Link, Stack, Typography, Skeleton } from '@mui/material';
-import NoData from '../../../container/NoData';
+import NoData from '../../../components/NoData';
 import { format } from 'date-fns';
 import { useTheme } from '@emotion/react';
 import { NavLink } from 'react-router-dom';

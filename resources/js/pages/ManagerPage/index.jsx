@@ -46,7 +46,7 @@ const ManagerPage = () => {
                     variant="outlined"
                     onClick={() => setAction(CREATE_ACTION)}
                   >
-                    Create
+                    Create New
                   </Button>
                 </Box>
               </Box>

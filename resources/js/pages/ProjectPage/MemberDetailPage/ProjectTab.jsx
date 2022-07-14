@@ -7,7 +7,7 @@ import employeeAPI from '../../../services/employee';
 import { NavLink } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
-import NoData from '../../../container/NoData';
+import NoData from '../../../components/NoData';
 import { PATH, PROJECT_PATH } from '../../../routes/paths';
 
 const ProjectTab = ({ memberId }) => {

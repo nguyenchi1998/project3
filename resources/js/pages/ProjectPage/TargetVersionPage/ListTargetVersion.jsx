@@ -18,7 +18,7 @@ import TableRow from '@mui/material/TableRow';
 import TableContainer from '@mui/material/TableContainer';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import NoData from '../../../container/NoData';
+import NoData from '../../../components/NoData';
 import { DATE_FORMAT, TARGET_VERSION_STATUS } from '../../../config/constants';
 import { ProjectContext } from '../../../layouts/project';
 import { format } from 'date-fns';

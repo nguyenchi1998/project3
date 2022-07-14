@@ -109,7 +109,7 @@ const ProjectItem = ({ project }) => {
                 <SiJavascript />
                 <Box ml={1}>
                   {project.languages
-                    .map((language) => language.name)
+                    .map((language) => language.name.replace('_', ' '))
                     .join(', ')}
                 </Box>
               </Grid>

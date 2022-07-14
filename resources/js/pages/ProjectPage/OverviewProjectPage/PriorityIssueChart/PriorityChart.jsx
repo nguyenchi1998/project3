@@ -10,7 +10,7 @@ import {
   ISSUE_PRIORITIES,
 } from '../../../../config/constants';
 import { Box, Skeleton, Typography } from '@mui/material';
-import NoData from '../../../../container/NoData';
+import NoData from '../../../../components/NoData';
 
 const PriorityChart = ({ trackerId }) => {
   useEffect(() => ChartJS.register(ArcElement, Tooltip, Legend), []);

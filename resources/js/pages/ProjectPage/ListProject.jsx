@@ -1,22 +1,14 @@
-import {
-  Box,
-  Grid,
-  TablePagination,
-  ToggleButton,
-  ToggleButtonGroup,
-  Typography,
-} from '@mui/material';
+import { Box, Grid, TablePagination, Typography } from '@mui/material';
 import { useCallback, useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useQuery } from 'react-query';
 import { KEY_QUERIES } from '../../config/keyQueries';
-import NoData from '../../container/NoData';
+import NoData from '../../components/NoData';
 import ListSkeleton from './ListSkeleton';
 import projectAPI from './../../services/project';
-import { PROJECT_STATUS, ROWS_PER_PAGE_OPTIONS } from '../../config/constants';
 import ProjectItem from './../../container/ProjectItem';
 
-const ListProject = ({ debounceFilter, filter, setFilter }) => {
+const ListProject = ({ debounceFilter }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const handleChangePage = useCallback((_event, newPage) => {
@@ -26,9 +18,7 @@ const ListProject = ({ debounceFilter, filter, setFilter }) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   }, []);
-  const handleTypeFilter = (_, type) => {
-    setFilter({ ...filter, ...{ type: type } });
-  };
+
   const { data, isLoading, error, isError } = useQuery(
     [KEY_QUERIES.FETCH_PROJECT, { ...debounceFilter }],
     () => projectAPI.all({ ...debounceFilter }),
@@ -41,38 +31,16 @@ const ListProject = ({ debounceFilter, filter, setFilter }) => {
   }
   return (
     <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-        <ToggleButtonGroup
-          value={filter.type}
-          exclusive
-          color="primary"
-          onChange={handleTypeFilter}
-        >
-          <ToggleButton value="" sx={{ paddingX: 2, paddingY: 0.8 }}>
-            All
-          </ToggleButton>
-          {PROJECT_STATUS.map(({ label, value }) => (
-            <ToggleButton
-              value={value}
-              key={value}
-              sx={{ paddingX: 2, paddingY: 0.8 }}
-            >
-              {label}
-            </ToggleButton>
-          ))}
-        </ToggleButtonGroup>
-        <TablePagination
-          component="div"
-          count={data.length}
-          page={page}
-          onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
-        />
-      </Box>
       {data.length ? (
         <Box>
+          <TablePagination
+            component="div"
+            count={data.length}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
           <Box sx={{ pt: 2 }}>
             <PerfectScrollbar>
               <Grid container spacing={2}>

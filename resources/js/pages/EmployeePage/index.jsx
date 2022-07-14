@@ -11,7 +11,7 @@ import useQueryParam from '../../hooks/useQueryParam';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import _isEmpty from 'lodash/isEmpty';
-import Filter from '../../container/Filter';
+import WrapFilter from '../../components/WrapFilter';
 import positionAPI from './../../services/position';
 import { useQuery } from 'react-query';
 import {
@@ -24,14 +24,15 @@ import { KEY_QUERIES } from '../../config/keyQueries';
 
 const EmployeePage = () => {
   const params = useQueryParam();
+  const [action, setAction] = useState(null);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [filterOpen, setFilterOpen] = useState(!_isEmpty(params));
   const [totalFilter, setTotalFilter] = useState({
     q: '',
     positionId: '',
     ...params,
   });
-  const [action, setAction] = useState(null);
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const debounceFilter = useDebounce(totalFilter);
   const handleToggleFilter = () => {
     setFilterOpen(!filterOpen);
   };
@@ -43,13 +44,10 @@ const EmployeePage = () => {
     setSelectedEmployee(null);
     setAction(null);
   }, []);
-  const debounceFilter = useDebounce(totalFilter, 500, true);
-
   const handleOpenEdit = useCallback((data) => {
     setSelectedEmployee(data);
     setAction('edit');
   }, []);
-
   const { data: positions, isPositionLoading } = useQuery(
     [KEY_QUERIES.FETCH_POSITION],
     () => positionAPI.all(),
@@ -71,7 +69,7 @@ const EmployeePage = () => {
               }}
               variant="contained"
             >
-              New Employee
+              Create New
             </Button>
             <Box ml={2}>
               <Button onClick={handleToggleFilter} variant="contained">
@@ -93,7 +91,7 @@ const EmployeePage = () => {
               handleOpenEdit={handleOpenEdit}
             />
           </Box>
-          <Filter
+          <WrapFilter
             onChangeTotalFilter={onChangeTotalFilter}
             filterOpen={filterOpen}
           >
@@ -102,6 +100,7 @@ const EmployeePage = () => {
                 <FormControl fullWidth>
                   <TextField
                     label="Keyword"
+                    placeholder="Search..."
                     name="q"
                     value={totalFilter?.q}
                     onChange={handleChange}
@@ -142,7 +141,7 @@ const EmployeePage = () => {
                 />
               </>
             )}
-          </Filter>
+          </WrapFilter>
         </Box>
         {!!action && (
           <ModalEmployee

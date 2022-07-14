@@ -34,6 +34,10 @@ const IssuesProjectPage = () => {
     dueDate: null,
     ...params,
   });
+  const debounceFilter = useDebounce(totalFilter);
+  const isInProject = useMemo(() => {
+    return data?.some(({ id }) => auth?.id);
+  }, [data, auth]);
   const handleToggleFilter = () => {
     setFilterOpen(!filterOpen);
   };
@@ -47,15 +51,9 @@ const IssuesProjectPage = () => {
   const handleCloseIssue = useCallback(() => {
     setOpenIssue(false);
   }, []);
-  const debounceFilter = useDebounce(totalFilter, 500, true);
-
   const { data } = useQuery([KEY_QUERIES.FETCH_MEMBER_PROJECT, projectId], () =>
     projectAPI.getMembers({ projectId }),
   );
-
-  const isInProject = useMemo(() => {
-    return data?.some(({ id }) => auth?.id);
-  }, [data, auth]);
 
   return (
     <Container maxWidth={false}>
@@ -93,7 +91,6 @@ const IssuesProjectPage = () => {
             </Box>
             <Filter
               filterOpen={filterOpen}
-              handleToggleFilter={handleToggleFilter}
               totalFilter={totalFilter}
               onChangeTotalFilter={onChangeTotalFilter}
             />

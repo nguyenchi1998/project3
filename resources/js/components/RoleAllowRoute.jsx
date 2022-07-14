@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import useAllowRoleOrPermission from '../hooks/useAllowRoleOrPermission';
+import ForbiddenPage from '../pages/Error/ForbiddenPage';
 
 const RoleAllowRoute = ({ children, roles, ...rest }) => {
   const isManager = useAllowRoleOrPermission({ roles });
@@ -8,18 +9,7 @@ const RoleAllowRoute = ({ children, roles, ...rest }) => {
   return (
     <Route
       {...rest}
-      render={() =>
-        isManager ? (
-          children
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/',
-              state: { notAllowToast: true },
-            }}
-          />
-        )
-      }
+      render={() => (isManager ? children : <ForbiddenPage />)}
     />
   );
 };
