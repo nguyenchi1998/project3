@@ -19,7 +19,8 @@ class UserSeeder extends Seeder
     public function run()
     {
         $superAdminRole = Role::findById(config('constant.role.super_admin'));
-        $managerRole = Role::findById(config('constant.role.manager'));
+        $groupManagerRole = Role::findById(config('constant.role.group_manager'));
+        $divisionManagerRole = Role::findById(config('constant.role.division_manager'));
         $employeeRole = Role::findById(config('constant.role.employee'));
         $languages = Language::all()
             ->pluck('id')
@@ -35,19 +36,20 @@ class UserSeeder extends Seeder
         $superAdmin->assignRole($superAdminRole);
         User::factory(1)->create([
             'email' => 'division-manager@gmail.com',
-            'position_id' => config('constant.position.division_manager'),
-        ])->each(function ($user) use ($managerRole) {
-            $user->assignRole($managerRole);
+            'position_id' => config('constant.position.brse'),
+        ])->each(function ($user) use ($divisionManagerRole) {
+            $user->assignRole($divisionManagerRole);
         });
         $groups = Group::all()->load('division');
-        $groupManagers = User::factory(count($groups))->state(new Sequence(
+        User::factory(count($groups))->state(new Sequence(
             fn ($sequence) => [
                 'email' => 'division-' . $groups[$sequence->index]['division']['id'] . '-group-' . $groups[$sequence->index]['id'] . '-manager@gmail.com',
+                'group_id' => $groups[$sequence->index]['id']
             ],
         ))->create([
-            'position_id' => config('constant.position.division_manager'),
-        ])->each(function ($user, $index) use ($managerRole, $groups) {
-            $user->assignRole($managerRole);
+            'position_id' => config('constant.position.brse'),
+        ])->each(function ($user, $index) use ($groupManagerRole, $groups) {
+            $user->assignRole($groupManagerRole);
             $groups[$index]->update(['group_manager_id' => $user->id]);
         });
 

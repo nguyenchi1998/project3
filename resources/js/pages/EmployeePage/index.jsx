@@ -13,6 +13,7 @@ import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArro
 import _isEmpty from 'lodash/isEmpty';
 import WrapFilter from '../../components/WrapFilter';
 import positionAPI from './../../services/position';
+import groupAPI from './../../services/group';
 import { useQuery } from 'react-query';
 import {
   Autocomplete,
@@ -30,6 +31,7 @@ const EmployeePage = () => {
   const [totalFilter, setTotalFilter] = useState({
     q: '',
     positionId: '',
+    groupId: '',
     ...params,
   });
   const debounceFilter = useDebounce(totalFilter);
@@ -51,6 +53,11 @@ const EmployeePage = () => {
   const { data: positions, isPositionLoading } = useQuery(
     [KEY_QUERIES.FETCH_POSITION],
     () => positionAPI.all(),
+    { enabled: !!filterOpen },
+  );
+  const { data: groups, isGroupLoading } = useQuery(
+    [KEY_QUERIES.FETCH_GROUP],
+    () => groupAPI.all(),
     { enabled: !!filterOpen },
   );
 
@@ -130,6 +137,43 @@ const EmployeePage = () => {
                         endAdornment: (
                           <>
                             {isPositionLoading ? (
+                              <CircularProgress color="inherit" size={20} />
+                            ) : null}
+                            {params.InputProps.endAdornment}
+                          </>
+                        ),
+                      }}
+                    />
+                  )}
+                />
+                <Autocomplete
+                  onChange={(e, value) =>
+                    handleChangeAutocomplete(e, value, 'groupId')
+                  }
+                  options={groups ?? []}
+                  loading={isGroupLoading}
+                  disableCloseOnSelect={false}
+                  isOptionEqualToValue={(option, value) =>
+                    option.id === value?.id
+                  }
+                  value={
+                    groups?.find(
+                      (group) => group.id === totalFilter?.groupId,
+                    ) ?? null
+                  }
+                  getOptionLabel={(option) =>
+                    `${option?.name} - Division: ${option?.division?.name}` ??
+                    ''
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Group"
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                          <>
+                            {isGroupLoading ? (
                               <CircularProgress color="inherit" size={20} />
                             ) : null}
                             {params.InputProps.endAdornment}

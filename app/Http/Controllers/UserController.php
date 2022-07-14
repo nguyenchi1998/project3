@@ -7,6 +7,7 @@ use App\Http\Requests\User\UserUpdateRequest;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
+use PDO;
 
 class UserController extends Controller
 {
@@ -14,7 +15,9 @@ class UserController extends Controller
     {
         $filters = $request->only(['ignoreIds', 'ignoreProjectId', 'q', 'positionId']);
 
-        return User::when(isset($filters['ignoreIds']), function ($query) use ($filters) {
+        return User::whereHas('roles', function ($query) {
+            $query->where('id', '!=', config('constant.role.super_admin'));
+        })->when(isset($filters['ignoreIds']), function ($query) use ($filters) {
             $query->whereNotIn('id', $filters['ignoreIds']);
         })->when(isset($filters['ignoreProjectId']),  function ($query) use ($filters) {
             $project = Project::find($filters['ignoreProjectId'])->load('members');

@@ -16,15 +16,13 @@ class DivisionSeeder extends Seeder
     public function run()
     {
         $divisions = [
-            'BN1', 'BN2-1', 'BN2-2', 'HN', 'HCM',
+            'BN', 'HN', 'HCM',
         ];
-
         foreach ($divisions as $division) {
             $division = Division::create([
                 'name' => $division,
             ]);
-
-            for ($i = 1; $i <= 3; $i++) {
+            for ($i = 1; $i <= 2; $i++) {
                 Group::create([
                     'name' => 'Group ' . $i,
                     'division_id' => $division->id

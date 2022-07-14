@@ -59,8 +59,9 @@ export const POSITIONS = [
 export const ROLES = [
   { label: 'Super Admin', value: 1 },
   { label: 'Director', value: 2 },
-  { label: 'Manager', value: 3 },
-  { label: 'Employee', value: 4 },
+  { label: 'Division Manager', value: 3 },
+  { label: 'Group Manager', value: 4 },
+  { label: 'Employee', value: 5 },
 ];
 
 export const SUPER_ADMIN_ROLE = 1;

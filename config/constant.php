@@ -20,8 +20,9 @@ return [
     'role' => [
         'super_admin' => 1,
         'director' => 2,
-        'manager' => 3,
-        'employee' => 4,
+        'division_manager' => 3,
+        'group_manager' => 4,
+        'employee' => 5,
     ],
     'permission' => [
         'project_list' => 1,
@@ -37,9 +38,9 @@ return [
     'create_project_role' => [1, 2, 3, 4],
     'create_project_permission' => [2],
     'position' => [
-        'director' => 1,
-        'division_manager' => 2,
-        'group_manager' => 3,
+        'accountant' => 1,
+        'designer' => 2,
+        'hr' => 3,
         'dev' => 4,
         'brse' => 5,
         'part_time' => 6,
@@ -51,9 +52,6 @@ return [
         'it_guy' => 12,
         'ci' => 13,
         'marketing' => 14,
-        'hr' => 15,
-        'accountant' => 16,
-        'designer' => 17,
     ],
     'manager_position' => [1, 2, 3],
     'project_status' => [

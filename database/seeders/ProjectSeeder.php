@@ -22,10 +22,10 @@ class ProjectSeeder extends Seeder
     {
         $languages = Language::all()->pluck('id')
             ->toArray();
-        $managers = User::whereHas('position', function ($query) {
-            $query->whereIN('id', [
-                config('constant.position.division_manager'),
-                config('constant.position.group_manager')
+        $managers = User::whereHas('roles', function ($query) {
+            $query->whereIn('id', [
+                config('constant.role.division_manager'),
+                config('constant.role.group_manager')
             ]);
         })->pluck('id');
         $employee = User::whereHas('position', function ($query) {
