@@ -136,3 +136,5 @@ export const TARGET_VERSION_STATUS = [
   { label: 'Lock', value: 2 },
   { label: 'Open', value: 3 },
 ];
+
+export const ROWS_PER_PAGE_OPTIONS = [5, 10, 20];

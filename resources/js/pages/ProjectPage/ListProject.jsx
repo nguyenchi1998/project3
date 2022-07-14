@@ -13,7 +13,7 @@ import { KEY_QUERIES } from '../../config/keyQueries';
 import NoData from '../../container/NoData';
 import ListSkeleton from './ListSkeleton';
 import projectAPI from './../../services/project';
-import { PROJECT_STATUS } from '../../config/constants';
+import { PROJECT_STATUS, ROWS_PER_PAGE_OPTIONS } from '../../config/constants';
 import ProjectItem from './../../container/ProjectItem';
 
 const ListProject = ({ debounceFilter, filter, setFilter }) => {
@@ -68,6 +68,7 @@ const ListProject = ({ debounceFilter, filter, setFilter }) => {
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
+          rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
         />
       </Box>
       {data.length ? (

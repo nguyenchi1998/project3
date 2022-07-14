@@ -12,7 +12,8 @@ import {
   CREATE_PROJECT_PERMISSION,
   MANAGER_ROLE,
 } from '../../config/constants';
-import useAuthRole from '../../hooks/useAuthRole';
+import useAllowRoleOrPermission from '../../hooks/useAllowRoleOrPermission';
+useAllowRoleOrPermission;
 
 const ProjectPage = () => {
   const auth = useSelector(selectAuth);
@@ -26,7 +27,7 @@ const ProjectPage = () => {
   const handleCreateClose = useCallback(() => {
     setCreateOpen(false);
   }, []);
-  const canCreateProject = useAuthRole({
+  const canCreateProject = useAllowRoleOrPermission({
     roles: MANAGER_ROLE,
     permissions: CREATE_PROJECT_PERMISSION,
   });

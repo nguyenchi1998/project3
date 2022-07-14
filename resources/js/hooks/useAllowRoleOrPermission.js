@@ -2,7 +2,10 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { selectAuth } from '../store/slices/user';
 
-export default function useAuthRole({ roles = [], permissions = [] }) {
+export default function useAllowRoleOrPermission({
+  roles = [],
+  permissions = [],
+}) {
   const auth = useSelector(selectAuth);
   const allow = useMemo(() => {
     return (

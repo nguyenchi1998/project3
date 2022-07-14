@@ -15,7 +15,7 @@ import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import GroupIcon from '@mui/icons-material/Group';
 import { useSelector } from 'react-redux';
 import { selectAuth } from '../../store/slices/user';
-import useAuthRole from '../../hooks/useAuthRole';
+import useAllowRoleOrPermission from '../../hooks/useAllowRoleOrPermission';
 import { MANAGER_ROLE } from '../../config/constants';
 
 const user = {
@@ -25,7 +25,7 @@ const user = {
 };
 
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
-  const isManager = useAuthRole({ roles: MANAGER_ROLE });
+  const isManager = useAllowRoleOrPermission({ roles: MANAGER_ROLE });
   const items = [
     {
       href: PATH.HOME_PAGE,

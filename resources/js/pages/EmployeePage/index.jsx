@@ -8,10 +8,19 @@ import useDebounce from '../../hooks/useDebounce';
 import ModalEmployee from './ModalEmployee';
 import ListEmployee from './ListEmployee';
 import useQueryParam from '../../hooks/useQueryParam';
-import Filter from './Filter';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import _isEmpty from 'lodash/isEmpty';
+import Filter from '../../container/Filter';
+import positionAPI from './../../services/position';
+import { useQuery } from 'react-query';
+import {
+  Autocomplete,
+  CircularProgress,
+  FormControl,
+  TextField,
+} from '@mui/material';
+import { KEY_QUERIES } from '../../config/keyQueries';
 
 const EmployeePage = () => {
   const params = useQueryParam();
@@ -40,6 +49,12 @@ const EmployeePage = () => {
     setSelectedEmployee(data);
     setAction('edit');
   }, []);
+
+  const { data: positions, isPositionLoading } = useQuery(
+    [KEY_QUERIES.FETCH_POSITION],
+    () => positionAPI.all(),
+    { enabled: !!filterOpen },
+  );
 
   return (
     <Container maxWidth={false}>
@@ -79,11 +94,55 @@ const EmployeePage = () => {
             />
           </Box>
           <Filter
-            filterOpen={filterOpen}
-            handleToggleFilter={handleToggleFilter}
-            totalFilter={totalFilter}
             onChangeTotalFilter={onChangeTotalFilter}
-          />
+            filterOpen={filterOpen}
+          >
+            {({ handleChange, handleChangeAutocomplete }) => (
+              <>
+                <FormControl fullWidth>
+                  <TextField
+                    label="Keyword"
+                    name="q"
+                    value={totalFilter?.q}
+                    onChange={handleChange}
+                  />
+                </FormControl>
+                <Autocomplete
+                  onChange={(e, value) =>
+                    handleChangeAutocomplete(e, value, 'positionId')
+                  }
+                  value={
+                    positions?.find(
+                      (position) => position.id === totalFilter?.positionId,
+                    ) ?? null
+                  }
+                  options={positions ?? []}
+                  loading={isPositionLoading}
+                  isOptionEqualToValue={(option, value) =>
+                    option.id === value.id
+                  }
+                  getOptionLabel={(option) => option?.name ?? ''}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Position"
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                          <>
+                            {isPositionLoading ? (
+                              <CircularProgress color="inherit" size={20} />
+                            ) : null}
+                            {params.InputProps.endAdornment}
+                          </>
+                        ),
+                      }}
+                    />
+                  )}
+                />
+              </>
+            )}
+          </Filter>
         </Box>
         {!!action && (
           <ModalEmployee

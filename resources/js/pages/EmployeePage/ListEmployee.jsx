@@ -26,10 +26,10 @@ import {
   ACTION_EMPLOYEE_PERMISSION,
   SUPER_ADMIN_ROLE,
 } from '../../config/constants';
-import useAuthRole from '../../hooks/useAuthRole';
+import useAllowRoleOrPermission from '../../hooks/useAllowRoleOrPermission';
 
 const ListEmployee = ({ debounceFilter, handleOpenEdit }) => {
-  const canActionEmployee = useAuthRole({
+  const canActionEmployee = useAllowRoleOrPermission({
     permissions: ACTION_EMPLOYEE_PERMISSION,
   });
   const headers = ['Name', 'Email', 'Position', 'Role'];

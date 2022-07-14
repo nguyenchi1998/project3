@@ -1,9 +1,9 @@
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
-import useAuthRole from '../hooks/useAuthRole';
+import useAllowRoleOrPermission from '../hooks/useAllowRoleOrPermission';
 
 const RoleAllowRoute = ({ children, roles, ...rest }) => {
-  const isManager = useAuthRole({ roles });
+  const isManager = useAllowRoleOrPermission({ roles });
 
   return (
     <Route
